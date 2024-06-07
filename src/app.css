@@ -3,21 +3,31 @@
 @tailwind utilities;
 
 @layer base {
-:root {
-    --background: 248, 248, 248;
-    --gray-100: 243, 245, 248;
-    --gray-200: 233, 235, 241;
-    --gray-300: 215, 217, 225;
-    --gray-600: 76, 78, 89;
-    --gray-800: 36, 46, 60;
+    :root {
+        --background: 248, 248, 248;
+        --gray-100: 243, 245, 248;
+        --gray-200: 233, 235, 241;
+        --gray-300: 215, 217, 225;
+        --gray-600: 76, 78, 89;
+        --gray-800: 36, 46, 60;
+        }
+        
+    :root[class~="dark"] {
+        --background: 24, 23, 29;
+        --gray-100: 29, 31, 34;
+        --gray-200: 37, 38, 40;
+        --gray-300: 62, 64, 79;
+        --gray-600: 169, 173, 180;
+        --gray-800: 219, 227, 237;
     }
-    
-:root[class~="dark"] {
-    --background: 24, 23, 29;
-    --gray-100: 29, 31, 34;
-    --gray-200: 37, 38, 40;
-    --gray-300: 62, 64, 79;
-    --gray-600: 169, 173, 180;
-    --gray-800: 219, 227, 237;
 }
+
+@layer base {
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: -webkit-fill-available;
+    }
 }

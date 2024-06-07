@@ -1,6 +1,10 @@
 <script lang="ts">
     import Header from "@/ui/header.svelte";
+    import Footer from "@/ui/footer.svelte";
 </script>
 
-<Header />
-<slot />
+<div class="h-full flex flex-col">
+    <Header />
+    <slot />
+    <Footer/>
+</div>

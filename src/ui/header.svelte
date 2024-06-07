@@ -17,7 +17,7 @@
     <nav
         class="
         flex-1 flex flex-row gap-[10px] self-center justify-center items-center
-        prose-a:transition-all
+        prose-a:transition-all prose-a:leading-none
         prose-a:text-black dark:data-[active=false]:prose-a:text-white prose-a:font-medium prose-a:p-[10px] prose-a:border-[transparent] hover:prose-a:border-yellow-500 prose-a:border-b data-[active=true]:prose-a:rounded-full data-[active=true]:prose-a:bg-yellow-500
         "
     >
