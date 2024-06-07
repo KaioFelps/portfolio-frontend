@@ -2,6 +2,9 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
+    fontFamily: {
+      "sans": ["Roboto", "sans-serif"]
+    },
     colors: {
       "white": "#ffffff",
       "black": "#000000",
