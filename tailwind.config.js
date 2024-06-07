@@ -4,6 +4,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        "white": "#ffffff",
+        "black": "#000000",
+
         "backgrond": "#F8F8F8",
         "d-backgrond": "#18171D",
 
