@@ -5,12 +5,14 @@
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-main mx-auto flex flex-col items-center justify-center"
 >
-	<h1 class="mb-20">Kaio Felipe</h1>
+	<h1 class="mb-20 text-center">Kaio Felipe</h1>
 
-	<h2 class="mb-6 font-medium text-2xl">Desenvolvo layouts e sites fantásticos!</h2>
+	<h2 class="mb-6 font-medium text-2xl text-center">Desenvolvo layouts e sites fantásticos!</h2>
 
 	<a class="group btn text-lg font-semibold" href="/projetos">
-		Conheça o meu trabalho <ArrowRight
+		<span class="max-2xs:hidden">Conheça o meu trabalho</span>
+		<span class="2xs:hidden">Projetos</span>
+		<ArrowRight
 			size="20"
 			weight="bold"
 			class="translate-x-0 group-hover:translate-x-1 transition-all duration-150 ease-in"

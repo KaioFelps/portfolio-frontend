@@ -1,19 +1,55 @@
+import { skeleton } from '@skeletonlabs/tw-plugin';
+import typography from "@tailwindcss/typography"
+import { join } from 'path';
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
+  content: [
+    './src/**/*.{html,js,svelte,ts}',
+    join(
+      require.resolve('@skeletonlabs/skeleton'),
+      '../**/*.{html,js,svelte,ts}'
+    )
+  ],
   theme: {
     extend: {
       screens: {
         main: "1152px",
-        mainExpanded: "1244px"
+        mainExpanded: "1244px",
+        xs: "480px",
+        "2xs": "380px"
+      },
+      keyframes: {
+        sheetSwipeInFromLeft: {
+          from: {
+            transform: "translateX(-100%)",
+          },
+          to: {
+            transform: "translateX(0)",
+          },
+        },
+        sheetSwipeInToLeft: {
+          from: {
+            transform: "translateX(0)",
+          },
+          to: {
+            transform: "translateX(-100%)",
+          },
+        },
+      },
+      animation: {
+        sheetSwipeInFromLeft: "sheetSwipeInFromLeft 150ms ease-out",
+        sheetSwipeInToLeft: "sheetSwipeInToLeft 150ms ease-in",
       }
     },
+  
     fontFamily: {
       "sans": ["Roboto", "sans-serif"]
     },
     colors: {
       "white": "#ffffff",
       "black": "#000000",
+      "transparent": "transparent",
 
       "backgrond": "#F8F8F8",
       "d-backgrond": "#100f13",
@@ -43,7 +79,8 @@ export default {
   },
   darkMode: "selector",
   plugins: [
-    require('@tailwindcss/typography')
+    typography,
+    skeleton
   ],
 }
 
