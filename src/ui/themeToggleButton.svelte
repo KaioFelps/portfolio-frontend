@@ -20,7 +20,8 @@
 
 <button
 	on:click={toggleMode}
-	class="rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative"
+	class="rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative hover:scale-105 transition-all ease-in cursor-default
+	"
 >
 	{#if theme === "light"}
 		<div transition:scale class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

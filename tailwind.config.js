@@ -2,6 +2,12 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
+    extend: {
+      screens: {
+        main: "1152px",
+        mainExpanded: "1244px"
+      }
+    },
     fontFamily: {
       "sans": ["Roboto", "sans-serif"]
     },
@@ -10,7 +16,7 @@ export default {
       "black": "#000000",
 
       "backgrond": "#F8F8F8",
-      "d-backgrond": "#18171D",
+      "d-backgrond": "#100f13",
 
       "yellow-700": "#C57C10",
       "yellow-600": "#FF7A00",
