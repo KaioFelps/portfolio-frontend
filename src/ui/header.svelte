@@ -1,33 +1,33 @@
 <script lang="ts">
-    import LogoDark from "@/assets/logo-dark-mode.svg"
-    import Logo from "@/assets/logo-white-mode.svg"
-    import { page } from "$app/stores"
-    import ThemeToggler from "@/ui/themeToggleButton.svelte"
+	import LogoDark from "@/assets/logo-dark-mode.svg";
+	import Logo from "@/assets/logo-white-mode.svg";
+	import { page } from "$app/stores";
+	import ThemeToggler from "@/ui/themeToggleButton.svelte";
 
-    let currentPath: string | null = null;
-    page.subscribe(value => currentPath = value.url.pathname);
+	let currentPath: string | null = null;
+	page.subscribe((value) => (currentPath = value.url.pathname));
 </script>
 
 <header class="h-[120px] flex gap-6 px-6">
-    <div class="flex-1 flex justify-start items-center">
-        <img class="dark:hidden w-[170px]" src="{Logo}" alt="Kaio Felps"/>
-        <img class="hidden dark:inline-block w-[170px]" src="{LogoDark}" alt="Kaio Felps"/>
-    </div>
+	<div class="flex-1 flex justify-start items-center">
+		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
+		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
+	</div>
 
-    <nav
-        class="
+	<nav
+		class="
         flex-1 flex flex-row gap-[10px] self-center justify-center items-center
         prose-a:transition-all prose-a:leading-none
         prose-a:text-black dark:data-[active=false]:prose-a:text-white prose-a:font-medium prose-a:p-[10px] prose-a:border-[transparent] hover:prose-a:border-yellow-500 prose-a:border-b data-[active=true]:prose-a:rounded-full data-[active=true]:prose-a:bg-yellow-500
         "
-    >
-        <a data-active={currentPath === "/"} href="/">Home</a>
-        <a data-active={currentPath === "/sobre"} href="/sobre">Sobre</a>
-        <a data-active={currentPath === "/sobre"} href="/sobre">Blog</a>
-        <a data-active={currentPath === "/projetos"} href="/projetos">Projetos</a>
-    </nav>
+	>
+		<a data-active={currentPath === "/"} href="/">Home</a>
+		<a data-active={currentPath === "/sobre"} href="/sobre">Sobre</a>
+		<a data-active={currentPath === "/sobre"} href="/sobre">Blog</a>
+		<a data-active={currentPath === "/projetos"} href="/projetos">Projetos</a>
+	</nav>
 
-    <div class="flex-1 flex items-center justify-end">
-        <ThemeToggler />
-    </div>
+	<div class="flex-1 flex items-center justify-end">
+		<ThemeToggler />
+	</div>
 </header>
