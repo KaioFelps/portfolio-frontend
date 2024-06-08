@@ -1,0 +1,12 @@
+{
+    "eslint.validate": ["javascript", "typescript", "svelte"],
+    "[svelte]": {
+        "editor.defaultFormatter": "svelte.svelte-vscode",
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "never",
+            "source.organizeImports": "never"
+        },
+        "editor.formatOnSave": true
+    },
+    "prettier.configPath": ".prettierrc"
+}
