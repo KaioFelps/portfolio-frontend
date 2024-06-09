@@ -19,5 +19,6 @@
 
     body {
         height: -webkit-fill-available;
+        @apply bg-backgrond dark:bg-d-backgrond text-black dark:text-white;
     }
 }
