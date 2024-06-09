@@ -1,7 +1,8 @@
 DISPLAY_NAME=Portfólio [frontend]
 DESCRIPTION=Front-end do meu portfólio/blog
 MAIN=build/index.js
-MEMORY=1000
-SUBDOMAIN=kaiofelps-frontend
+MEMORY=512
+SUBDOMAIN=portfolio-frontend2
 VERSION=recommended
 AUTORESTART=true
+START=node -r dotenv/config build

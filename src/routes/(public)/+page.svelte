@@ -1,5 +1,5 @@
 <script>
-	import { ArrowRight } from "phosphor-svelte";
+	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 </script>
 
 <main

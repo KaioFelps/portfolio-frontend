@@ -3,9 +3,7 @@
 	import Logo from "@/assets/logo-white-mode.svg";
 	import { page } from "$app/stores";
 	import X from "phosphor-svelte/lib/X";
-	import { getDrawerStore } from "@skeletonlabs/skeleton";
-
-	const drawerStore = getDrawerStore();
+	import { Dialog } from "bits-ui";
 
 	$: currentPath = $page.url.pathname;
 </script>
@@ -17,8 +15,7 @@
 		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
 		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
 
-		<button
-			on:click={() => drawerStore.close()}
+		<Dialog.Close
 			class="
                     cursor-default p-2 rounded-xl bg-transparent dark:bg-white/10 border border-black/10 dark:border-white/10
                     hover:bg-black/5 outline-gray-600/30
@@ -27,7 +24,7 @@
                     "
 		>
 			<X size="20" weight="bold" />
-		</button>
+		</Dialog.Close>
 	</header>
 
 	<div
@@ -44,31 +41,3 @@
 		<a data-active={currentPath === "/projetos"} href="/projetos">Projetos</a>
 	</div>
 </div>
-
-<!-- <Dialog.Root modal={true} bind:open={modalIsOpen}>
-	<Dialog.Trigger
-		class="
-        rounded-full border-gray-300 dark:border-d-gray-300 border
-        w-[46px] h-[46px] hover:scale-105 transition-all ease-in cursor-default
-        flex items-center justify-center
-        "
-	>
-		<Sidebar size={24} weight="bold" />
-	</Dialog.Trigger>
-
-	<Dialog.Portal>
-		<Dialog.Overlay class="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-		<Dialog.Content
-			class="
-            fixed left-0 inset-y-0 w-full max-w-80
-			bg-backgrond dark:bg-d-backgrond
-			focus:outline-none data-[state=open]:animate-contentShow
-            data-[state=open]:animate-sheetSwipeInFromLeft data-[state=closed]:animate-sheetSwipeInToLeft
-            "
-			openAutoFocus={true}
-			closeAutoFocus={true}
-		>
-
-		</Dialog.Content>
-	</Dialog.Portal>
-</Dialog.Root> -->

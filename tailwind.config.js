@@ -1,18 +1,16 @@
-import { skeleton } from '@skeletonlabs/tw-plugin';
-import typography from "@tailwindcss/typography"
-import { join } from 'path';
+import typography from "@tailwindcss/typography";
 
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './src/**/*.{html,js,svelte,ts}',
-    join(
-      require.resolve('@skeletonlabs/skeleton'),
-      '../**/*.{html,js,svelte,ts}'
-    )
-  ],
-  theme: {
-    extend: {
+	content: ["./src/**/*.{html,js,svelte,ts}"],
+	theme: {
+		container: {
+			center: true,
+			padding: "2rem",
+			screens: {
+				"2xl": "1400px"
+			}
+		},
+		extend: {
       screens: {
         main: "1152px",
         mainExpanded: "1244px",
@@ -40,9 +38,8 @@ export default {
       animation: {
         sheetSwipeInFromLeft: "sheetSwipeInFromLeft 150ms ease-out",
         sheetSwipeInToLeft: "sheetSwipeInToLeft 150ms ease-in",
-      }
+      },
     },
-  
     fontFamily: {
       "sans": ["Roboto", "sans-serif"]
     },
@@ -80,7 +77,5 @@ export default {
   darkMode: "selector",
   plugins: [
     typography,
-    skeleton
   ],
 }
-
