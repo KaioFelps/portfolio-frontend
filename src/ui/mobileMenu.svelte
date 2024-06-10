@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LogoDark from "@/assets/logo-dark-mode.svg";
-	import Logo from "@/assets/logo-white-mode.svg";
+	import LogoDark from "$crate/assets/logo-dark-mode.svg";
+	import Logo from "$crate/assets/logo-white-mode.svg";
 	import { page } from "$app/stores";
 	import X from "phosphor-svelte/lib/X";
 	import { Dialog } from "bits-ui";

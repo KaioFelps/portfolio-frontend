@@ -1,8 +1,8 @@
 <script lang="ts">
-	import LogoDark from "@/assets/logo-dark-mode.svg";
-	import Logo from "@/assets/logo-white-mode.svg";
+	import LogoDark from "$crate/assets/logo-dark-mode.svg";
+	import Logo from "$crate/assets/logo-white-mode.svg";
 	import { page } from "$app/stores";
-	import ThemeToggler from "@/ui/themeToggleButton.svelte";
+	import ThemeToggler from "$crate/ui/themeToggleButton.svelte";
 
 	let currentPath: string | null = null;
 	page.subscribe((value) => (currentPath = value.url.pathname));

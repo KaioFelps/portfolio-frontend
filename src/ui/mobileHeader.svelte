@@ -1,9 +1,9 @@
 <script lang="ts">
-	import LogoDark from "@/assets/logo-dark-mode.svg";
-	import Logo from "@/assets/logo-white-mode.svg";
-	import ThemeToggler from "@/ui/themeToggleButton.svelte";
+	import LogoDark from "$crate/assets/logo-dark-mode.svg";
+	import Logo from "$crate/assets/logo-white-mode.svg";
+	import ThemeToggler from "$crate/ui/themeToggleButton.svelte";
 	import Sidebar from "phosphor-svelte/lib/Sidebar";
-	import * as Sheet from "@/components/ui/sheet";
+	import * as Sheet from "$crate/components/ui/sheet";
 	import MobileMenu from "./mobileMenu.svelte";
 </script>
 
