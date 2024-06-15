@@ -4,11 +4,36 @@
 
 @layer components {
   .btn {
-      @apply text-black leading-none w-fit px-8 py-4 bg-yellow-500 rounded-full font-medium flex items-center justify-center gap-2 transition-all
-      hover:bg-yellow-600 hover:scale-[1.005] ease-in-out
-      active:brightness-95
-      outline-0 outline-yellow-600/30 outline-none
-      focus:outline-4 focus:outline-none
+      @apply text-black leading-none w-fit px-8 py-4 rounded-full font-medium flex items-center justify-center gap-2 transition-all
+      ease-in-out
+      enabled:active:brightness-95
+      outline-0 
+      enabled:focus:outline-4
+      disabled:saturate-0 disabled:opacity-70
+  }
+
+  .btn.default {
+    @apply bg-yellow-500
+    enabled:hover:bg-yellow-600 enabled:hover:scale-[1.005]
+    outline-yellow-600/30
+  }
+
+  .btn.ghost-dark {
+    @apply text-white border border-white/10 bg-white/10
+    enabled:hover:bg-white/15
+    outline-white/30
+    disabled:border-0
+  }
+
+  .btn.ghost {
+    @apply border border-black/10 bg-black/10
+    enabled:hover:bg-black/15
+    outline-black/30
+    disabled:border-0
+  }
+
+  .btn-sm {
+    @apply py-1 px-2 font-normal text-base
   }
 }
 

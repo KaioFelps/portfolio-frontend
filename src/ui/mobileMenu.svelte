@@ -37,7 +37,7 @@
 	>
 		<a data-active={currentPath === "/"} href="/">Home</a>
 		<a data-active={currentPath === "/sobre"} href="/sobre">Sobre</a>
-		<a data-active={currentPath === "/sobre"} href="/sobre">Blog</a>
+		<a data-active={currentPath === "/blog"} href="/blog">Blog</a>
 		<a data-active={currentPath === "/projetos"} href="/projetos">Projetos</a>
 	</div>
 </div>

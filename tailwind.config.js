@@ -71,6 +71,8 @@ export default {
 
       "violet-500": "#8F00FF",
 
+      "red-700": "#b91c1c",
+
       "green-500": "#1BB82B",
     },
   },
