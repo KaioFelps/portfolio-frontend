@@ -1,0 +1,83 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "standard",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended",
+      "plugin:svelte/recommended",
+      "@rocketseat/eslint-config/node"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+    "project": "tsconfig.json",
+    "extraFileExtensions": [".svelte"],
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "overrides": [
+            {
+                "files": ["*.svelte", "*.ts"],
+                "parser": "svelte-eslint-parser",
+                "parserOptions": {
+                    "parser": "@typescript-eslint/parser"
+                }
+            }
+        ]
+    },
+    "plugins": [
+      "@typescript-eslint/eslint-plugin"
+    ],
+    "rules": {
+        "prettier/prettier": ["error", {
+            "endOfLine": "auto",
+            "printWidth": 80,
+            "tabWidth": 2,
+            "doubleQuote": true,
+            "trailingComma": "all",
+            "arrowParens": "always",
+            "semi": false
+        }],
+        "svelte/html-closing-bracket-spacing": "warn",
+        "svelte/indent": "off",
+        "svelte/html-quotes": "warn",
+        "svelte/max-attributes-per-line": "off",
+        "svelte/html-self-closing": "warn",
+        "svelte/no-trailing-spaces": "error",
+        "svelte/no-useless-mustaches": "error",
+        "svelte/valid-each-key": "error",
+        "svelte/mustache-spacing": ["warn", {
+            "textExpressions": "never",
+            "attributesAndProps": "never",
+            "directiveExpressions": "never",
+            "tags": {
+                "openingBrace": "never",
+                "closingBrace": "never"
+            }
+        }]
+    },
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx", ".d.ts"]
+        }
+    },
+    "ignorePatterns": [
+      "node_modules",
+      "build",
+      ".svelte-kit",
+      "dist"
+    ]
+}
