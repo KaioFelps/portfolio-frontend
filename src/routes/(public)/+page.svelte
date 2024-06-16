@@ -9,7 +9,7 @@
 
 	<h2 class="mb-6 font-medium text-2xl text-center">Desenvolvo layouts e sites fantásticos!</h2>
 
-	<a class="group btn text-lg font-semibold" href="/projetos">
+	<a class="group btn default text-lg font-semibold" href="/projetos">
 		<span class="max-2xs:hidden">Conheça o meu trabalho</span>
 		<span class="2xs:hidden">Projetos</span>
 		<ArrowRight
