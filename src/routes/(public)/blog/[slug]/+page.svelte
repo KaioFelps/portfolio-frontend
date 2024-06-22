@@ -1,0 +1,86 @@
+<script lang="ts">
+	import { page } from "$app/stores";
+	import type { GetPostResponse } from "./+page.server";
+	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
+
+	export let data: GetPostResponse;
+</script>
+
+<main class="w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
+	<a
+		href="/blog"
+		class="
+        cursor-default mb-2 w-fit self-start flex items-center gap-3 px-4 py-2 rounded-full border border-gray-300 dark:border-d-gray-300 leading-none
+        text-sm
+        transition-all hover:bg-gray-100 active:bg-gray-200
+        max-sm:mb-8
+        "
+	>
+		<ArrowLeft size="16" weight="bold" />
+		Voltar
+	</a>
+
+	{#if data.post}
+		<header>
+			<h1
+				class="
+                px-12 text-center pb-4 border-b mb-6
+                font-bold text-5xl text-gray-800 border-gray-300
+                dark:text-d-gray-800 dark:border-d-gray-300
+                "
+			>
+				{data.post.title}
+			</h1>
+
+			<div class="flex flex-col gap-2 w-full items-center mb-16">
+				<span class="text-sm text-center">
+					{#if data.post.publishedAt}
+						Publicado em {data.post.publishedAt.toLocaleDateString("pt-Br", {
+							day: "numeric",
+							month: "long",
+							year: "numeric",
+						})}.
+					{:else}
+						Post ainda não publicado.
+					{/if}
+
+					{#if data.post.updatedAt}
+						{" "}Última edição em {data.post.updatedAt.toLocaleDateString("pt-Br")}.
+					{/if}
+				</span>
+
+				<div class="flex flex-wrap justify-center gap-1">
+					{#each data.post.tags as tag (tag.id)}
+						<a
+							href="/blog?queryBy=tag&query={tag.value}"
+							class="
+                            cursor-default text-black rounded-full px-2 py-1 bg-yellow-500 text-sm leading-tight transition-all
+                            hover:brightness-110 hover:scale-[1.04]
+                            "
+						>
+							{tag.value}
+						</a>
+					{/each}
+				</div>
+			</div>
+		</header>
+
+		<div
+			id="article-body"
+			class="
+            max-w-[792px] gap-4 mx-auto
+            text-lg
+            dark:text-d-gray-800
+            [&_:is(p,div,hr,table)]:mb-4
+            prose-table:max-w-full prose-table:overflow-x-scroll
+            prose-img:max-w-full
+            "
+		>
+			{@html data.post.content}</div
+		>
+	{:else}
+		<div class="flex justify-center text-red-700 my-12">
+			<span>Post não encontrado =(</span>
+		</div>
+	{/if}
+</main>
