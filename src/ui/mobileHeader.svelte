@@ -7,7 +7,14 @@
 	import MobileMenu from "./mobileMenu.svelte";
 </script>
 
-<header class="h-[120px] flex gap-6 px-6 xs:hidden">
+<div class="h-[120px] shrink-0 xs:hidden"></div>
+
+<header
+	class="
+	h-[120px] flex gap-6 px-6 xs:hidden shrink-0 bg-backgrond/50 dark:bg-d-backgrond/80 backdrop-blur-md z-20
+	fixed inset-x-0 top-0
+	"
+>
 	<div class="flex-1 flex justify-start items-center max-sm:hidden">
 		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
 		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
