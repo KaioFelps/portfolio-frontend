@@ -1,19 +1,20 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import type { GetPostResponse } from "./+page.server";
+	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
 
 	export let data: GetPostResponse;
 </script>
 
-<main class="w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
+<main class="flex-1 w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
 	<a
 		href="/blog"
 		class="
-        cursor-default mb-2 w-fit self-start flex items-center gap-3 px-4 py-2 rounded-full border border-gray-300 dark:border-d-gray-300 leading-none
-        text-sm
-        transition-all hover:bg-gray-100 active:bg-gray-200
-        max-sm:mb-8
+        cursor-default mb-2 w-fit self-start flex items-center gap-3 px-4 py-2 rounded-full border border-gray-300 dark:border-d-gray-300 leading-none text-sm
+        transition-all max-sm:mb-8
+		hover:bg-gray-100 active:bg-gray-200
+		dark:hover:bg-d-gray-100 dark:active:bg-d-gray-200
         "
 	>
 		<ArrowLeft size="16" weight="bold" />
@@ -33,7 +34,7 @@
 			</h1>
 
 			<div class="flex flex-col gap-2 w-full items-center mb-16">
-				<span class="text-sm text-center">
+				<span class="text-sm text-center mb-1 text-gray-600 dark:text-d-gray-600">
 					{#if data.post.publishedAt}
 						Publicado em {data.post.publishedAt.toLocaleDateString("pt-Br", {
 							day: "numeric",
@@ -45,7 +46,7 @@
 					{/if}
 
 					{#if data.post.updatedAt}
-						{" "}Última edição em {data.post.updatedAt.toLocaleDateString("pt-Br")}.
+						<br />Última edição em {data.post.updatedAt.toLocaleDateString("pt-Br")}.
 					{/if}
 				</span>
 
@@ -54,11 +55,18 @@
 						<a
 							href="/blog?queryBy=tag&query={tag.value}"
 							class="
-                            cursor-default text-black rounded-full px-2 py-1 bg-yellow-500 text-sm leading-tight transition-all
-                            hover:brightness-110 hover:scale-[1.04]
+							flex
+                            group cursor-default text-black rounded-full px-2 py-1 bg-yellow-500 text-sm leading-tight transition-all
+                            hover:bg-yellow-600
+							dark:bg-yellow-600 dark:hover:bg-yellow-500
                             "
 						>
 							{tag.value}
+							<div
+								class="w-[0] group-hover:w-[calc(16px+4px)] transition-all duration-100 ease-in-out overflow-hidden"
+							>
+								<ArrowRight size="16" weight="bold" class="ml-1" />
+							</div>
 						</a>
 					{/each}
 				</div>
@@ -78,9 +86,13 @@
 		>
 			{@html data.post.content}</div
 		>
-	{:else}
+	{:else if !data.error}
 		<div class="flex justify-center text-red-700 my-12">
 			<span>Post não encontrado =(</span>
+		</div>
+	{:else}
+		<div class="max-w-screen-main mx-auto my-12">
+			<span class="mx-auto warning alert">Parece que o servidor está fora do ar =(</span>
 		</div>
 	{/if}
 </main>
