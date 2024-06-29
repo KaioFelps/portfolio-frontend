@@ -35,6 +35,11 @@
   .btn-sm {
     @apply py-1 px-2 font-normal text-base
   }
+
+  /* ALERTS */
+  .warning.alert {
+    @apply flex w-fit justify-center text-red-600 bg-red-700/15 p-6 rounded-xl
+  }
 }
 
 @layer base {
