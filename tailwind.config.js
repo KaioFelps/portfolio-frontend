@@ -51,10 +51,13 @@ export default {
       "backgrond": "#F8F8F8",
       "d-backgrond": "#100f13",
 
-      "yellow-700": "#C57C10",
-      "yellow-600": "#FF7A00",
+      "yellow-900": "#C57C10",
+      "yellow-700": "#f3a002",
+      "yellow-600": "#ffb900",
       "yellow-500": "#FFC700",
       
+      "tangerine-600": "#FF7A00",
+
       "blue-500": "#0066FF",
       
       "gray-800": "#242E3C",
@@ -72,6 +75,7 @@ export default {
       "violet-500": "#8F00FF",
 
       "red-700": "#b91c1c",
+      "red-600": "#e02929",
 
       "green-500": "#1BB82B",
     },
