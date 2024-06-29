@@ -34,10 +34,16 @@ export default {
             transform: "translateX(-100%)",
           },
         },
+        indeterminate: {
+          "0%": { transform:  "translateX(0) scaleX(0)"},
+          "40%": { transform:  "translateX(0) scaleX(0.4)" },
+          "100%": { transform:  "translateX(100%) scaleX(0.5)"}
+        }
       },
       animation: {
         sheetSwipeInFromLeft: "sheetSwipeInFromLeft 150ms ease-out",
         sheetSwipeInToLeft: "sheetSwipeInToLeft 150ms ease-in",
+        indeterminate: "indeterminate 1s infinite ease-in",
       },
     },
     fontFamily: {
