@@ -28,7 +28,7 @@
 			color: transparent;
 			background: -webkit-linear-gradient(
 				0deg,
-				theme("colors.yellow-600"),
+				theme("colors.tangerine-600"),
 				theme("colors.yellow-500")
 			);
 			-webkit-fill-color: transparent;
