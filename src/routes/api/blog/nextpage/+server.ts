@@ -1,8 +1,9 @@
 import { generateQueryString, type Args } from "$crate/core/utils/queryParams";
-import type { FetchPostsResponse } from "$crate/routes/(public)/blog/+page.server";
+import type { FetchPostsResponse, FetchPostsData } from "$crate/routes/(public)/blog/+page.server";
 import { env } from "$env/dynamic/private";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { logger } from "$crate/hooks.server";
 
 export const GET: RequestHandler = async ({ fetch, url }) => {
 	let args: Args = {};
@@ -16,8 +17,18 @@ export const GET: RequestHandler = async ({ fetch, url }) => {
 
 	const queryString = generateQueryString(args);
 
-	const res = await fetch(`${env.BACKEND_URL}/post/list${queryString}`);
+	try {
+		const res = await fetch(`${env.BACKEND_URL}/post/list${queryString}`);
 
-	const data: FetchPostsResponse = await res.json();
-	return json(data);
+		const data: FetchPostsData = await res.json();
+
+		return json({ data, error: null } satisfies FetchPostsResponse);
+	} catch (e) {
+		logger.error(e);
+
+		return json({
+			data: null,
+			error: "Algo deu errado enquanto tentava buscar os posts =(",
+		} satisfies FetchPostsResponse);
+	}
 };
