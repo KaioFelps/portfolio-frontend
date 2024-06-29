@@ -5,6 +5,8 @@
 	import Sidebar from "phosphor-svelte/lib/Sidebar";
 	import * as Sheet from "$crate/components/ui/sheet";
 	import MobileMenu from "./mobileMenu.svelte";
+
+	let dialogOpen = false;
 </script>
 
 <div class="h-[120px] shrink-0 xs:hidden"></div>
@@ -22,7 +24,7 @@
 	<div class="flex-1 flex items-center justify-end gap-2">
 		<ThemeToggler />
 
-		<Sheet.Root>
+		<Sheet.Root bind:open={dialogOpen}>
 			<Sheet.Trigger>
 				<button
 					class="
@@ -37,8 +39,9 @@
 			<Sheet.Content
 				side="left"
 				class="bg-backgrond dark:bg-d-backgrond border-gray-300 dark:border-x-gray-800 p-0 w-full max-w-[380px]"
-				><MobileMenu /></Sheet.Content
 			>
+				<MobileMenu close={() => (dialogOpen = false)} />
+			</Sheet.Content>
 		</Sheet.Root>
 	</div>
 </header>

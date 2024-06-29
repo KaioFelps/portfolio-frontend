@@ -5,6 +5,8 @@
 	import X from "phosphor-svelte/lib/X";
 	import { Dialog } from "bits-ui";
 
+	export let close: () => void;
+
 	$: currentPath = $page.url.pathname;
 </script>
 
@@ -35,9 +37,9 @@
                 prose-a:transition-all prose-a:cursor-default
                 "
 	>
-		<a data-active={currentPath === "/"} href="/">Home</a>
-		<a data-active={currentPath === "/sobre"} href="/sobre">Sobre</a>
-		<a data-active={currentPath === "/blog"} href="/blog">Blog</a>
-		<a data-active={currentPath === "/projetos"} href="/projetos">Projetos</a>
+		<a data-active={currentPath === "/"} href="/" on:click={close}>Home</a>
+		<a data-active={currentPath === "/sobre"} href="/sobre" on:click={close}>Sobre</a>
+		<a data-active={currentPath === "/blog"} href="/blog" on:click={close}>Blog</a>
+		<a data-active={currentPath === "/projetos"} href="/projetos" on:click={close}>Projetos</a>
 	</div>
 </div>
