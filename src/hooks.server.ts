@@ -1,5 +1,8 @@
 import type { Handle } from "@sveltejs/kit";
 import winston from "winston";
+import { ThemeParser } from "./lib/theme-parser";
+
+globalThis.themeCookieKey = "kaiofelps_theme";
 
 export const logger = winston.createLogger({
 	level: "info",
@@ -33,5 +36,5 @@ export const handle: Handle = async ({ event, resolve }) => {
 	});
 
 	const response = await resolve(event);
-	return response;
+	return await ThemeParser.parse({ response, cookies: event.cookies });
 };
