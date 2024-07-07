@@ -71,30 +71,16 @@
 		<h1 class="text-5xl font-bold">Blog</h1>
 
 		<form action="" class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden">
-			<label
-				class="
-				flex px-6 py-4 gap-3 rounded-full bg-gray-100 border border-gray-300 dark:bg-d-gray-100 dark:border-d-gray-300
-				max-md:grow
-				"
-			>
+			<label class="flex gap-3 input">
 				<span>
 					<MagnifyingGlass size="32" weight="regular" />
 				</span>
 				<span class="sr-only">Filtro</span>
-				<input
-					name="query"
-					placeholder="Filtro"
-					class="placeholder:text-gray-600 dark:placeholder:text-d-gray-600 bg-transparent border-none focus:outline-none"
-				/>
+				<input name="query" placeholder="Filtro" class="input-inner" />
 			</label>
 
 			<Select.Root>
-				<Select.Trigger
-					class="
-                    text-gray-600 dark:text-d-gray-600 flex items-center px-6 py-5 gap-3 rounded-full bg-gray-100 border border-gray-300 dark:bg-d-gray-100 dark:border-d-gray-300
-                    group
-                    "
-				>
+				<Select.Trigger class="flex items-center py-5 gap-3 input group">
 					<Select.Value placeholder="Pesquisar por..." />
 					<CaretUp
 						size="24"

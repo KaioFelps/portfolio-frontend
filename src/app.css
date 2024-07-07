@@ -40,6 +40,19 @@
   .warning.alert {
     @apply flex w-fit justify-center text-red-600 bg-red-700/15 p-6 rounded-xl
   }
+
+  /* INPUTS */
+  .input {
+    @apply
+    px-6 py-4 rounded-full bg-gray-100 border border-gray-300 dark:bg-d-gray-100 dark:border-d-gray-300
+    focus-within:ring-4 outline-none ring-yellow-500/25 focus-within:border-yellow-500 focus-within:dark:border-yellow-900
+    transition-all will-change-[shadow,_border-color]
+    text-gray-600 dark:text-d-gray-600
+  }
+
+  .input-inner {
+    @apply text-black dark:text-white placeholder:text-gray-600 dark:placeholder:text-d-gray-600 bg-transparent border-none outline-none
+  }
 }
 
 @layer base {

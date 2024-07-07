@@ -9,10 +9,10 @@
 </script>
 
 <header class="h-[120px] flex gap-6 px-6 max-xs:hidden mb-20 shrink-0">
-	<div class="flex-1 flex justify-start items-center max-sm:hidden">
+	<a href="/" class="flex-1 flex justify-start items-center max-sm:hidden">
 		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
 		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
-	</div>
+	</a>
 
 	<nav
 		class="
