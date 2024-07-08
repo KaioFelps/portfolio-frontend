@@ -8,12 +8,14 @@
 	import { page } from "$app/stores";
 	import LinksPopover from "./linksPopover.svelte";
 	import clsx from "clsx";
+	import { enhance } from "$app/forms";
 
 	export let data: FetchProjectsData;
 	export let form: ActionData;
 
 	let loadError = data.error;
 	let formError = false;
+	let formIsLoading = false;
 
 	let projectsUnion = data.success?.projects ?? [];
 
@@ -67,63 +69,81 @@
 	</header>
 
 	{#if !loadError && data.success}
-		<div
-			class={clsx(
-				"grid grid-flow-row grid-cols-3 gap-12 w-full max-w-screen-main mt-16",
-				"max-lg:gap-6",
-				"max-md:grid-cols-2",
-				"max-sm:grid-cols-1",
-			)}
-		>
-			{#each projectsUnion as project}
-				<article
-					class="
-                    group/parent transition-all will-change-[shadow]
-                    p-4 rounded-2xl bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none
-                    hover:shadow-lg duration-300
-                    flex flex-col gap-3
-                    "
-				>
-					<img
-						src={project.topstory}
-						class="h-[180px] rounded-lg object-cover object-center"
-						alt=""
-					/>
-
-					<h2 class="font-medium text-base leading-4"
-						><span class="sr-only">Projeto </span>{project.title}</h2
-					>
-
-					<footer class="flex items-start justify-between gap-2">
-						<div class="flex flex-wrap gap-1.5">
-							{#each project.tags as tag (`${project.id}_tag_${tag.id}`)}
-								<a
-									href="/blog?queryBy=tag&query={tag.value}"
-									class="group chip c-yellow c-clickable"
-								>
-									{tag.value}
-								</a>
-							{/each}
-						</div>
-
-						<LinksPopover links={project.links} />
-					</footer>
-				</article>
-			{/each}
-		</div>
-
-		<form method="get" action="?/fetchMore">
-			<button
-				type="submit"
-				class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
-				disabled={projectsUnion.length >= data.success.totalCount}
+		{#if projectsUnion.length > 0}
+			<div
+				class={clsx(
+					"grid grid-flow-row grid-cols-3 gap-12 w-full max-w-screen-main mt-16",
+					"max-lg:gap-6",
+					"max-md:grid-cols-2",
+					"max-sm:grid-cols-1",
+				)}
 			>
-				Carregar mais
-			</button>
-		</form>
+				{#each projectsUnion as project}
+					<article
+						class="
+						group/parent transition-all will-change-[shadow]
+						p-4 rounded-2xl bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none
+						hover:shadow-lg duration-300
+						flex flex-col gap-3
+						"
+					>
+						<img
+							src={project.topstory}
+							class="h-[180px] rounded-lg object-cover object-center"
+							alt=""
+						/>
+
+						<h2 class="font-medium text-base leading-4"
+							><span class="sr-only">Projeto </span>{project.title}</h2
+						>
+
+						<footer class="flex items-start justify-between gap-2">
+							<div class="flex flex-wrap gap-1.5">
+								{#each project.tags as tag (`${project.id}_tag_${tag.id}`)}
+									<a
+										href="/blog?queryBy=tag&query={tag.value}"
+										class="group chip c-yellow c-clickable"
+									>
+										{tag.value}
+									</a>
+								{/each}
+							</div>
+
+							<LinksPopover links={project.links} />
+						</footer>
+					</article>
+				{/each}
+			</div>
+		{:else}
+			<div class="max-w-screen-main my-12 w-full">
+				<span class="mx-auto warning alert text-center w-full">Ainda não há nenhum projeto 🫶</span>
+			</div>
+		{/if}
+
+		{#if projectsUnion.length < data.success.totalCount}
+			<form
+				action="?/fetchMore"
+				use:enhance={() => {
+					formIsLoading = true;
+
+					return async ({ update }) => {
+						formIsLoading = false;
+						update();
+					};
+				}}
+			>
+				<button
+					type="submit"
+					class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
+					disabled={formIsLoading}
+				>
+					Carregar mais
+				</button>
+			</form>
+		{/if}
 	{:else}
 		<div class="max-w-screen-main mx-auto my-12">
-			<span class="mx-auto warning alert">{loadError}</span>
+			<span class="mx-auto danger alert">{loadError}</span>
 		</div>
 	{/if}
 </main>
