@@ -37,9 +37,10 @@
   }
 
   /* ALERTS */
-  .warning.alert {
-    @apply flex w-fit justify-center text-red-600 bg-red-700/15 p-6 rounded-xl
-  }
+  .alert { @apply flex w-fit justify-center p-6 rounded-xl }
+
+  .warning.alert { @apply text-yellow-900 bg-yellow-600/15 }
+  .danger.alert { @apply text-red-600 bg-red-700/15 }
 
   /* INPUTS */
   .input {

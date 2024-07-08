@@ -199,7 +199,7 @@
 			</button>
 		{:else}
 			<div class="max-w-screen-main mx-auto my-12">
-				<span class="mx-auto warning alert">{data.error}</span>
+				<span class="mx-auto danger alert">{data.error}</span>
 			</div>
 		{/if}
 	</div>

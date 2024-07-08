@@ -92,7 +92,7 @@
 		</div>
 	{:else}
 		<div class="max-w-screen-main mx-auto my-12">
-			<span class="mx-auto warning alert">Parece que o servidor está fora do ar =(</span>
+			<span class="mx-auto danger alert">Parece que o servidor está fora do ar =(</span>
 		</div>
 	{/if}
 </main>
