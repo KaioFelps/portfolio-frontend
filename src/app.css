@@ -53,6 +53,16 @@
   .input-inner {
     @apply text-black dark:text-white placeholder:text-gray-600 dark:placeholder:text-d-gray-600 bg-transparent border-none outline-none
   }
+
+  /* CHIPS */
+  .chip {
+    @apply 
+      flex justify-center items-center cursor-default rounded-full px-2 py-1.5
+      text-sm leading-none transition-all
+  }
+
+  .chip.c-yellow { @apply bg-yellow-500/10 border border-yellow-500 text-yellow-900 }
+  .chip.c-yellow.c-clickable { @apply hover:bg-yellow-500/25 active:bg-yellow-500/40 }
 }
 
 @layer base {
