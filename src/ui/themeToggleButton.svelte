@@ -5,6 +5,7 @@
 	import { scale } from "svelte/transition";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
+	import clsx from "clsx";
 
 	let theme = "";
 
@@ -30,8 +31,10 @@
 
 <button
 	on:click={toggleMode}
-	class="rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative hover:scale-105 transition-all ease-in cursor-default
-	"
+	class={clsx(
+		"rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative hover:scale-105 transition-all ease-in cursor-default",
+		"outline-none ring-0 dark:ring-white/15 ring-black/15 focus-within:ring-4",
+	)}
 >
 	{#if theme === "dark"}
 		<div transition:scale class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

@@ -4,6 +4,7 @@
 	import { page } from "$app/stores";
 	import X from "phosphor-svelte/lib/X";
 	import { Dialog } from "bits-ui";
+	import clsx from "clsx";
 
 	export let close: () => void;
 
@@ -12,18 +13,19 @@
 
 <div>
 	<header
-		class="flex flex-row justify-between items-center gap-4 p-6 h-[120px] border-b border-gray-300 dark:border-gray-800"
+		class="flex flex-row justify-between items-center gap-4 p-6 py-2 border-b border-gray-300 dark:border-gray-800"
 	>
 		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
 		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
 
 		<Dialog.Close
-			class="
-                    cursor-default p-2 rounded-xl bg-transparent dark:bg-white/10 border border-black/10 dark:border-white/10
-                    hover:bg-black/5 outline-gray-600/30
-                    dark:hover:bg-white/15 dark:outline-d-gray-600/30
-                    active:brightness-95 ring-0 focus:ring-0 outline-0 focus:outline-4 transition-all
-                    "
+			autofocus={false}
+			class={clsx(
+				"cursor-default p-3 rounded-full bg-transparent dark:bg-white/5",
+				"hover:bg-black/5",
+				"dark:hover:bg-white/10",
+				"active:brightness-95 outline-none ring-0 dark:ring-white/15 ring-black/15 focus:ring-4 transition-all",
+			)}
 		>
 			<X size="20" weight="bold" />
 		</Dialog.Close>

@@ -5,6 +5,7 @@
 	import Sidebar from "phosphor-svelte/lib/Sidebar";
 	import * as Sheet from "$crate/components/ui/sheet";
 	import MobileMenu from "./mobileMenu.svelte";
+	import clsx from "clsx";
 
 	let dialogOpen = false;
 </script>
@@ -13,28 +14,28 @@
 
 <header
 	class="
-	h-[120px] flex gap-6 px-6 xs:hidden shrink-0 bg-backgrond/50 dark:bg-d-backgrond/80 backdrop-blur-md z-20
-	fixed inset-x-0 top-0
+	flex gap-6 px-6 py-2 xs:hidden shrink-0 bg-backgrond/50 dark:bg-d-backgrond/80 backdrop-blur-md z-20
+	fixed inset-x-0 top-0 border-b border-b-gray-200 dark:border-b-d-gray-100
 	"
 >
-	<div class="flex-1 flex justify-start items-center max-sm:hidden">
+	<a href="/" class="flex-1 flex justify-start items-center max-sm:hidden max-xs:flex">
 		<img class="dark:hidden w-[170px]" src={Logo} alt="Kaio Felps" />
 		<img class="hidden dark:inline-block w-[170px]" src={LogoDark} alt="Kaio Felps" />
-	</div>
+	</a>
+
 	<div class="flex-1 flex items-center justify-end gap-2">
 		<ThemeToggler />
 
 		<Sheet.Root bind:open={dialogOpen}>
-			<Sheet.Trigger>
-				<button
-					class="
-					rounded-full border-gray-300 dark:border-d-gray-300 border
-					w-[46px] h-[46px] hover:scale-105 transition-all ease-in cursor-default
-					flex items-center justify-center
-					"
-				>
-					<Sidebar size={24} weight="bold" />
-				</button>
+			<Sheet.Trigger
+				class={clsx(
+					"rounded-full border-gray-300 dark:border-d-gray-300 border",
+					"w-[46px] h-[46px] hover:scale-105 transition-all ease-in cursor-default",
+					"flex items-center justify-center",
+					"outline-none ring-0 dark:ring-white/15 ring-black/15 focus-within:ring-4",
+				)}
+			>
+				<Sidebar size={24} weight="bold" />
 			</Sheet.Trigger>
 			<Sheet.Content
 				side="left"
