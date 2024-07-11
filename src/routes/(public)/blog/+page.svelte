@@ -1,60 +1,77 @@
 <script lang="ts">
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
-	import { Select } from "bits-ui";
+	import { Select, type Selected } from "bits-ui";
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import { flyAndScale } from "$crate/utils";
 	import type { FetchPostsResponse } from "./+page.server";
 	import type { Post } from "$crate/core/entities/post";
 	import { page } from "$app/stores";
-	import { generateQueryString, getQueryParamsFromUrl } from "$crate/core/utils/queryParams";
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
 	import { fly } from "svelte/transition";
+	import { enhance } from "$app/forms";
+	import type { ActionData } from "./$types";
+	import { goto } from "$app/navigation";
 
-	export let data: FetchPostsResponse;
-	const { data: loadData, error } = data;
-
-	let nextPageFetchError: string | null = null;
-	let posts = loadData?.posts ?? [];
-	$: currentPage = loadData?.page ?? 1;
-
-	const postsPerMonth: Record<string, Post[]> = {};
+	const queryByOptions = [
+		{ value: "query", label: "Buscar por título" },
+		{ value: "tag", label: "Buscar por tag" },
+	];
 
 	function segregatePostsByPublishmentDate(posts: Post[]) {
-		posts.forEach((post: any) => {
+		posts.forEach((post) => {
 			const date = new Date(post.createdAt);
 			const key = date.toLocaleDateString("pt-Br", { year: "numeric", month: "long" });
+
 			if (!postsPerMonth[key]) {
-				postsPerMonth[key] = [];
+				postsPerMonth[key] = [post];
+				return;
 			}
+
 			postsPerMonth[key].push(post);
 		});
+
+		postsPerMonth = postsPerMonth;
 	}
 
-	segregatePostsByPublishmentDate(posts);
+	export let data: FetchPostsResponse;
+	export let form: ActionData;
+	$: formError = form?.error ? true : false;
 
-	async function handleFetchNextPage() {
-		if (error) return;
+	let formIsLoading = false;
 
-		const searchArgs = getQueryParamsFromUrl($page.url);
-		searchArgs.page = currentPage + 1;
+	let nextPageFetchError: string | null = null;
+	$: currentPage = data.success?.page ?? 1;
 
-		const query = generateQueryString(searchArgs);
-		const response = await fetch(`/api/blog/nextpage${query}`);
+	let postsPerMonth: Record<string, Post[]> = {};
 
-		if (response.ok) {
-			const { data }: FetchPostsResponse = await response.json();
-			currentPage = data!.page;
-			segregatePostsByPublishmentDate(data!.posts);
-			posts = [...posts, ...data!.posts];
-			return;
-		}
+	$: segregatePostsByPublishmentDate(data.success?.posts ?? []);
+	$: if (form?.success) {
+		segregatePostsByPublishmentDate(form.success.posts);
+		currentPage = form.success.page;
+	}
 
-		nextPageFetchError = "Algo deu errado enquanto buscávamos a próxima página!";
+	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
+	let query: string = $page.url.searchParams.get("query") ?? "";
 
-		setTimeout(() => {
-			nextPageFetchError = null;
-		}, 5000);
+	const urlQueryBy = queryByOptions.find(
+		(option) => option.value === $page.url.searchParams.get("queryBy"),
+	);
+
+	let queryBy: Selected<string> | undefined = urlQueryBy;
+
+	function handleQueryInput() {
+		clearTimeout(queryFormTimeoutId);
+
+		if (!(queryBy && query)) return;
+
+		const timeout = setTimeout(async () => {
+			postsPerMonth = {};
+			if (query.trim() === "") return goto($page.url.pathname);
+			goto(`?query=${query}&queryBy=${queryBy!.value}`);
+		}, 1500);
+
+		queryFormTimeoutId = timeout;
 	}
 </script>
 
@@ -76,10 +93,20 @@
 					<MagnifyingGlass size="32" weight="regular" />
 				</span>
 				<span class="sr-only">Filtro</span>
-				<input name="query" placeholder="Filtro" class="input-inner" />
+				<input
+					name="query"
+					placeholder="Filtro"
+					class="input-inner"
+					bind:value={query}
+					on:input={handleQueryInput}
+				/>
 			</label>
 
-			<Select.Root>
+			<Select.Root
+				bind:selected={queryBy}
+				items={queryByOptions}
+				onSelectedChange={handleQueryInput}
+			>
 				<Select.Trigger class="flex items-center py-5 gap-3 input group">
 					<Select.Value placeholder="Pesquisar por..." />
 					<CaretUp
@@ -94,28 +121,19 @@
 					sideOffset={8}
 					class="w-full rounded-xl border border-gray-200 dark:border-d-gray-200 bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none"
 				>
-					<Select.Item
-						value="title"
-						label="Buscar por título"
-						class="
-						cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
-						data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
-						"
-					>
-						Buscar por título
-						<Select.ItemIndicator />
-					</Select.Item>
-					<Select.Item
-						value="tag"
-						label="Buscar por tag"
-						class="
-						cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
-						data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
-						"
-					>
-						Buscar por tag
-						<Select.ItemIndicator />
-					</Select.Item>
+					{#each queryByOptions as { value, label } (value)}
+						<Select.Item
+							{value}
+							{label}
+							class="
+							cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
+							data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
+							"
+						>
+							{label}
+							<Select.ItemIndicator />
+						</Select.Item>
+					{/each}
 					<Select.Arrow />
 				</Select.Content>
 				<Select.Input name="searchBy" />
@@ -124,7 +142,7 @@
 	</header>
 
 	<div class="flex flex-col w-full max-w-screen-main mt-16">
-		{#if !error && !!loadData}
+		{#if !data.error && !!data.success}
 			{#each Object.entries(postsPerMonth) as [month, posts] (month)}
 				<div class="mb-16 last-of-type:mb-0">
 					<h2 class="capitalize text-2xl font-bold mb-6">
@@ -190,13 +208,29 @@
 				</div>
 			{/each}
 
-			<button
-				on:click={handleFetchNextPage}
-				class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
-				disabled={!!error || posts.length >= loadData.totalCount}
-			>
-				Carregar mais
-			</button>
+			{#if !data.error && data.success.posts.length < data.success.totalCount}
+				<form
+					action="?/fetchMore"
+					use:enhance={() => {
+						formIsLoading = true;
+
+						return async ({ update }) => {
+							formIsLoading = false;
+							update();
+						};
+					}}
+					method="POST"
+				>
+					<input type="hidden" name="page" value={currentPage + 1} />
+					<button
+						type="submit"
+						class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
+						disabled={formIsLoading}
+					>
+						{formIsLoading ? "Carregando" : "Carregar mais"}
+					</button>
+				</form>
+			{/if}
 		{:else}
 			<div class="max-w-screen-main mx-auto my-12">
 				<span class="mx-auto danger alert">{data.error}</span>
@@ -205,7 +239,7 @@
 	</div>
 </main>
 
-{#if nextPageFetchError}
+{#if form?.error}
 	<div
 		class="p-4 rounded-xl absolute right-3 bottom-3 z-20 max-w-[calc(100%_-_24px)] bg-red-700/80"
 		transition:fly
@@ -217,10 +251,7 @@
 			</span>
 		</div>
 
-		<button
-			on:click={() => (nextPageFetchError = null)}
-			class="btn ghost-dark btn-sm block ml-auto mt-1"
-		>
+		<button on:click={() => (formError = false)} class="btn ghost-dark btn-sm block ml-auto mt-1">
 			Fechar
 		</button>
 	</div>
