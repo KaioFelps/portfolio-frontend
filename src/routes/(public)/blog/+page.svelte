@@ -87,7 +87,10 @@
 	>
 		<h1 class="text-5xl font-bold">Blog</h1>
 
-		<form action="" class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden">
+		<form
+			on:submit={handleQueryInput}
+			class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden"
+		>
 			<label class="flex gap-3 input">
 				<span>
 					<MagnifyingGlass size="32" weight="regular" />

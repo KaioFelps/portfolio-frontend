@@ -51,7 +51,10 @@
 	>
 		<h1 class="text-5xl font-bold">Projetos realizados</h1>
 
-		<form class="flex-1 flex flex-row gap-4 items-center justify-end max-sm:hidden">
+		<form
+			on:submit={handleQueryInput}
+			class="flex-1 flex flex-row gap-4 items-center justify-end max-sm:hidden"
+		>
 			<label class="flex gap-3 input">
 				<span>
 					<MagnifyingGlass size="32" weight="regular" />
