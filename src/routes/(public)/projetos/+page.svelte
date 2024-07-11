@@ -123,6 +123,7 @@
 		{#if projectsUnion.length < data.success.totalCount}
 			<form
 				action="?/fetchMore"
+				method="post"
 				use:enhance={() => {
 					formIsLoading = true;
 
