@@ -50,7 +50,9 @@
 		"tailwind-merge": "2.3.0",
 		"tailwind-variants": "0.2.1",
 		"vite-tsconfig-paths": "^4.3.2",
-		"winston": "3.13.0"
+		"winston": "3.13.0",
+		"zod": "3.23.8",
+		"zod-validation-error": "3.3.0"
 	},
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "4.18.0"
