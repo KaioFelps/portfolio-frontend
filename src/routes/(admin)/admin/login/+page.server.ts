@@ -14,26 +14,34 @@ export type LoginResponse = {
 };
 
 export const actions: Actions = {
-	login: async ({ request, fetch }) => {
+	login: async ({ request, fetch, cookies }) => {
 		const parsedData = LoginSchema.safeParse(Object.fromEntries(await request.formData()));
 
 		if (!parsedData.success) {
 			return fail(400, { success: null, errors: parsedData.error.flatten().fieldErrors });
 		}
 
-		const data = parsedData.data;
+		const data = JSON.stringify(parsedData.data);
 
 		const response = await fetch(`${env.BACKEND_URL}/auth/login`, {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
 			},
-			method: "POST",
-			body: JSON.stringify(data),
+			method: "post",
+			body: data,
+			credentials: "include",
 		});
 
 		if (response.ok) {
 			const data = await response.json();
+
+			cookies.set("refresh_token", response.headers.getSetCookie()[0].split("=")[1], {
+				path: "/",
+			});
+
+			cookies.set("access_token", data.access_token, { path: "/" });
+
 			return { success: data, errors: null } satisfies LoginResponse;
 		}
 

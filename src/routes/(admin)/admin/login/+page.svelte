@@ -4,8 +4,13 @@
 	import Blob from "$crate/assets/orange-blob.svg";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import type { ActionData } from "./$types";
+	import { goto } from "$app/navigation";
 
 	export let form: ActionData;
+
+	$: if (form?.success) {
+		goto("/admin");
+	}
 
 	let formIsLoading = false;
 </script>

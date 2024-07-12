@@ -9,6 +9,9 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		interface Locals {
+			accessToken: string | undefined;
+		}
 	}
 }
 
