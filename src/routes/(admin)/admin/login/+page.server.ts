@@ -50,6 +50,10 @@ export const actions: Actions = {
 			return fail(400, { success: null, errors: data.message });
 		}
 
+		if (response.status === 401) {
+			return fail(401, { success: null, errors: ["Credenciais inválidas."] });
+		}
+
 		return fail(500, { success: null, errors: ["Alguma coisa deu errada..."] });
 	},
 };
