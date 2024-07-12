@@ -42,8 +42,6 @@ export const load: PageServerLoad = async ({ url, depends }) => {
 
 	const queryString = generateQueryString(args);
 
-	console.log("load rodou");
-
 	return await fetchDataAndFormat(queryString);
 };
 
@@ -56,8 +54,6 @@ export const actions: Actions = {
 		const queryBy = url.searchParams.get("queryBy");
 		const query = url.searchParams.get("query");
 		const page = formData.get("page")?.toString();
-
-		console.log(page);
 
 		if (queryBy && query) args[queryBy] = query;
 		if (page) args["page"] = page;
