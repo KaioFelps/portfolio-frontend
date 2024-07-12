@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {   
+    /**
+    # ESTRUTURA DO FORMULÁRIO:
+    
+    - div.form-floating
+    - input.form-control
+    - label
+    
+    a label precisa estar do lado do input.
+    */
+    body {
+        @apply !bg-d-backgrond text-white;
+    }
+
+    .form-floating {
+        @apply relative;
+    }
+    
+    .form-control {
+        @apply px-6 py-3 bg-transparent border border-d-gray-300 rounded-lg text-d-gray-800
+        outline-none ring-0 ring-yellow-500/20
+        focus-within:ring-4 transition-[shadow] focus-within:border-yellow-900
+    }
+
+    .form-floating>label {
+        @apply px-6 py-3 text-d-gray-600 font-medium
+        absolute top-0 left-0 z-[2] h-full overflow-hidden text-start overflow-ellipsis whitespace-nowrap pointer-events-none [transform-origin:0_0] transition-[opacity_.1s_ease-in-out,_transform_.1s_ease-in-out]
+    }
+
+    .form-floating>.form-control {
+        @apply placeholder:sr-only
+    }
+
+    .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+        @apply scale-75 -translate-y-4 translate-x-2 z-10 py-2.5 h-fit text-black
+        after:absolute after:inset-x-4 after:inset-y-2 after:bg-yellow-900 after:rounded-lg after:-z-[1]
+    }
+}

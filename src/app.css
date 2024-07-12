@@ -38,9 +38,11 @@
 
   /* ALERTS */
   .alert { @apply flex w-fit justify-center p-6 rounded-xl }
+  .alert.sm { @apply py-2 px-4 }
 
   .warning.alert { @apply text-yellow-900 bg-yellow-600/15 }
   .danger.alert { @apply text-red-600 bg-red-700/15 }
+  .success.alert { @apply text-green-500 bg-green-500/15 }
 
   /* INPUTS */
   .input {
