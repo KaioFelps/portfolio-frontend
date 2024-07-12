@@ -1,7 +1,8 @@
 <script lang="ts">
+	import logo from "$crate/assets/logo-dark-mode.svg";
+	import blob from "$crate/assets/orange-blob.svg";
+
 	import { enhance } from "$app/forms";
-	import LogoDark from "$crate/assets/logo-dark-mode.svg";
-	import Blob from "$crate/assets/orange-blob.svg";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
@@ -13,9 +14,11 @@
 	}
 
 	let formIsLoading = false;
+
+	const imageUrl = `url(${blob})`;
 </script>
 
-<img src={LogoDark} alt="Kaio Felps" class="absolute top-4 left-4" />
+<img src={logo} alt="Kaio Felps" class="absolute top-4 left-4" />
 
 <div
 	class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[calc(100%_-_48px)] max-w-[500px]"
@@ -76,6 +79,6 @@
 </div>
 
 <div
-	style="background-image: url({Blob})"
+	style="background-image: {imageUrl}"
 	class="absolute inset-x-0 bottom-0 h-[40vh] bg-[center_top] bg-no-repeat bg-cover -z-50"
 />
