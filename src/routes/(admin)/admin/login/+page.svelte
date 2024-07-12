@@ -15,7 +15,7 @@
 
 	let formIsLoading = false;
 
-	const imageUrl = `url(${blob})`;
+	const bgImage = `background-image: url("${blob}")`;
 </script>
 
 <img src={logo} alt="Kaio Felps" class="absolute top-4 left-4" />
@@ -79,6 +79,6 @@
 </div>
 
 <div
-	style="background-image: {imageUrl}"
+	style={bgImage}
 	class="absolute inset-x-0 bottom-0 h-[40vh] bg-[center_top] bg-no-repeat bg-cover -z-50"
 />
