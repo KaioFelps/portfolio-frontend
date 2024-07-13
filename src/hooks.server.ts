@@ -45,6 +45,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 async function authenticationMiddleware({ event }: { event: RequestEvent }, callback: () => any) {
 	const { cookies, url } = event;
 
+	if (!url.pathname.startsWith("/admin")) return callback();
+
 	if (cookies.get("access_token")) {
 		event.locals.accessToken = cookies.get("access_token");
 
@@ -75,11 +77,7 @@ async function authenticationMiddleware({ event }: { event: RequestEvent }, call
 		});
 	}
 
-	if (
-		url.pathname.startsWith("/admin") &&
-		url.pathname !== "/admin/login" &&
-		!event.locals.accessToken
-	) {
+	if (url.pathname !== "/admin/login" && !event.locals.accessToken) {
 		return new Response("Unauthenticated user", {
 			status: 302,
 			headers: { location: "/admin/login" },
