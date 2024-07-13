@@ -9,6 +9,7 @@
 	import LinksPopover from "./linksPopover.svelte";
 	import clsx from "clsx";
 	import { enhance } from "$app/forms";
+	import Title from "$crate/components/title.svelte";
 
 	export let data: FetchProjectsData;
 	export let form: ActionData;
@@ -38,6 +39,10 @@
 		queryFormTimeoutId = timeout;
 	}
 </script>
+
+<svelte:head>
+	<Title title="Projetos" />
+</svelte:head>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-mainExpanded mx-auto flex flex-col items-center justify-center"

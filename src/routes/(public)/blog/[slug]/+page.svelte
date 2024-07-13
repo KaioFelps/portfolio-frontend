@@ -3,9 +3,14 @@
 	import type { GetPostResponse } from "./+page.server";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
+	import Title from "$crate/components/title.svelte";
 
 	export let data: GetPostResponse;
 </script>
+
+<svelte:head>
+	<Title title={data.post ? data.post.title : "Não encontrado"} />
+</svelte:head>
 
 <main class="flex-1 w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
 	<a

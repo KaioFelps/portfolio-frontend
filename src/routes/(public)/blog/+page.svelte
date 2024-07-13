@@ -12,6 +12,7 @@
 	import { enhance } from "$app/forms";
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
+	import Title from "$crate/components/title.svelte";
 
 	const queryByOptions = [
 		{ value: "query", label: "Buscar por título" },
@@ -74,6 +75,10 @@
 		queryFormTimeoutId = timeout;
 	}
 </script>
+
+<svelte:head>
+	<Title title="Blog" />
+</svelte:head>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-mainExpanded mx-auto flex flex-col items-center justify-center"

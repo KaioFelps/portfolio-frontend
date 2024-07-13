@@ -1,6 +1,11 @@
 <script>
+	import Title from "$crate/components/title.svelte";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 </script>
+
+<svelte:head>
+	<Title />
+</svelte:head>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-main mx-auto flex flex-col items-center justify-center"
@@ -20,7 +25,7 @@
 	</a>
 </main>
 
-<style>
+<style lang="postcss">
 	h1 {
 		@apply font-bold text-7xl w-fit;
 
