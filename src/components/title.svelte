@@ -10,7 +10,7 @@
 
 	onMount(() => {
 		return () => {
-			document.head.querySelector("title")?.remove();
+			document.head.querySelectorAll("title")?.forEach((title) => title.remove());
 		};
 	});
 </script>
