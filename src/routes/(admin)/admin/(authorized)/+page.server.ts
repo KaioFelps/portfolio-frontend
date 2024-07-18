@@ -1,6 +1,5 @@
 import type { Log } from "$crate/core/entities/log";
 import { env } from "$env/dynamic/private";
-import { fail } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 type FetchLogsResponse = {

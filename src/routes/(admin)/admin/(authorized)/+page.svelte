@@ -29,7 +29,6 @@
 
 		return message;
 	}
-	console.log(data);
 </script>
 
 <section class="mb-12">
