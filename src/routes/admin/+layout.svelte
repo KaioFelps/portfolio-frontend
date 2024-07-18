@@ -13,7 +13,4 @@
 		<div class="h-full w-full bg-yellow-600 animate-indeterminate origin-[0_50%]" />
 	</div>
 {/if}
-
-<div class="h-full flex flex-col">
-	<slot />
-</div>
+<slot />
