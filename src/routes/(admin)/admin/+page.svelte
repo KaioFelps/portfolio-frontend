@@ -3,4 +3,4 @@
 </script>
 
 <h1>admin page</h1>
-<p>{data.accessToken}</p>
+<p class="break-words">{data.accessToken}</p>
