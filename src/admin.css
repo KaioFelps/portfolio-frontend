@@ -39,4 +39,8 @@
         @apply scale-75 -translate-y-4 translate-x-2 z-10 py-2.5 h-fit text-black
         after:absolute after:inset-x-4 after:inset-y-2 after:bg-yellow-900 after:rounded-lg after:-z-[1]
     }
+
+    h1, h2 {
+        @apply font-bold text-3xl
+    }
 }

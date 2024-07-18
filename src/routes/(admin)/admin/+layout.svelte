@@ -45,9 +45,9 @@
 	</nav>
 </aside>
 
-<div class="fixed right-0 inset-y-0 max-w-[calc(100%_-_300px)]">
+<div class="fixed right-0 inset-y-0 max-w-[calc(100%_-_300px)] w-full">
 	<main
-		class="mx-20 my-12 rounded-3xl px-[42px] py-12 bg-d-gray-100/25 border border-white/10 backdrop-blur-3xl shadow-black/25 shadow-[0_4px_25px_0_var(--tw-shadow-color)]"
+		class="mx-20 my-12 max-w-screen-main rounded-3xl px-[42px] py-12 bg-d-gray-100/25 border border-white/10 backdrop-blur-3xl shadow-black/25 shadow-[0_4px_25px_0_var(--tw-shadow-color)]"
 	>
 		<slot />
 	</main>
