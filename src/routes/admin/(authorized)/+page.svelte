@@ -2,8 +2,9 @@
 	import { LogTargetType, LogAction, type Log } from "$crate/core/entities/log.js";
 	import PenNib from "phosphor-svelte/lib/PenNib";
 	import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
+	import type { AdminHomePageServerData } from "./+page.server";
 
-	export let data;
+	export let data: AdminHomePageServerData;
 
 	function formatLogString(log: Log) {
 		let message;
@@ -34,36 +35,44 @@
 <section class="mb-12">
 	<h2 class="mb-6">Status</h2>
 
-	<div class="flex gap-3">
-		<div class="flex-1 status-card">
-			<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
-				<RocketLaunch size="32" weight="bold" />
-			</span>
-			<span class="font-bold"><span class="text-3xl">13</span> projetos novos</span>
-		</div>
+	{#if data.statistics.data}
+		<div class="flex gap-3">
+			<div class="flex-1 status-card">
+				<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
+					<RocketLaunch size="32" weight="bold" />
+				</span>
+				<span class="font-bold"
+					><span class="text-3xl">{data.statistics.data.totalProjects}</span> projetos novos</span
+				>
+			</div>
 
-		<div class="flex-1 status-card">
-			<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
-				<PenNib size="32" weight="bold" />
-			</span>
-			<span class="font-bold"><span class="text-3xl">32</span> artigos publicados</span>
-		</div>
+			<div class="flex-1 status-card">
+				<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
+					<PenNib size="32" weight="bold" />
+				</span>
+				<span class="font-bold"
+					><span class="text-3xl">{data.statistics.data.totalPosts}</span> artigos publicados</span
+				>
+			</div>
 
-		<div class="flex-1 rounded-2xl bg-white/5"> </div>
-	</div>
+			<div class="flex-1 rounded-2xl bg-white/5"> </div>
+		</div>
+	{:else}
+		<span class="mx-auto danger alert text-center w-full">{data.statistics.error}</span>
+	{/if}
 </section>
 
 <section>
 	<h2 class="mb-6">Últimos registros</h2>
 
-	{#if data.success}
+	{#if data.logs.data}
 		<div class="flex flex-col gap-1">
-			{#each data.success?.logs as log}
+			{#each data.logs.data?.logs as log}
 				<p class="rounded-2xl bg-white/5 font-medium p-4">{formatLogString(log)}</p>
 			{/each}
 		</div>
-	{:else if data.error}
-		<span class="mx-auto danger alert text-center w-full">{data.error}</span>
+	{:else if data.logs.error}
+		<span class="mx-auto danger alert text-center w-full">{data.logs.error}</span>
 	{/if}
 </section>
 
