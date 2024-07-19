@@ -29,6 +29,8 @@ logger.add(
 );
 
 export const handle: Handle = async ({ event, resolve }) => {
+	event.locals.logger = logger;
+
 	const { url, getClientAddress, cookies } = event;
 
 	logger.info("Request recebida em " + new Date().toString(), {

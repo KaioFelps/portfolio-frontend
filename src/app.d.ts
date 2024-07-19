@@ -1,4 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
+
+import type { Logger } from "winston";
 // for information about these interfaces
 declare global {
 	var themeCookieKey: string;
@@ -11,6 +13,7 @@ declare global {
 		// interface Platform {}
 		interface Locals {
 			accessToken: string | undefined;
+			logger: Logger;
 		}
 	}
 }
