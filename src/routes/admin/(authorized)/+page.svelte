@@ -26,8 +26,7 @@
 			if (log.targetType === LogTargetType.user) message = "Alterações no usuário";
 		}
 
-		message = message?.concat(': "', log.target, '"');
-
+		message += `: "${log.target}", às ${log.createdAt.toLocaleString("pt-br")}`;
 		return message;
 	}
 </script>
@@ -41,18 +40,18 @@
 				<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
 					<RocketLaunch size="32" weight="bold" />
 				</span>
-				<span class="font-bold"
-					><span class="text-3xl">{data.statistics.data.totalProjects}</span> projetos novos</span
-				>
+				<span class="flex items-center gap-2">
+					<span class="text-3xl font-bold">{data.statistics.data.totalProjects}</span> projetos novos
+				</span>
 			</div>
 
 			<div class="flex-1 status-card">
 				<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
 					<PenNib size="32" weight="bold" />
 				</span>
-				<span class="font-bold"
-					><span class="text-3xl">{data.statistics.data.totalPosts}</span> artigos publicados</span
-				>
+				<span class="flex items-center gap-2">
+					<span class="text-3xl font-bold">{data.statistics.data.totalPosts}</span> artigos publicados
+				</span>
 			</div>
 
 			<div class="flex-1 rounded-2xl bg-white/5"> </div>
