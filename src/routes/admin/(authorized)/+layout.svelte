@@ -1,16 +1,20 @@
-<script>
+<script lang="ts">
 	import logo from "$crate/assets/logo-dark-mode.svg";
-	import noisyBlob from "$crate/assets/orange-noisy-blob.svg";
 	import House from "phosphor-svelte/lib/House";
+	import SideBarDynamicMenu from "./sideBarDynamicMenu.svelte";
+	import type { AuthUser } from "$crate/core/entities/authUser";
+	import ArrowSquareOut from "phosphor-svelte/lib/ArrowSquareOut";
+
+	export let data: { user: AuthUser };
 </script>
 
 <div
 	id="background-blobs"
-	class="fixed inset-0 -z-10 bg-d-backgrond from-yellow-700/50 to-d-backgrond"
+	class="fixed inset-0 -z-10 bg-d-backgrond from-yellow-700/50 to-d-backgrond pointer-events-none"
 >
-	<div class="bg-blob absolute -left-[40%] -top-[60%]" />
-	<div class="bg-blob absolute -right-[40%] -bottom-[60%]" />
-	<div class="fixed inset-0 bg-blobs-overlay"></div>
+	<div class="bg-blob absolute pointer-events-none -left-[40%] -top-[60%]" />
+	<div class="bg-blob absolute pointer-events-none -right-[40%] -bottom-[60%]" />
+	<div class="pointer-events-none fixed inset-0 bg-blobs-overlay"></div>
 </div>
 
 <aside
@@ -25,14 +29,21 @@
 	<nav>
 		<a
 			href="/admin"
-			class="px-6 py-4 border-b border-white/10 flex items-center gap-3 font-bold text-base text-white"
+			class="px-6 py-4 border-b border-white/10 flex items-center gap-3 font-bold text-base text-white hover:bg-black/10 hover:text-white/80 cursor-default active:text-white/70 transition-all duration-100"
 		>
 			<span class="text-yellow-500"><House size="20" weight="bold" /></span> Home
+		</a>
+		<SideBarDynamicMenu user={data.user} />
+		<a
+			href="/admin/logout"
+			class="px-6 py-4 border-b border-white/10 flex items-center gap-3 font-bold text-base text-white hover:bg-black/10 hover:text-white/80 cursor-default active:text-white/70 transition-all duration-100"
+		>
+			<span class="text-yellow-500"><ArrowSquareOut size="20" weight="bold" /></span> Deslogar
 		</a>
 	</nav>
 </aside>
 
-<div class="fixed right-0 inset-y-0 max-w-[calc(100%_-_300px)] w-full">
+<div class="fixed right-0 inset-y-0 max-w-[calc(100%_-_300px)] w-full text-white">
 	<main
 		class="mx-20 my-12 max-w-screen-main rounded-3xl px-[42px] py-12 bg-d-gray-100/25 border border-white/10 backdrop-blur-3xl shadow-black/25 shadow-[0_4px_25px_0_var(--tw-shadow-color)]"
 	>
