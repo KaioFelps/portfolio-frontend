@@ -38,24 +38,30 @@ export const handle: Handle = async ({ event, resolve }) => {
 		client: getClientAddress(),
 	});
 
-	return await authenticationMiddleware({ event }, async () => {
-		const response = await resolve(event);
-		return await ThemeParser.parse({ response, cookies: event.cookies });
+	const response = await authenticationMiddleware({ event }, async () => {
+		return await resolve(event);
 	});
+
+	return await ThemeParser.parse({ response, cookies: event.cookies });
 };
 
-async function authenticationMiddleware({ event }: { event: RequestEvent }, callback: () => any) {
+async function authenticationMiddleware(
+	{ event }: { event: RequestEvent },
+	callback: () => Promise<any>,
+) {
 	const { cookies, url } = event;
 
-	if (!url.pathname.startsWith("/admin")) return callback();
+	if (!url.pathname.startsWith("/admin")) return await callback();
 
-	if (cookies.get("access_token")) {
-		event.locals.accessToken = cookies.get("access_token");
-
-		cookies.delete("access_token", {
-			path: "/",
+	if (url.pathname === "/admin/login" && !!event.locals.accessToken && !!event.locals.user) {
+		console.log(event.locals);
+		return new Response("Already authenticated user", {
+			status: 302,
+			headers: { location: "/admin" },
 		});
 	}
+
+	if (event.locals.accessToken && event.locals.user) return await callback();
 
 	if (cookies.get("refresh_token")) {
 		const newTokenResponse = await event.fetch(`${env.BACKEND_URL}/auth/refresh`, {
@@ -66,25 +72,17 @@ async function authenticationMiddleware({ event }: { event: RequestEvent }, call
 		});
 
 		if (newTokenResponse.ok) {
-			const { access_token, refreshToken } = await newTokenResponse.json();
+			const { accessToken, refreshToken, user } = await newTokenResponse.json();
 			cookies.set("refresh_token", refreshToken, { path: "/" });
-			event.locals.accessToken = access_token;
+			event.locals.accessToken = accessToken;
+			event.locals.user = user;
+
+			return await callback();
 		}
 	}
 
-	if (url.pathname === "/admin/login" && event.locals.accessToken) {
-		return new Response("Already authenticated user", {
-			status: 302,
-			headers: { location: "/admin" },
-		});
-	}
-
-	if (url.pathname !== "/admin/login" && !event.locals.accessToken) {
-		return new Response("Unauthenticated user", {
-			status: 302,
-			headers: { location: "/admin/login" },
-		});
-	}
-
-	return callback();
+	return new Response("Unauthenticated user", {
+		status: 302,
+		headers: { location: "/admin/login" },
+	});
 }

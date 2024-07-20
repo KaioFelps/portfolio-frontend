@@ -14,7 +14,7 @@ export type LoginResponse = {
 };
 
 export const actions: Actions = {
-	login: async ({ request, fetch, cookies }) => {
+	login: async ({ request, fetch, cookies, locals }) => {
 		const parsedData = LoginSchema.safeParse(Object.fromEntries(await request.formData()));
 
 		if (!parsedData.success) {
@@ -40,7 +40,8 @@ export const actions: Actions = {
 				path: "/",
 			});
 
-			cookies.set("access_token", data.access_token, { path: "/" });
+			locals.accessToken = data.accessToken;
+			locals.user = data.user;
 
 			return { success: data, errors: null } satisfies LoginResponse;
 		}

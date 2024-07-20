@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import type { Logger } from "winston";
+import type { AuthUser } from "./core/entities/authUser";
 // for information about these interfaces
 declare global {
 	var themeCookieKey: string;
@@ -13,6 +14,7 @@ declare global {
 		// interface Platform {}
 		interface Locals {
 			accessToken: string | undefined;
+			user: AuthUser | undefined;
 			logger: Logger;
 		}
 	}
