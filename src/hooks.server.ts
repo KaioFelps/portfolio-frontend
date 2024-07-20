@@ -53,12 +53,14 @@ async function authenticationMiddleware(
 
 	if (!url.pathname.startsWith("/admin")) return await callback();
 
-	if (url.pathname === "/admin/login" && !!event.locals.accessToken && !!event.locals.user) {
-		console.log(event.locals);
-		return new Response("Already authenticated user", {
-			status: 302,
-			headers: { location: "/admin" },
-		});
+	if (url.pathname === "/admin/login") {
+		if (event.locals.accessToken && event.locals.user)
+			return new Response("Already authenticated user", {
+				status: 302,
+				headers: { location: "/admin" },
+			});
+
+		return await callback();
 	}
 
 	if (event.locals.accessToken && event.locals.user) return await callback();
