@@ -1,9 +1,7 @@
 import type { UserRoleEnum } from "./userRoleEnum";
 
-export type User = {
-	id: string;
+export type AuthUser = {
+	sub: string;
 	name: string;
-	email: string;
 	role: UserRoleEnum;
-	createdAt: Date;
 };
