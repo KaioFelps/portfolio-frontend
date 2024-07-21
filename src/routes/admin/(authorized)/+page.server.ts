@@ -61,12 +61,16 @@ async function fetchLogs({
 	}
 
 	if (response.status === 401) {
-		return new ServerActionResponse<FetchLogsResponse, string | string[]>(null, ["Não autorizado"]);
+		return new ServerActionResponse<FetchLogsResponse, string | string[]>(null, [
+			"Não autorizado.",
+		]);
 	}
 
-	locals.logger.error("Falha ao buscar dados no endpoint de logs (/logs/list): " + response.json());
+	locals.logger.error(
+		"Falha ao buscar dados no endpoint de logs (/logs/list): " + (await response.text()),
+	);
 	return new ServerActionResponse<FetchLogsResponse, string | string[]>(null, [
-		"Alguma coisa deu errada enquanto carregávamos os logs...",
+		"Não foi possível carregar os registros.",
 	]);
 }
 
@@ -88,7 +92,11 @@ async function fetchStatistics({
 	}
 
 	locals.logger.error(
-		"Falha ao buscar dados no endpoint de estatísticas (/statistics/count): " + response.json(),
+		"Falha ao buscar dados no endpoint de estatísticas (/statistics/count): " +
+			(await response.text()),
 	);
-	return new ServerActionResponse<FetchStatisticsResponse>(null, "Algo deu errado");
+	return new ServerActionResponse<FetchStatisticsResponse>(
+		null,
+		"Não foi possível carregar as estatísticas do site.",
+	);
 }
