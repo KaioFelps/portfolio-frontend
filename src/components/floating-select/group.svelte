@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Select } from "bits-ui";
+	import { Select, type Selected } from "bits-ui";
 	import { FloatingLabel } from "$crate/components/floating-input";
 	import clsx from "clsx";
 	import { fly } from "svelte/transition";
@@ -8,11 +8,11 @@
 	export let options: { value: string; label: string }[];
 	export let placeholder: string;
 	export let multiple: boolean = false;
-	export let values: string[];
+	export let values: Selected<string>[] | Selected<string>;
 </script>
 
-<Select.Root {multiple}>
-	<Select.Trigger bind:value={values} class="mb-4 form-select-floating w-full flex">
+<Select.Root {multiple} bind:selected={values}>
+	<Select.Trigger class="mb-4 form-select-floating w-full flex">
 		<Select.Value class="data-[placeholder]:opacity-0 form-select-control" {placeholder} />
 		<FloatingLabel>{placeholder}</FloatingLabel>
 	</Select.Trigger>
