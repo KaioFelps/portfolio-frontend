@@ -37,7 +37,7 @@
 	<h1>Tags</h1>
 
 	{#if data.user.role === UserRoleEnum.admin}
-		<a href="/admin/tsgs/novo" class="btn default">Adicionar tag</a>
+		<a href="/admin/tags/novo" class="btn default">Adicionar tag</a>
 	{/if}
 </header>
 
