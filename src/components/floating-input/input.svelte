@@ -6,8 +6,14 @@
 
 	let className: $$Props["class"] = undefined;
 	let placeholder: $$Props["placeholder"] = "input";
+	let value: $$Props["value"] = "";
 
-	export { className as class, placeholder };
+	export { className as class, placeholder, value };
 </script>
 
-<input class={clsx("form-control", className && className)} {placeholder} {...$$restProps} />
+<input
+	class={clsx("form-control", className && className)}
+	bind:value
+	{placeholder}
+	{...$$restProps}
+/>
