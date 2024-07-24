@@ -1,13 +1,11 @@
 import type { Project } from "$crate/core/entities/project";
 import { ServerActionResponse } from "$crate/core/prototypes/serverActionResponse";
+import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
 import { env } from "$env/dynamic/private";
 import type { PageServerLoad } from "../$types";
 
-type ApiResponse = {
+type ApiResponse = PaginatedResponse & {
 	projects: Project[];
-	totalCount: number;
-	page: number;
-	perPage: number;
 };
 
 export type AdminProjectPageServerData = ServerActionResponse<ApiResponse>;
@@ -41,7 +39,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 	}
 
 	locals.logger.error(
-		"Falha ao buscar listagem de projetos (/logs/list) no painel de administração: " +
+		"Falha ao buscar listagem de projetos (/project/list) no painel de administração: " +
 			(await response.text()),
 	);
 
