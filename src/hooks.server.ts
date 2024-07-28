@@ -1,7 +1,7 @@
-import type { Cookies, Handle, RequestEvent } from "@sveltejs/kit";
+import type { Handle } from "@sveltejs/kit";
 import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
-import { env } from "$env/dynamic/private";
+import { authenticationMiddleware } from "./middlewares/authentication";
 
 globalThis.themeCookieKey = "kaiofelps_theme";
 
@@ -44,47 +44,3 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return await ThemeParser.parse({ response, cookies: event.cookies });
 };
-
-async function authenticationMiddleware(
-	{ event }: { event: RequestEvent },
-	callback: () => Promise<any>,
-) {
-	const { cookies, url } = event;
-
-	if (!url.pathname.startsWith("/admin")) return await callback();
-
-	if (url.pathname === "/admin/login") {
-		if (event.locals.accessToken && event.locals.user)
-			return new Response("Already authenticated user", {
-				status: 302,
-				headers: { location: "/admin" },
-			});
-
-		return await callback();
-	}
-
-	if (event.locals.accessToken && event.locals.user) return await callback();
-
-	if (cookies.get("refresh_token")) {
-		const newTokenResponse = await event.fetch(`${env.BACKEND_URL}/auth/refresh`, {
-			method: "PATCH",
-			headers: {
-				Cookie: `refresh_token=${cookies.get("refresh_token")}`,
-			},
-		});
-
-		if (newTokenResponse.ok) {
-			const { accessToken, refreshToken, user } = await newTokenResponse.json();
-			cookies.set("refresh_token", refreshToken, { path: "/" });
-			event.locals.accessToken = accessToken;
-			event.locals.user = user;
-
-			return await callback();
-		}
-	}
-
-	return new Response("Unauthenticated user", {
-		status: 302,
-		headers: { location: "/admin/login" },
-	});
-}
