@@ -61,7 +61,7 @@
 <h1 class="mb-12">Novo projeto</h1>
 
 {#if form?.success}
-	<span class="success alert mb-3 py-2"> Tag criada com sucesso! </span>
+	<span class="success alert mb-3 py-2">Projeto criado com sucesso! </span>
 {:else if Array.isArray(form?.error)}
 	{#each form.error as error}
 		<span class="danger alert mb-3 py-2">{form.error}</span>
