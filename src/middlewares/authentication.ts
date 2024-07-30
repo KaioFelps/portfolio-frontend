@@ -1,21 +1,41 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
+const redirectToLogin = () =>
+	new Response("User is unauthenticated", {
+		status: 302,
+		headers: { location: "/admin/login" },
+	});
+
+const redirectToAdminHome = () =>
+	new Response("User is already authenticated", {
+		status: 302,
+		headers: { location: "/admin" },
+	});
+
 export async function authenticationMiddleware(
 	{ event }: { event: RequestEvent },
 	callback: () => Promise<any>,
 ) {
 	const { cookies, url } = event;
+	const refreshToken = cookies.get("refresh_token");
 
-	if (!url.pathname.startsWith("/admin")) return await callback();
+	const hasRefreshToken = !!refreshToken;
+	const hasAccessToken = event.locals.accessToken;
+	const hasAuthUser = event.locals.user;
+	const isLoginRoute = url.pathname === "/admin/login";
+	const isNotAdminRoute = !url.pathname.startsWith("/admin");
 
-	if (event.locals.accessToken && event.locals.user) {
-		if (url.pathname !== "/admin/login") return await callback();
+	if (isNotAdminRoute || (hasAccessToken && hasAuthUser && !isNotAdminRoute))
+		return await callback();
 
-		return authenticatedReturnResponse;
-	}
+	if (
+		(!hasAccessToken && !hasRefreshToken && !isNotAdminRoute) ||
+		(!hasAuthUser && !hasRefreshToken && !isNotAdminRoute)
+	)
+		return redirectToLogin();
 
-	if (cookies.get("refresh_token")) {
+	if ((!hasAccessToken || !hasAuthUser) && hasRefreshToken && !isNotAdminRoute) {
 		const newTokenResponse = await event.fetch(`${env.BACKEND_URL}/auth/refresh`, {
 			method: "PATCH",
 			headers: {
@@ -29,18 +49,12 @@ export async function authenticationMiddleware(
 			event.locals.accessToken = accessToken;
 			event.locals.user = user;
 
-			if (url.pathname === "/admin/login") return authenticatedReturnResponse;
 			return await callback();
 		}
+
+		return redirectToLogin();
 	}
 
-	return new Response("User is unauthenticated", {
-		status: 302,
-		headers: { location: "/admin/login" },
-	});
+	if ((hasRefreshToken && isLoginRoute) || (hasAccessToken && hasAuthUser && isLoginRoute))
+		return redirectToAdminHome();
 }
-
-const authenticatedReturnResponse = new Response("User is already authenticated", {
-	status: 302,
-	headers: { location: "/admin" },
-});
