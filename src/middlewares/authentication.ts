@@ -49,10 +49,12 @@ export async function authenticationMiddleware(
 			event.locals.accessToken = accessToken;
 			event.locals.user = user;
 
-			return redirectToLogin();
+			if (isLoginRoute) return redirectToAdminHome();
+
+			return await callback();
 		}
 
-		return await callback();
+		return redirectToLogin();
 	}
 
 	if ((hasRefreshToken && isLoginRoute) || (hasAccessToken && hasAuthUser && isLoginRoute))
