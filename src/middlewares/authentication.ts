@@ -35,6 +35,9 @@ export async function authenticationMiddleware(
 	)
 		return redirectToLogin();
 
+	if ((hasRefreshToken && isLoginRoute) || (hasAccessToken && hasAuthUser && isLoginRoute))
+		return redirectToAdminHome();
+
 	if ((!hasAccessToken || !hasAuthUser) && hasRefreshToken && !isNotAdminRoute) {
 		const newTokenResponse = await event.fetch(`${env.BACKEND_URL}/auth/refresh`, {
 			method: "PATCH",
@@ -49,14 +52,9 @@ export async function authenticationMiddleware(
 			event.locals.accessToken = accessToken;
 			event.locals.user = user;
 
-			if (isLoginRoute) return redirectToAdminHome();
-
 			return await callback();
 		}
 
 		return redirectToLogin();
 	}
-
-	if ((hasRefreshToken && isLoginRoute) || (hasAccessToken && hasAuthUser && isLoginRoute))
-		return redirectToAdminHome();
 }
