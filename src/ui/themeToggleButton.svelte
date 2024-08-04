@@ -5,6 +5,8 @@
 	import { scale } from "svelte/transition";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
+	import { getThemeCookie } from "$crate/utils";
+	import { PUBLIC_THEME_COOKIE_KEY } from "$env/static/public";
 	import clsx from "clsx";
 
 	let theme = "";
@@ -13,12 +15,14 @@
 		theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
 	});
 
-	async function toggleMode() {
+	async function toggleTheme() {
 		if (!browser) return;
 
-		const response = await fetch(`/api/theme`);
-		const { theme: newTheme }: { theme: string } = await response.json();
+		const currentTheme = getThemeCookie(document.cookie);
+		console.log(currentTheme);
+		let newTheme = currentTheme === "dark" ? "light" : "dark";
 
+		document.cookie = `${PUBLIC_THEME_COOKIE_KEY}=${newTheme}; path=/; SameSite=lax`;
 		theme = newTheme;
 
 		if (newTheme === "dark") {
@@ -30,7 +34,7 @@
 </script>
 
 <button
-	on:click={toggleMode}
+	on:click={toggleTheme}
 	class={clsx(
 		"rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative hover:scale-105 transition-all ease-in cursor-default",
 		"outline-none ring-0 dark:ring-white/15 ring-black/15 focus-within:ring-4",

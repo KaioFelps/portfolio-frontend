@@ -4,8 +4,6 @@ import type { Logger } from "winston";
 import type { AuthUser } from "./core/entities/authUser";
 // for information about these interfaces
 declare global {
-	var themeCookieKey: string;
-
 	namespace App {
 		// interface Error {}
 		// interface Locals {}

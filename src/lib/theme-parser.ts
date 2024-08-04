@@ -1,4 +1,5 @@
 import type { Cookies } from "@sveltejs/kit";
+import { PUBLIC_THEME_COOKIE_KEY } from "$env/static/public";
 
 type ParseParams = {
 	response: Response;
@@ -14,7 +15,7 @@ export class ThemeParser {
 	}: ParseParams): Promise<Response> {
 		if (!(response.headers.get("content-type") === "text/html")) return response;
 
-		const themeCookie = cookies.get(themeCookieKey);
+		const themeCookie = cookies.get(PUBLIC_THEME_COOKIE_KEY);
 		let isDark = false;
 
 		if (themeCookie === "dark") isDark = true;

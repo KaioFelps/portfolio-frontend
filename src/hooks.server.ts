@@ -3,8 +3,6 @@ import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
 
-globalThis.themeCookieKey = "kaiofelps_theme";
-
 export const logger = winston.createLogger({
 	level: "info",
 	format: winston.format.json(),
@@ -31,7 +29,7 @@ logger.add(
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
 
-	const { url, getClientAddress, cookies } = event;
+	const { url, getClientAddress } = event;
 
 	logger.info("Request recebida em " + new Date().toString(), {
 		url: url.href,
