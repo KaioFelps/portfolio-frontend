@@ -27,6 +27,9 @@
 		}
 
 		message += `: "${log.target}", às ${log.createdAt.toLocaleString("pt-br")}`;
+
+		if (log.author) message += ` por ${log.author.name} (${log.author.role})`;
+
 		return message;
 	}
 </script>

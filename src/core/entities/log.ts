@@ -15,7 +15,7 @@ export enum LogTargetType {
 export type Log = {
 	id: string;
 	action: LogAction;
-	author: User;
+	author: User | null;
 	target: string;
 	targetType: LogTargetType;
 	createdAt: Date;
