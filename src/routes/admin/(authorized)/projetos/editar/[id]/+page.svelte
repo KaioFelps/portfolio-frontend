@@ -5,7 +5,7 @@
 	import type { Selected } from "bits-ui";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select";
-	import { Trash } from "phosphor-svelte";
+	import Trash from "phosphor-svelte/lib/Trash";
 	import { goto } from "$app/navigation";
 
 	export let data: AdminEditProjectPageServerData;
