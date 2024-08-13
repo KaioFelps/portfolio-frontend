@@ -1,6 +1,7 @@
 <script lang="ts">
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
+	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import { fly } from "svelte/transition";
 	import type { FetchProjectsData } from "./proxy+page.server.js";
 	import type { ActionData } from "./$types";
@@ -10,30 +11,39 @@
 	import clsx from "clsx";
 	import { enhance } from "$app/forms";
 	import Title from "$crate/components/title.svelte";
+	import { Select, type Selected } from "bits-ui";
+	import { flyAndScale } from "$crate/utils.js";
+	import type { Project } from "$crate/core/entities/project.js";
 
 	export let data: FetchProjectsData;
 	export let form: ActionData;
 
-	let loadError = data.error;
-	let formError = false;
 	let formIsLoading = false;
+	$: formError = !form?.success;
 
-	let projectsUnion = data.success?.projects ?? [];
+	let projectsUnion: Project[] = [];
 
-	$: if (!form?.error) projectsUnion = [...projectsUnion, ...(form?.success?.projects ?? [])];
-
-	$: formError = form?.error ? true : false;
+	$: projectsUnion = data.success ? data.data.projects : [];
+	$: if (form?.success) projectsUnion = [...projectsUnion, ...form.data.projects];
 
 	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
-	let query: string = $page.url.searchParams.get("query") ?? "";
+	let query: string = $page.url.searchParams.get("q") ?? "";
 
-	function handleQueryInput() {
+	const queryByOptions = [
+		{ value: "title", label: "Buscar por título" },
+		{ value: "tag", label: "Buscar por tag" },
+	];
+
+	let queryBy: Selected<string> =
+		queryByOptions.find((opt) => opt.value === $page.url.searchParams.get("qb")) ??
+		queryByOptions[0];
+
+	function handleQueryProjects() {
 		clearTimeout(queryFormTimeoutId);
 
 		const timeout = setTimeout(() => {
 			if (query.trim() === "") return goto($page.url.pathname);
-
-			goto(`?query=${query}`);
+			goto(`?q=${query}&qb=${queryBy!.value}`);
 		}, 1500);
 
 		queryFormTimeoutId = timeout;
@@ -57,8 +67,8 @@
 		<h1 class="text-5xl font-bold">Projetos realizados</h1>
 
 		<form
-			on:submit={handleQueryInput}
-			class="flex-1 flex flex-row gap-4 items-center justify-end max-sm:hidden"
+			on:submit|preventDefault={handleQueryProjects}
+			class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden"
 		>
 			<label class="flex gap-3 input">
 				<span>
@@ -66,17 +76,54 @@
 				</span>
 				<span class="sr-only">Filtro</span>
 				<input
-					bind:value={query}
-					on:input={handleQueryInput}
 					name="query"
-					placeholder="Pesquise por títulos"
+					placeholder="Filtro"
 					class="input-inner"
+					bind:value={query}
+					on:input={handleQueryProjects}
 				/>
 			</label>
+
+			<Select.Root
+				bind:selected={queryBy}
+				items={queryByOptions}
+				onSelectedChange={handleQueryProjects}
+			>
+				<Select.Trigger class="flex items-center py-5 gap-3 input group">
+					<Select.Value placeholder="Pesquisar por..." />
+					<CaretUp
+						size="24"
+						weight="regular"
+						class="group-aria-[expanded=true]:rotate-180 transition-all duration-300"
+					/>
+				</Select.Trigger>
+
+				<Select.Content
+					transition={flyAndScale}
+					sideOffset={8}
+					class="w-full rounded-xl border border-gray-200 dark:border-d-gray-200 bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none"
+				>
+					{#each queryByOptions as { value, label } (value)}
+						<Select.Item
+							{value}
+							{label}
+							class="
+							cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
+							data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
+							"
+						>
+							{label}
+							<Select.ItemIndicator />
+						</Select.Item>
+					{/each}
+					<Select.Arrow />
+				</Select.Content>
+				<Select.Input name="searchBy" />
+			</Select.Root>
 		</form>
 	</header>
 
-	{#if !loadError && data.success}
+	{#if data.success}
 		{#if projectsUnion.length > 0}
 			<div
 				class={clsx(
@@ -101,9 +148,9 @@
 							alt=""
 						/>
 
-						<h2 class="font-medium text-base leading-4"
-							><span class="sr-only">Projeto </span>{project.title}</h2
-						>
+						<h2 class="font-medium text-base leading-4">
+							<span class="sr-only">Projeto </span>{project.title}
+						</h2>
 
 						<footer class="flex items-start justify-between gap-2">
 							<div class="flex flex-wrap gap-1.5">
@@ -128,7 +175,7 @@
 			</div>
 		{/if}
 
-		{#if projectsUnion.length < data.success.totalCount}
+		{#if projectsUnion.length < data.data.totalCount}
 			<form
 				action="?/fetchMore"
 				method="post"
@@ -151,13 +198,13 @@
 			</form>
 		{/if}
 	{:else}
-		<div class="max-w-screen-main mx-auto my-12">
-			<span class="mx-auto danger alert">{loadError}</span>
+		<div class="max-w-screen-main w-full my-12">
+			<span class="w-full danger alert">{data.error}</span>
 		</div>
 	{/if}
 </main>
 
-{#if form?.error}
+{#if !form?.success && form?.error}
 	<div
 		class="p-4 rounded-xl absolute right-3 bottom-3 z-20 max-w-[calc(100%_-_24px)] bg-red-700/80"
 		transition:fly
@@ -165,7 +212,7 @@
 		<div class="flex items-start gap-2">
 			<WarningCircle size="20" weight="fill" class="mt-[1px]" />
 			<span>
-				{form.error}
+				{form?.error}
 			</span>
 		</div>
 
