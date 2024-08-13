@@ -68,7 +68,7 @@
 
 		<form
 			on:submit|preventDefault={handleQueryProjects}
-			class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden"
+			class="flex flex-row gap-4 items-center justify-end max-sm:hidden"
 		>
 			<label class="flex gap-3 input">
 				<span>
