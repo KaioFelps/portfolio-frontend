@@ -1,4 +1,4 @@
-import type { Handle } from "@sveltejs/kit";
+import type { Handle, HandleFetch } from "@sveltejs/kit";
 import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
@@ -26,14 +26,20 @@ logger.add(
 	}),
 );
 
+export const handleFetch: HandleFetch = ({ event, fetch, request }) => {
+	if (event.locals.accessToken)
+		request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
+
+	return fetch(request);
+};
+
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
 
-	const { url, getClientAddress } = event;
-
+	const { url } = event;
 	logger.info("Request recebida em " + new Date().toString(), {
 		url: url.href,
-		client: getClientAddress(),
+		ip: event.getClientAddress() || null,
 	});
 
 	const response = await authenticationMiddleware({ event }, async () => {
