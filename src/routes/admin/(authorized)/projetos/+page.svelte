@@ -1,14 +1,25 @@
 <script lang="ts">
 	import CaretLeft from "phosphor-svelte/lib/CaretLeft";
 	import CaretRight from "phosphor-svelte/lib/CaretRight";
-	import type { AdminProjectPageServerData } from "./+page.server";
+	import type { AdminProjectPageServerData, DeleteProjectResponse } from "./+page.server";
 	import { page } from "$app/stores";
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
 	import Pencil from "phosphor-svelte/lib/Pencil";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
+	import DeleteProjectButton from "./deleteProjectButton.svelte";
+	import type { ActionData } from "./$types";
+	import ErrorToast from "$crate/components/error-toast.svelte";
+	import { goto } from "$app/navigation";
 
 	export let data: AdminProjectPageServerData & { user: AuthUser };
+	export let form: DeleteProjectResponse | null;
+
+	$: formError = form ? !form.success : false;
+
+	$: if (form?.success) {
+		goto($page.url.pathname);
+	}
 
 	let url = $page.url;
 	let currentPage = data.data?.page ?? 1;
@@ -44,10 +55,13 @@
 {#if data.data}
 	{#if data.data.projects.length > 0}
 		<div class="flex flex-col gap-1 mb-12">
-			{#each data.data.projects as project}
+			{#each data.data.projects as project (project.id)}
 				<div class="flex justify-between gap-3 items-center p-4 rounded-2xl bg-white/5">
 					<span class="font-medium">{project.title}</span>
-					<a href="/admin/projetos/editar/{project.id}"><Pencil size="20" weight="bold" /></a>
+					<div class="flex items-center gap-3">
+						<DeleteProjectButton projectId={project.id} />
+						<a href="/admin/projetos/editar/{project.id}"><Pencil size="20" weight="bold" /></a>
+					</div>
 				</div>
 			{/each}
 		</div>
@@ -88,4 +102,8 @@
 	</div>
 {:else}
 	<span class="mx-auto danger alert text-center w-full">{data.error}</span>
+{/if}
+
+{#if formError && form && !form.success}
+	<ErrorToast close={() => (formError = false)} message={form.error} />
 {/if}
