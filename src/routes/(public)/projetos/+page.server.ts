@@ -48,10 +48,21 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 };
 
 export const actions: Actions = {
-	fetchMore: async ({ fetch, url }) => {
+	fetchMore: async ({ fetch, url, request }) => {
 		const query = url.searchParams.get("q");
 		const queryBy = url.searchParams.get("qb");
-		const page = url.searchParams.get("page") ?? 2;
+
+		let formData = await request.formData();
+
+		const _page = formData.get("page");
+
+		if (!_page || Number.isNaN(_page.toString()))
+			return fail(400, {
+				success: false,
+				error: "Página inválida.",
+			} satisfies FetchProjectsData);
+
+		const page = Number(_page.toString());
 
 		let args: Args = { page };
 
@@ -62,12 +73,16 @@ export const actions: Actions = {
 		const res = await fetch(apiUrl(queryString));
 
 		if (!res.ok) {
-			if (res.status >= 500) return fail(500, { error: "Erro interno" });
+			if (res.status >= 500)
+				return fail(500, {
+					error: "Erro interno",
+					success: false,
+				} satisfies FetchProjectsData);
 
 			return fail<FetchProjectsData>(res.status, {
 				error: "Ups, algo deu errado =(",
 				success: false,
-			});
+			} satisfies FetchProjectsData);
 		}
 
 		const data: ProjectsData = await res.json();

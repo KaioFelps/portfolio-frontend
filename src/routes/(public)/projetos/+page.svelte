@@ -4,7 +4,6 @@
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import { fly } from "svelte/transition";
 	import type { FetchProjectsData } from "./proxy+page.server.js";
-	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import LinksPopover from "./linksPopover.svelte";
@@ -17,7 +16,9 @@
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 
 	export let data: FetchProjectsData;
-	export let form: ActionData;
+	export let form: FetchProjectsData | null;
+
+	$: currentPage = data.success ? data.data.page : 1;
 
 	let formIsLoading = false;
 	$: formError = !form?.success;
@@ -25,7 +26,10 @@
 	let projectsUnion: Project[] = [];
 
 	$: projectsUnion = data.success ? data.data.projects : [];
-	$: if (form?.success) projectsUnion = [...projectsUnion, ...form.data.projects];
+	$: if (form?.success) {
+		projectsUnion = [...projectsUnion, ...form.data.projects];
+		currentPage = form.data.page;
+	}
 
 	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
 	let query: string = $page.url.searchParams.get("q") ?? "";
@@ -187,6 +191,7 @@
 					};
 				}}
 			>
+				<input type="hidden" name="page" value={currentPage + 1} />
 				<button
 					type="submit"
 					class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"

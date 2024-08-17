@@ -11,10 +11,15 @@ export type FetchPostsData = {
 	perPage: number;
 };
 
-export type FetchPostsResponse = {
-	success: FetchPostsData | null;
-	error: string | null;
-};
+export type FetchPostsResponse =
+	| {
+			success: true;
+			data: FetchPostsData;
+	  }
+	| {
+			success: false;
+			error: string;
+	  };
 
 async function fetchDataAndFormat(queryString: string) {
 	const res = await fetch(`${env.BACKEND_URL}/post/list${queryString}`);
@@ -24,19 +29,19 @@ async function fetchDataAndFormat(queryString: string) {
 
 		return fail<FetchPostsResponse>(res.status, {
 			error: "Ups, algo deu errado =(",
-			success: null,
+			success: false,
 		});
 	}
 
 	const data: FetchPostsData = await res.json();
-	return { success: data, error: null } satisfies FetchPostsResponse;
+	return { success: true, data } satisfies FetchPostsResponse;
 }
 
 export const load: PageServerLoad = async ({ url, depends }) => {
 	let args: Args = {};
 
-	const queryBy = url.searchParams.get("queryBy");
-	const query = url.searchParams.get("query");
+	const query = url.searchParams.get("q");
+	const queryBy = url.searchParams.get("qb");
 
 	if (queryBy && query) args[queryBy] = query;
 
@@ -53,10 +58,19 @@ export const actions: Actions = {
 
 		const queryBy = url.searchParams.get("queryBy");
 		const query = url.searchParams.get("query");
-		const page = formData.get("page")?.toString();
+
+		const _page = formData.get("page");
+
+		if (!_page || Number.isNaN(_page.toString()))
+			return fail(400, {
+				success: false,
+				error: "Página inválida.",
+			} satisfies FetchPostsResponse);
+
+		const page = Number(_page.toString());
 
 		if (queryBy && query) args[queryBy] = query;
-		if (page) args["page"] = page;
+		args["page"] = page;
 
 		const queryString = generateQueryString(args);
 

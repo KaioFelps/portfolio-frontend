@@ -16,9 +16,46 @@
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 
 	const queryByOptions = [
-		{ value: "query", label: "Buscar por título" },
+		{ value: "title", label: "Buscar por título" },
 		{ value: "tag", label: "Buscar por tag" },
 	];
+
+	export let data: FetchPostsResponse;
+	export let form: ActionData;
+
+	$: formError = form?.error ? true : false;
+
+	let formIsLoading = false;
+
+	let nextPageFetchError: string | null = null;
+	$: currentPage = data.success ? data.data.page : 1;
+
+	let postsPerMonth: Record<string, Post[]> = {};
+
+	$: segregatePostsByPublishmentDate(data.success ? data.data.posts : []);
+	$: if (form?.success) {
+		segregatePostsByPublishmentDate(form.data.posts);
+		currentPage = form.data.page;
+	}
+
+	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
+	let query: string = $page.url.searchParams.get("q") ?? "";
+
+	let queryBy: Selected<string> | undefined =
+		queryByOptions.find((option) => option.value === $page.url.searchParams.get("qb")) ??
+		queryByOptions[0];
+
+	function handleQueryInput() {
+		clearTimeout(queryFormTimeoutId);
+
+		const timeout = setTimeout(async () => {
+			postsPerMonth = {};
+			if (query.trim() === "") return goto($page.url.pathname);
+			goto(`?q=${query}&qb=${queryBy!.value}`);
+		}, 1500);
+
+		queryFormTimeoutId = timeout;
+	}
 
 	function segregatePostsByPublishmentDate(posts: Post[]) {
 		posts.forEach((post) => {
@@ -34,46 +71,6 @@
 		});
 
 		postsPerMonth = postsPerMonth;
-	}
-
-	export let data: FetchPostsResponse;
-	export let form: ActionData;
-	$: formError = form?.error ? true : false;
-
-	let formIsLoading = false;
-
-	let nextPageFetchError: string | null = null;
-	$: currentPage = data.success?.page ?? 1;
-
-	let postsPerMonth: Record<string, Post[]> = {};
-
-	$: segregatePostsByPublishmentDate(data.success?.posts ?? []);
-	$: if (form?.success) {
-		segregatePostsByPublishmentDate(form.success.posts);
-		currentPage = form.success.page;
-	}
-
-	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
-	let query: string = $page.url.searchParams.get("query") ?? "";
-
-	const urlQueryBy = queryByOptions.find(
-		(option) => option.value === $page.url.searchParams.get("queryBy"),
-	);
-
-	let queryBy: Selected<string> | undefined = urlQueryBy;
-
-	function handleQueryInput() {
-		clearTimeout(queryFormTimeoutId);
-
-		if (!(queryBy && query)) return;
-
-		const timeout = setTimeout(async () => {
-			postsPerMonth = {};
-			if (query.trim() === "") return goto($page.url.pathname);
-			goto(`?query=${query}&queryBy=${queryBy!.value}`);
-		}, 1500);
-
-		queryFormTimeoutId = timeout;
 	}
 </script>
 
@@ -150,9 +147,9 @@
 		</form>
 	</header>
 
-	{#if data.success && data.success.posts.length > 0}
-		<div class="flex flex-col w-full max-w-screen-main mt-16">
-			{#if !data.error && !!data.success}
+	{#if data.success}
+		{#if data.data.posts.length > 0}
+			<div class="flex flex-col w-full max-w-screen-main mt-16">
 				{#each Object.entries(postsPerMonth) as [month, posts] (month)}
 					<div class="mb-16 last-of-type:mb-0">
 						<h2 class="capitalize text-2xl font-bold mb-6">
@@ -163,10 +160,10 @@
 							<a
 								href="/blog/{post.slug}"
 								class="
-							group/parent transition-all
-							cursor-default p-6 rounded-lg bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none flex gap-6 mb-2 last:mb-0 w-full
-							hover:-translate-y-1 hover:z-10 hover:scale-[1.005] hover:shadow-lg
-							"
+								group/parent transition-all
+								cursor-default p-6 rounded-lg bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none flex gap-6 mb-2 last:mb-0 w-full
+								hover:-translate-y-1 hover:z-10 hover:scale-[1.005] hover:shadow-lg
+								"
 							>
 								<img
 									src={post.topstory}
@@ -178,11 +175,11 @@
 									<div class="flex items-start justify-between gap-4">
 										<h3
 											class="
-										text-[20px] font-bold relative
-										group-hover/parent:text-blue-500 transition-all
-										after:absolute after:-translate-x-1/2 after:left-1/2 after:bottom-0.5 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all
-										hover:after:w-full
-										"
+											text-[20px] font-bold relative
+											group-hover/parent:text-blue-500 transition-all
+											after:absolute after:-translate-x-1/2 after:left-1/2 after:bottom-0.5 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all
+											hover:after:w-full
+											"
 										>
 											{post.title}
 										</h3>
@@ -218,7 +215,7 @@
 					</div>
 				{/each}
 
-				{#if !data.error && data.success.posts.length < data.success.totalCount}
+				{#if data.data.posts.length < data.data.totalCount}
 					<form
 						action="?/fetchMore"
 						use:enhance={() => {
@@ -241,14 +238,14 @@
 						</button>
 					</form>
 				{/if}
-			{:else}
-				<div class="max-w-screen-main mx-auto my-12">
-					<span class="mx-auto danger alert">{data.error}</span>
-				</div>
-			{/if}
-		</div>
+			</div>
+		{:else}
+			<WarningAlert>Ainda não há nenhum post 😒</WarningAlert>
+		{/if}
 	{:else}
-		<WarningAlert>Ainda não há nenhum post 😒</WarningAlert>
+		<div class="max-w-screen-main mx-auto my-12">
+			<span class="mx-auto danger alert">{data.error}</span>
+		</div>
 	{/if}
 </main>
 
