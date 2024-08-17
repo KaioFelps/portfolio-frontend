@@ -13,6 +13,7 @@
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
 	import Title from "$crate/components/title.svelte";
+	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 
 	const queryByOptions = [
 		{ value: "query", label: "Buscar por título" },
@@ -149,102 +150,106 @@
 		</form>
 	</header>
 
-	<div class="flex flex-col w-full max-w-screen-main mt-16">
-		{#if !data.error && !!data.success}
-			{#each Object.entries(postsPerMonth) as [month, posts] (month)}
-				<div class="mb-16 last-of-type:mb-0">
-					<h2 class="capitalize text-2xl font-bold mb-6">
-						<span class="sr-only">Publicações de </span>{month}
-					</h2>
+	{#if data.success && data.success.posts.length > 0}
+		<div class="flex flex-col w-full max-w-screen-main mt-16">
+			{#if !data.error && !!data.success}
+				{#each Object.entries(postsPerMonth) as [month, posts] (month)}
+					<div class="mb-16 last-of-type:mb-0">
+						<h2 class="capitalize text-2xl font-bold mb-6">
+							<span class="sr-only">Publicações de </span>{month}
+						</h2>
 
-					{#each posts as post}
-						<a
-							href="/blog/{post.slug}"
-							class="
-						group/parent transition-all
-						cursor-default p-6 rounded-lg bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none flex gap-6 mb-2 last:mb-0 w-full
-						hover:-translate-y-1 hover:z-10 hover:scale-[1.005] hover:shadow-lg
-						"
-						>
-							<img
-								src={post.topstory}
-								class="min-w-[264px] h-32 object-cover rounded-lg max-md:hidden"
-								alt=""
-							/>
+						{#each posts as post}
+							<a
+								href="/blog/{post.slug}"
+								class="
+							group/parent transition-all
+							cursor-default p-6 rounded-lg bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none flex gap-6 mb-2 last:mb-0 w-full
+							hover:-translate-y-1 hover:z-10 hover:scale-[1.005] hover:shadow-lg
+							"
+							>
+								<img
+									src={post.topstory}
+									class="min-w-[264px] h-32 object-cover rounded-lg max-md:hidden"
+									alt=""
+								/>
 
-							<div class="w-full">
-								<div class="flex items-start justify-between gap-4">
-									<h3
-										class="
-									text-[20px] font-bold relative
-									group-hover/parent:text-blue-500 transition-all
-									after:absolute after:-translate-x-1/2 after:left-1/2 after:bottom-0.5 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all
-									hover:after:w-full
-									"
-									>
-										{post.title}
-									</h3>
-									<button class="text-blue-500 p-0" title="Copiar link do post">
-										<LinkSimple size="24" weight="bold" />
-									</button>
-								</div>
-
-								<p class="text-gray-600 dark:text-d-gray-600 font-medium mb-6 mt-1"
-									>{post.preview}</p
-								>
-
-								<div class="flex gap-2 flex-wrap">
-									<span
-										class="text-gray-600 dark:text-d-gray-600 px-2 py-[6px] rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 leading-none text-sm"
-										>{new Date(post.publishedAt).toLocaleString("pt-Br", {
-											day: "numeric",
-											month: "long",
-											year: "numeric",
-										})}</span
-									>
-
-									{#each post.tags as tag}
-										<span
-											class="px-2 py-[6px] rounded-full bg-yellow-500/10 border border-yellow-500 leading-none text-sm text-yellow-700"
-											>{tag.value}</span
+								<div class="w-full">
+									<div class="flex items-start justify-between gap-4">
+										<h3
+											class="
+										text-[20px] font-bold relative
+										group-hover/parent:text-blue-500 transition-all
+										after:absolute after:-translate-x-1/2 after:left-1/2 after:bottom-0.5 after:h-0.5 after:w-0 after:bg-blue-500 after:transition-all
+										hover:after:w-full
+										"
 										>
-									{/each}
+											{post.title}
+										</h3>
+										<button class="text-blue-500 p-0" title="Copiar link do post">
+											<LinkSimple size="24" weight="bold" />
+										</button>
+									</div>
+
+									<p class="text-gray-600 dark:text-d-gray-600 font-medium mb-6 mt-1"
+										>{post.preview}</p
+									>
+
+									<div class="flex gap-2 flex-wrap">
+										<span
+											class="text-gray-600 dark:text-d-gray-600 px-2 py-[6px] rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 leading-none text-sm"
+											>{new Date(post.publishedAt).toLocaleString("pt-Br", {
+												day: "numeric",
+												month: "long",
+												year: "numeric",
+											})}</span
+										>
+
+										{#each post.tags as tag}
+											<span
+												class="px-2 py-[6px] rounded-full bg-yellow-500/10 border border-yellow-500 leading-none text-sm text-yellow-700"
+												>{tag.value}</span
+											>
+										{/each}
+									</div>
 								</div>
-							</div>
-						</a>
-					{/each}
-				</div>
-			{/each}
+							</a>
+						{/each}
+					</div>
+				{/each}
 
-			{#if !data.error && data.success.posts.length < data.success.totalCount}
-				<form
-					action="?/fetchMore"
-					use:enhance={() => {
-						formIsLoading = true;
+				{#if !data.error && data.success.posts.length < data.success.totalCount}
+					<form
+						action="?/fetchMore"
+						use:enhance={() => {
+							formIsLoading = true;
 
-						return async ({ update }) => {
-							formIsLoading = false;
-							update();
-						};
-					}}
-					method="POST"
-				>
-					<input type="hidden" name="page" value={currentPage + 1} />
-					<button
-						type="submit"
-						class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
-						disabled={formIsLoading}
+							return async ({ update }) => {
+								formIsLoading = false;
+								update();
+							};
+						}}
+						method="POST"
 					>
-						{formIsLoading ? "Carregando" : "Carregar mais"}
-					</button>
-				</form>
+						<input type="hidden" name="page" value={currentPage + 1} />
+						<button
+							type="submit"
+							class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
+							disabled={formIsLoading}
+						>
+							{formIsLoading ? "Carregando" : "Carregar mais"}
+						</button>
+					</form>
+				{/if}
+			{:else}
+				<div class="max-w-screen-main mx-auto my-12">
+					<span class="mx-auto danger alert">{data.error}</span>
+				</div>
 			{/if}
-		{:else}
-			<div class="max-w-screen-main mx-auto my-12">
-				<span class="mx-auto danger alert">{data.error}</span>
-			</div>
-		{/if}
-	</div>
+		</div>
+	{:else}
+		<WarningAlert>Ainda não há nenhum post 😒</WarningAlert>
+	{/if}
 </main>
 
 {#if form?.error}

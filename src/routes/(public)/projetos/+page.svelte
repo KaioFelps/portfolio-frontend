@@ -14,6 +14,7 @@
 	import { Select, type Selected } from "bits-ui";
 	import { flyAndScale } from "$crate/utils.js";
 	import type { Project } from "$crate/core/entities/project.js";
+	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 
 	export let data: FetchProjectsData;
 	export let form: ActionData;
@@ -170,9 +171,7 @@
 				{/each}
 			</div>
 		{:else}
-			<div class="max-w-screen-main my-12 w-full">
-				<span class="mx-auto warning alert text-center w-full">Ainda não há nenhum projeto 🫶</span>
-			</div>
+			<WarningAlert>Ainda não há nenhum projeto 🫶</WarningAlert>
 		{/if}
 
 		{#if projectsUnion.length < data.data.totalCount}
