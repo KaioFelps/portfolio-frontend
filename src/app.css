@@ -32,6 +32,13 @@
     disabled:border-0
   }
 
+  .btn.danger {
+    @apply text-red-700 border border-red-600 bg-red-600/75
+    [&:not(:disabled)]:hover:bg-red-600/90
+    outline-none ring-0 ring-red-700/40 transition-all focus-visible:ring-4
+    disabled:border-transparent disabled:saturate-0
+  }
+
   .btn-sm {
     @apply py-1 px-2 font-normal text-base
   }

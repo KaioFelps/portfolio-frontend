@@ -57,6 +57,10 @@
         @apply font-normal text-white border-d-gray-200 bg-d-gray-100 rounded-lg px-4 py-3;
     }
 
+    .btn.danger {
+        @apply font-normal text-white rounded-lg px-4 py-3;
+    }
+
     .btn.default {
         @apply font-normal rounded-lg px-4 py-3;
     }
