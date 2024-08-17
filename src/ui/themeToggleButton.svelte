@@ -19,7 +19,6 @@
 		if (!browser) return;
 
 		const currentTheme = getThemeCookie(document.cookie);
-		console.log(currentTheme);
 		let newTheme = currentTheme === "dark" ? "light" : "dark";
 
 		document.cookie = `${PUBLIC_THEME_COOKIE_KEY}=${newTheme}; path=/; SameSite=lax`;

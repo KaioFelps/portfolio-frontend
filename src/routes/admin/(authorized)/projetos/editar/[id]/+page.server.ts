@@ -138,7 +138,6 @@ export const actions: Actions = {
 		const { _id: projectId, ...data } = parsedData.data;
 
 		if (Object.keys(data).length <= 0) return { success: true } satisfies EditProjectResponse;
-		console.log(data);
 
 		const response = await fetch(`${env.BACKEND_URL}/project/${projectId}/edit`, {
 			method: "put",
