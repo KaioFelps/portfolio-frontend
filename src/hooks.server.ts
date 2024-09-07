@@ -6,7 +6,6 @@ import { authenticationMiddleware } from "./middlewares/authentication";
 export const logger = winston.createLogger({
 	level: "info",
 	format: winston.format.json(),
-	defaultMeta: { service: "user-service" },
 	transports: [
 		//
 		// - Write all logs with importance level of `error` or less to `error.log`
@@ -17,27 +16,23 @@ export const logger = winston.createLogger({
 	],
 });
 
-//
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
 logger.add(
 	new winston.transports.Console({
-		format: winston.format.simple(),
+		format: winston.format.combine(
+			winston.format.cli(),
+			winston.format.colorize({
+				all: true,
+				colors: { info: "blue", error: "red", warn: "yellow" },
+			}),
+		),
 	}),
 );
-
-export const handleFetch: HandleFetch = ({ event, fetch, request }) => {
-	if (event.locals.accessToken)
-		request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
-
-	return fetch(request);
-};
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
 
 	const { url } = event;
-	logger.info("Request recebida em " + new Date().toString(), {
+	event.locals.logger.info("Request recebida em " + new Date().toString(), {
 		url: url.href,
 		ip: event.getClientAddress() || null,
 	});
