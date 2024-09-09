@@ -31,11 +31,9 @@ logger.add(
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
 
-	const { url } = event;
-	event.locals.logger.info("Request recebida em " + new Date().toString(), {
-		url: url.href,
-		ip: event.getClientAddress() || null,
-	});
+	event.locals.logger.info(
+		`[${event.request.url}]\t Request recebida em ${new Date().toLocaleString()}. \t`,
+	);
 
 	const response = await authenticationMiddleware({ event }, async () => {
 		return await resolve(event);
