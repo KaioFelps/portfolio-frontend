@@ -1,14 +1,15 @@
 <script lang="ts">
 	import CaretLeft from "phosphor-svelte/lib/CaretLeft";
 	import CaretRight from "phosphor-svelte/lib/CaretRight";
-	import type { AdminTagPageLoadData } from "./+page.server";
 	import { page } from "$app/stores";
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
-	import Pencil from "phosphor-svelte/lib/Pencil";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
+	import EditTagDialog from "./editTagDialog.svelte";
+	import type { EditTagResponse, PageLoadData } from "./handlers";
 
-	export let data: AdminTagPageLoadData & { user: AuthUser };
+	export let data: PageLoadData & { user: AuthUser };
+	export let form: EditTagResponse | undefined;
 
 	let url = $page.url;
 	let currentPage = data?.success ? data.data.page : 1;
@@ -47,15 +48,14 @@
 			{#each data.data.tags as tag}
 				<div class="flex justify-between gap-3 items-center p-4 rounded-2xl bg-white/5">
 					<span class="font-medium">{tag.value}</span>
-					<a href="/admin/tags/editar/{tag.id}"><Pencil size="20" weight="bold" /></a>
+					<EditTagDialog {tag} {form} />
 				</div>
 			{/each}
 		</div>
 	{:else}
 		<span class="mx-auto warning alert text-center w-full mb-12 inline-block">
-			Não há nenhuma tag registrada. Experimente <a class="font-bold" href="/admin/tags/novo"
-				>criar uma</a
-			>!
+			Não há nenhuma tag registrada. Experimente
+			<a class="font-bold" href="/admin/tags/novo"> criar uma </a>!
 		</span>
 	{/if}
 
@@ -87,5 +87,7 @@
 		</a>
 	</div>
 {:else}
-	<span class="mx-auto danger alert text-center w-full">{data.error}</span>
+	<span class="mx-auto danger alert text-center w-full">
+		{data.internalError ? "Não foi possível carregar as tags existentes." : data.error}
+	</span>
 {/if}
