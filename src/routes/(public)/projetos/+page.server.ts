@@ -23,7 +23,7 @@ export type FetchProjectsData =
 			error: string;
 	  };
 
-export const load: PageServerLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const query = url.searchParams.get("q");
 	const queryBy = url.searchParams.get("qb");
 
@@ -35,6 +35,10 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	const res = await fetch(apiUrl(queryString));
 
 	if (!res.ok) {
+		locals.logger.error(
+			`Falha ao exibir projetos na rota "/projetos${queryString}". Erro: ` + (await res.text()),
+		);
+
 		if (res.status >= 500) return { error: "Erro interno" };
 
 		return {

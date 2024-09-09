@@ -1,25 +1,25 @@
 <script lang="ts">
 	import CaretLeft from "phosphor-svelte/lib/CaretLeft";
 	import CaretRight from "phosphor-svelte/lib/CaretRight";
-	import type { AdminTagPageServerData } from "./+page.server";
+	import type { AdminTagPageLoadData } from "./+page.server";
 	import { page } from "$app/stores";
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
 	import Pencil from "phosphor-svelte/lib/Pencil";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
 
-	export let data: AdminTagPageServerData & { user: AuthUser };
+	export let data: AdminTagPageLoadData & { user: AuthUser };
 
 	let url = $page.url;
-	let currentPage = data.data?.page ?? 1;
+	let currentPage = data?.success ? data.data.page : 1;
 	let lastPage = 1;
 
-	$: if (data.data) {
+	$: if (data.success) {
 		lastPage = data.data.totalCount <= 0 ? 1 : Math.ceil(data.data.totalCount / data.data.perPage);
 	}
 
 	let paginationButtons = (() => {
-		if (!data.data) return [];
+		if (!data.success) return [];
 
 		let { maxLeft, maxRight } = PaginationHelper.getVisibleButtons(5, currentPage, lastPage);
 
@@ -41,7 +41,7 @@
 	{/if}
 </header>
 
-{#if data.data}
+{#if data.success}
 	{#if data.data.tags.length > 0}
 		<div class="flex flex-col gap-1 mb-12">
 			{#each data.data.tags as tag}

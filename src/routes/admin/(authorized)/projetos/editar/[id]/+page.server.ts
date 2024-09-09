@@ -3,29 +3,28 @@ import type { PageServerLoad } from "./$types";
 import { env } from "$env/dynamic/private";
 import { z } from "zod";
 import { fail, type Actions, type ServerLoadEvent } from "@sveltejs/kit";
-import {
-	ServerDataFetchResult,
-	type ServerDataFetchResponse,
-} from "$crate/core/prototypes/serverActionResponse";
 import type { Tag } from "$crate/core/entities/tag";
 import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
+import type { ServerResponseData } from "$crate/core/types/serverResponseData";
+import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 
 type FetchTagsResponse = PaginatedResponse & {
 	tags: Array<Tag>;
 };
 
-export type AdminEditProjectPageServerData = {
-	project: ServerDataFetchResponse<Project | null>;
-	tags: ServerDataFetchResponse<FetchTagsResponse>;
+export type AdminEditProjectPageData = {
+	project: ServerResponseData<Project | null, string>;
+	tags: ServerResponseData<FetchTagsResponse, string>;
 };
 
-export const load: PageServerLoad = async (ctx) => {
-	let projectData: ServerDataFetchResponse<Project | null>;
+export const load: PageServerLoad = async (ctx): Promise<AdminEditProjectPageData> => {
+	let projectResponse: ServerResponseData<Project | null, string>;
 	const availableTags = await getAvailableTags(ctx);
 
 	try {
 		const response = await fetch(`${env.BACKEND_URL}/project/${ctx.params.id}`, {
-			headers: { Authorization: `Bearer ${ctx.locals.accessToken}` },
+			headers: genHeadersWithAuth(ctx.locals.accessToken),
 		});
 
 		let project: Project | null = null;
@@ -33,44 +32,34 @@ export const load: PageServerLoad = async (ctx) => {
 
 		if (data.project) project = { ...data.project, createdAt: new Date(data.project.createdAt) };
 
-		projectData = { success: true, data: project };
+		projectResponse = MakeServerResponseData.Ok(data.project);
 	} catch (error) {
 		ctx.locals.logger.error(error);
-		projectData = {
-			success: false,
-			error: "Erro interno.",
-		};
+		projectResponse = MakeServerResponseData.Error("Erro interno");
 	}
 
-	return { project: projectData, tags: availableTags } satisfies AdminEditProjectPageServerData;
+	return { project: projectResponse, tags: availableTags } satisfies AdminEditProjectPageData;
 };
 
 async function getAvailableTags({
 	fetch,
 	locals,
-}: ServerLoadEvent): Promise<ServerDataFetchResponse<FetchTagsResponse>> {
+}: ServerLoadEvent): Promise<ServerResponseData<FetchTagsResponse, string>> {
 	try {
-		const response = await fetch(`${env.BACKEND_URL}/tag/list`, {
-			headers: {
-				Authorization: `Bearer ${locals.accessToken}`,
-			},
-		});
+		const response = await fetch(`${env.BACKEND_URL}/tag/list`);
 
 		if (response.ok) {
 			const data: FetchTagsResponse = await response.json();
-			return ServerDataFetchResult.Ok(data);
+			return MakeServerResponseData.Ok(data);
 		}
 
 		locals.logger.error(
-			"Falha ao buscar tags no endpoint (/tag/list), na rota /admin/projetos/novo: " +
-				(await response.text()),
+			`Falha ao buscar tags no endpoint "/tag/list". Erro: ` + (await response.text()),
 		);
-		return ServerDataFetchResult.Error("Não foi possível carregar as tags disponíveis.");
+		return MakeServerResponseData.Error("Não foi possível carregar as tags disponíveis.");
 	} catch (error) {
-		locals.logger.error(
-			"Falha ao buscar tags no endpoint (/tag/list), na rota /admin/projetos/novo: " + error,
-		);
-		return ServerDataFetchResult.Error("Não foi possível carregar as tags disponíveis.");
+		locals.logger.error(`Falha ao buscar tags no endpoint "/tag/list". Erro: ` + error);
+		return MakeServerResponseData.Error("Não foi possível carregar as tags disponíveis.");
 	}
 }
 
@@ -141,11 +130,10 @@ export const actions: Actions = {
 
 		const response = await fetch(`${env.BACKEND_URL}/project/${projectId}/edit`, {
 			method: "put",
-			headers: {
+			headers: genHeadersWithAuth(locals.accessToken, {
 				"Content-Type": "application/json",
 				Accept: "application/json",
-				Authorization: `Bearer ${locals.accessToken}`,
-			},
+			}),
 			credentials: "include",
 			body: JSON.stringify(data),
 		});
@@ -166,7 +154,7 @@ export const actions: Actions = {
 		}
 
 		locals.logger.error(
-			"Falha ao atualizar um projeto no endpoint (/project/:id/edit) na rota /admin/projetos/editar/:id: " +
+			`Falha ao atualizar um projeto no endpoint "/project/:id/edit". Erro: ` +
 				(await response.text()),
 		);
 

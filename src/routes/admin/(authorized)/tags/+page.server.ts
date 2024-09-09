@@ -1,42 +1,35 @@
 import type { Tag } from "$crate/core/entities/tag";
-import { ServerActionResponse } from "$crate/core/prototypes/serverActionResponse";
 import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
+import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import type { ServerResponseData } from "$crate/core/types/serverResponseData";
 import { env } from "$env/dynamic/private";
-import type { PageServerLoad } from "../$types";
+import type { PageServerLoad } from "./$types";
+import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 
 type ApiResponse = PaginatedResponse & {
 	tags: Tag[];
 };
 
-export type AdminTagPageServerData = ServerActionResponse<ApiResponse>;
+export type AdminTagPageLoadData = ServerResponseData<ApiResponse, string>;
 
-export const load: PageServerLoad = async ({ fetch, locals }) => {
+export const load: PageServerLoad = async ({ fetch, locals }): Promise<AdminTagPageLoadData> => {
 	const response = await fetch(`${env.BACKEND_URL}/tag/list`, {
-		headers: {
+		headers: genHeadersWithAuth(locals.accessToken, {
 			Accept: "application/json",
-		},
+		}),
 	});
 
-	if (response.ok) {
-		const data: ApiResponse = await response.json();
-		return new ServerActionResponse(data, null).toJSON();
+	switch (response.status) {
+		case 200:
+			return MakeServerResponseData.Ok((await response.json()) as ApiResponse);
+		case 401:
+			return MakeServerResponseData.Error("Não autorizado.");
+		default:
+			locals.logger.error(
+				`Falha ao buscar listagem de tags "/tags/list" no painel de administração. Erro: ` +
+					(await response.text()),
+			);
+
+			return MakeServerResponseData.Error("Não foi possível carregar a listagem de tags.");
 	}
-
-	if (response.status === 400) {
-		const data = await response.json();
-		return new ServerActionResponse<ApiResponse>(null, data.message);
-	}
-
-	if (response.status === 401) {
-		return new ServerActionResponse<ApiResponse, string | string[]>(null, ["Não autorizado."]);
-	}
-
-	locals.logger.error(
-		"Falha ao buscar listagem de tags (/tags/list) no painel de administração: " +
-			(await response.text()),
-	);
-
-	return new ServerActionResponse<ApiResponse, string | string[]>(null, [
-		"Não foi possível carregar a listagem de tags.",
-	]);
 };

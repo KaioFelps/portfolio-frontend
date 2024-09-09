@@ -2,9 +2,9 @@
 	import { LogTargetType, LogAction, type Log } from "$crate/core/entities/log.js";
 	import PenNib from "phosphor-svelte/lib/PenNib";
 	import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
-	import type { AdminHomePageServerData } from "./+page.server";
+	import type { PageLoadData } from "./handlers";
 
-	export let data: AdminHomePageServerData;
+	export let data: PageLoadData;
 
 	function formatLogString(log: Log) {
 		let message;
@@ -37,7 +37,7 @@
 <section class="mb-12">
 	<h2 class="mb-6">Status</h2>
 
-	{#if data.statistics.data}
+	{#if data.statistics.success}
 		<div class="flex gap-3">
 			<div class="flex-1 status-card">
 				<span class="block w-fit p-2 rounded-2xl bg-yellow-500 text-d-backgrond">
@@ -60,21 +60,27 @@
 			<div class="flex-1 rounded-2xl bg-white/5"> </div>
 		</div>
 	{:else}
-		<span class="mx-auto danger alert text-center w-full">{data.statistics.error}</span>
+		<span class="mx-auto danger alert text-center w-full">
+			{data.statistics.internalError
+				? "Não foi possível carregar as estatísticas do site."
+				: data.statistics.error}
+		</span>
 	{/if}
 </section>
 
 <section>
 	<h2 class="mb-6">Últimos registros</h2>
 
-	{#if data.logs.data}
+	{#if data.logs.success}
 		<div class="flex flex-col gap-1">
-			{#each data.logs.data?.logs as log}
+			{#each data.logs.data.logs as log}
 				<p class="rounded-2xl bg-white/5 font-medium p-4">{formatLogString(log)}</p>
 			{/each}
 		</div>
-	{:else if data.logs.error}
-		<span class="mx-auto danger alert text-center w-full">{data.logs.error}</span>
+	{:else}
+		<span class="mx-auto danger alert text-center w-full">
+			{data.logs.internalError ? "Não foi possível carregar os logs." : data.logs.error}
+		</span>
 	{/if}
 </section>
 

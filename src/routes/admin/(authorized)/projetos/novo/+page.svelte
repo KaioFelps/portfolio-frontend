@@ -3,12 +3,13 @@
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select";
 	import Trash from "phosphor-svelte/lib/Trash";
-	import type { AdminNewProjectPageServerData, PublishProjectResponse } from "./+page.server";
 	import type { Selected } from "bits-ui";
 	import { tick } from "svelte";
+	import type { PageLoadData, PublishResponseType } from "./handlers";
 
-	export let form: PublishProjectResponse;
-	export let data: AdminNewProjectPageServerData;
+	export let form: PublishResponseType;
+	export let data: PageLoadData;
+
 	let formIsLoading = false;
 	let subFormElement: HTMLFormElement | undefined;
 	let selectedTags: Selected<string>[] = [];
@@ -60,14 +61,16 @@
 
 <h1 class="mb-12">Novo projeto</h1>
 
-{#if form?.success}
+{#if form && form.success}
 	<span class="success alert mb-3 py-2">Projeto criado com sucesso! </span>
-{:else if Array.isArray(form?.error)}
-	{#each form.error as error}
-		<span class="danger alert mb-3 py-2">{form.error}</span>
+{:else if form && !form.success && !form.internalError && !form.error.validation && Array.isArray(form.error.data)}
+	{#each form.error.data as error}
+		<span class="danger alert mb-3 py-2">{error}</span>
 	{/each}
-{:else if form?.error}
-	<span class="danger alert mb-3 py-2">{form.error}</span>
+{:else if form && !form.success}
+	<span class="danger alert mb-3 py-2">
+		{form.internalError ? "Algo deu errado enquanto enviávamos o formuláriro." : form.error.data}
+	</span>
 {/if}
 
 <form
@@ -85,8 +88,8 @@
 		};
 	}}
 >
-	{#if form?.zod?.fieldErrors.title}
-		{#each form.zod.fieldErrors.title as error}
+	{#if form && !form.success && !form.internalError && form.error.validation}
+		{#each form.error.data.fieldErrors.title ?? [] as error}
 			<span class="alert danger mb-2 mt-4 sm">{error}</span>
 		{/each}
 	{/if}
@@ -95,8 +98,8 @@
 		<FloatingLabel>Nome do projeto</FloatingLabel>
 	</FloatingGroup>
 
-	{#if form?.zod?.fieldErrors.topstory}
-		{#each form.zod.fieldErrors.topstory as error}
+	{#if form && !form.success && !form.internalError && form.error.validation && form.error.data.fieldErrors.topstory}
+		{#each form.error.data.fieldErrors.topstory as error}
 			<span class="alert danger mb-2 mt-4 sm">{error}</span>
 		{/each}
 	{/if}
@@ -105,9 +108,9 @@
 		<FloatingLabel>Imagem de capa</FloatingLabel>
 	</FloatingGroup>
 
-	{#if tagsData.data && tagsData.data.tags.length > 0}
-		{#if form?.zod?.fieldErrors.tags}
-			{#each form.zod.fieldErrors.tags as error}
+	{#if tagsData.success && tagsData.data.tags.length > 0}
+		{#if form && !form.success && !form.internalError && form.error.validation && form.error.data.fieldErrors.tags}
+			{#each form.error.data.fieldErrors.tags as error}
 				<span class="alert danger mb-2 mt-4 sm">{error}</span>
 			{/each}
 		{/if}
@@ -117,15 +120,15 @@
 			options={tagsData.data.tags.map(({ id, value }) => ({ value: id, label: value }))}
 			placeholder="Tags"
 		/>
-	{:else if !data.tags.error}
+	{:else if !tagsData.success}
+		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
+			{tagsData.internalError ? "Não foi possível carregar as tags existentes." : tagsData.error}
+		</span>
+	{:else}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
 			Ainda não há tags registradas. Você precisará <a class="font-bold" href="/admin/tags/novo">
 				criar uma tag
 			</a> antes!
-		</span>
-	{:else}
-		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
-			{data.tags.error}
 		</span>
 	{/if}
 
@@ -136,8 +139,8 @@
 	>
 		<h3 class="text-xl font-bold mb-6">Links referente ao projeto</h3>
 
-		{#if form?.zod?.fieldErrors.links}
-			{#each form.zod.fieldErrors.links as error}
+		{#if form && !form.success && !form.internalError && form.error.validation && form.error.data.fieldErrors.links}
+			{#each form.error.data.fieldErrors.links as error}
 				<span class="alert danger mb-2 mt-4 sm">{error}</span>
 			{/each}
 		{/if}
@@ -185,7 +188,7 @@
 		<a href="/admin/projetos" class="btn ghost">Cancelar</a>
 		<button
 			type="submit"
-			disabled={formIsLoading || !!tagsData.error || !(tagsData.data?.tags.length ?? 0 > 0)}
+			disabled={formIsLoading || !tagsData.success || !(tagsData.data?.tags.length ?? 0 > 0)}
 			class="btn default"
 		>
 			{formIsLoading ? "Publicando" : "Publicar"} projeto
