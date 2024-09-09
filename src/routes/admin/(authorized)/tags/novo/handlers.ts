@@ -11,15 +11,9 @@ const createTagSchema = z.object({
 	value: z.string().min(1, "Tag precisa ter 1 caracter no mínimo."),
 });
 
-const editTagSchema = z.object({
-	value: z.string().min(1, "Tag precisa ter 1 caracter no mínimo."),
-	id: z.string().uuid("O ID da tag deve ser um Uuid válido."),
-});
 type CreateResponseError = ResponseErrorType<typeof createTagSchema, string[]>;
-type EditResponseError = ResponseErrorType<typeof editTagSchema, string>;
 
 export type CreateTagResponse = ServerResponseData<{}, CreateResponseError>;
-export type EditTagResponse = ServerResponseData<{}, EditResponseError>;
 
 export abstract class TagsActionsHandlers {
 	public static async createTag(
@@ -69,55 +63,6 @@ export abstract class TagsActionsHandlers {
 			MakeServerResponseData.Error<CreateResponseError>({
 				validation: false,
 				data: ["Não foi possível criar a tag."],
-			}),
-		);
-	}
-
-	public static async editTag(
-		this: RequestEvent,
-	): Promise<ActionFailure<EditTagResponse> | EditTagResponse> {
-		const formData = await this.request.formData();
-		const parsedData = editTagSchema.safeParse(Object.fromEntries(formData));
-
-		if (!parsedData.success)
-			return fail(
-				400,
-				MakeServerResponseData.Error<EditResponseError>({
-					validation: true,
-					data: parsedData.error.flatten(),
-				}),
-			);
-
-		const { id, value } = parsedData.data;
-
-		const response = await this.fetch(`${env.BACKEND_URL}/tag/${id}/edit`, {
-			method: "PATCH",
-			body: JSON.stringify({
-				value,
-			}),
-			headers: genHeadersWithAuth(this.locals.accessToken),
-		});
-
-		if (response.ok) return MakeServerResponseData.Ok({});
-
-		this.locals.logger.error(
-			`Falha ao editar tag de ID "${id}" no endpoint "/tag/new". Erro: ` + (await response.text()),
-		);
-
-		if (response.status === 401)
-			return fail(
-				401,
-				MakeServerResponseData.Error<EditResponseError>({
-					validation: false,
-					data: "Você não está autorizado a editar esta tag.",
-				}),
-			);
-
-		return fail(
-			500,
-			MakeServerResponseData.Error<EditResponseError>({
-				validation: false,
-				data: "Não foi possível alterar a tag.",
 			}),
 		);
 	}
