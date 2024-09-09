@@ -11,12 +11,22 @@
 	export let data: PageLoadData & { user: AuthUser };
 	export let form: EditTagResponse | undefined;
 
+	$: tags = data.success ? data.data.tags : [];
+
 	let url = $page.url;
 	let currentPage = data?.success ? data.data.page : 1;
 	let lastPage = 1;
 
 	$: if (data.success) {
 		lastPage = data.data.totalCount <= 0 ? 1 : Math.ceil(data.data.totalCount / data.data.perPage);
+	}
+
+	$: if (form && form.success) {
+		tags = tags.map((tag) => {
+			if (tag.id === form.data.id) return form.data;
+
+			return tag;
+		});
 	}
 
 	let paginationButtons = (() => {
@@ -43,9 +53,9 @@
 </header>
 
 {#if data.success}
-	{#if data.data.tags.length > 0}
+	{#if tags.length > 0}
 		<div class="flex flex-col gap-1 mb-12">
-			{#each data.data.tags as tag}
+			{#each tags as tag (tag.id)}
 				<div class="flex justify-between gap-3 items-center p-4 rounded-2xl bg-white/5">
 					<span class="font-medium">{tag.value}</span>
 					<EditTagDialog {tag} {form} />

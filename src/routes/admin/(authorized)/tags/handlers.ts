@@ -14,7 +14,7 @@ type ApiResponse = PaginatedResponse & {
 };
 
 export type PageLoadData = ServerResponseData<ApiResponse, string>;
-export type EditTagResponse = ServerResponseData<{}, EditTagErrorType>;
+export type EditTagResponse = ServerResponseData<Tag, EditTagErrorType>;
 
 export abstract class TagsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
@@ -52,15 +52,21 @@ export abstract class TagsActionsHandlers {
 
 		const { _id, value } = parsedData.data;
 
-		const response = await this.fetch(`${env.BACKEND_URL}/tag/${_id}/edit`, {
+		const endpoint = `${env.BACKEND_URL}/tag/${_id}/edit`;
+		const reqBody = JSON.stringify({ value });
+
+		const response = await this.fetch(endpoint, {
 			method: "PATCH",
-			headers: genHeadersWithAuth(this.locals.accessToken),
-			body: JSON.stringify({
-				value,
+			headers: genHeadersWithAuth(this.locals.accessToken, {
+				"Content-Type": "application/json",
 			}),
+			body: reqBody,
 		});
 
-		if (response.ok) return MakeServerResponseData.Ok({});
+		if (response.ok) {
+			const { tag } = await response.json();
+			return MakeServerResponseData.Ok(tag as Tag);
+		}
 
 		switch (response.status) {
 			case 401:
