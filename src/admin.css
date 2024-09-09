@@ -29,6 +29,10 @@
     .form-floating>.form-control {
         @apply placeholder:sr-only
     }
+    
+    .form-floating>.form-control:disabled {
+        @apply bg-d-gray-300
+    }
 
     .form-floating>.form-control:focus~label,
     .form-floating>.form-control:not(:placeholder-shown)~label,
