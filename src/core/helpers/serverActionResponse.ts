@@ -6,6 +6,10 @@ export abstract class MakeServerResponseData {
 	}
 
 	public static Error<E>(error: E) {
-		return { success: false, error } satisfies ServerResponseData<unknown, E>;
+		return { success: false, error, internalError: false } satisfies ServerResponseData<unknown, E>;
+	}
+
+	public static InternalError() {
+		return { success: false, internalError: true } satisfies ServerResponseData<unknown, unknown>;
 	}
 }
