@@ -1,37 +1,10 @@
 <script lang="ts">
-	import { LogTargetType, LogAction, type Log } from "$crate/core/entities/log.js";
 	import PenNib from "phosphor-svelte/lib/PenNib";
 	import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
 	import type { PageLoadData } from "./handlers";
+	import { formatLogString } from "$crate/utils";
 
 	export let data: PageLoadData;
-
-	function formatLogString(log: Log) {
-		let message;
-		if (log.action === LogAction.created) {
-			if (log.targetType === LogTargetType.post) message = "Novo post";
-			if (log.targetType === LogTargetType.project) message = "Projeto criado";
-			if (log.targetType === LogTargetType.user) message = "Novo usuário registrado";
-		}
-
-		if (log.action === LogAction.deleted) {
-			if (log.targetType === LogTargetType.post) message = "Post deletado";
-			if (log.targetType === LogTargetType.project) message = "Projeto removido";
-			if (log.targetType === LogTargetType.user) message = "Usuário removido";
-		}
-
-		if (log.action === LogAction.updated) {
-			if (log.targetType === LogTargetType.post) message = "Post editado";
-			if (log.targetType === LogTargetType.project) message = "Projeto editado";
-			if (log.targetType === LogTargetType.user) message = "Alterações no usuário";
-		}
-
-		message += `: "${log.target}", às ${log.createdAt.toLocaleString("pt-br")}`;
-
-		if (log.author) message += ` por ${log.author.name} (${log.author.role})`;
-
-		return message;
-	}
 </script>
 
 <section class="mb-12">

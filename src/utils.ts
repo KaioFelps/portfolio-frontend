@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 import { PUBLIC_THEME_COOKIE_KEY } from "$env/static/public";
+import { LogAction, LogTargetType, type Log } from "./core/entities/log";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -66,4 +67,34 @@ export function getThemeCookie(cookieString: string): string | undefined {
 	}
 
 	return cookies.get(PUBLIC_THEME_COOKIE_KEY);
+}
+
+export function formatLogString(log: Log) {
+	let message;
+	if (log.action === LogAction.created) {
+		if (log.targetType === LogTargetType.post) message = "Novo post";
+		if (log.targetType === LogTargetType.project) message = "Projeto criado";
+		if (log.targetType === LogTargetType.user) message = "Novo usuário registrado";
+		if (log.targetType === LogTargetType.tag) message = "Nova tag criada";
+	}
+
+	if (log.action === LogAction.deleted) {
+		if (log.targetType === LogTargetType.post) message = "Post deletado";
+		if (log.targetType === LogTargetType.project) message = "Projeto removido";
+		if (log.targetType === LogTargetType.user) message = "Usuário removido";
+		if (log.targetType === LogTargetType.tag) message = "Tag removida";
+	}
+
+	if (log.action === LogAction.updated) {
+		if (log.targetType === LogTargetType.post) message = "Post editado";
+		if (log.targetType === LogTargetType.project) message = "Projeto editado";
+		if (log.targetType === LogTargetType.user) message = "Alterações no usuário";
+		if (log.targetType === LogTargetType.tag) message = "Tag editada";
+	}
+
+	message += `: "${log.target}", às ${log.createdAt.toLocaleString("pt-br")}`;
+
+	if (log.author) message += ` por ${log.author.name} (${log.author.role})`;
+
+	return message;
 }
