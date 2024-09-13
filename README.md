@@ -43,10 +43,12 @@ Tutoriais para rodar o site em diferentes ambientes
 ### Desenvolvimento
 1. Fazer o fork/download deste repositório
 2. Criar um arquivo `.env` na raíz do projeto com o conteúdo do arquivo `.env.example` (preenchido corretamente)
+
 |   Chave   |   Fim |
 |   :---    |   :-- |
-|   BACKEND_URL   |   URL da api back-end para qual esta aplicação fará as requisições    |
+|   BACKEND_URL   |   URL da api back-end para qual esta aplicação fará as requisições  |
 |   PUBLIC_THEME_COOKIE_KEY |   Chave que será usada para armazenar/ler o cookie que guarda a opção de tema do usuário (claro ou escuro)    |
+
 3. Rode os comandos abaixo no terminal para iniciar o servidor
 ```bash
 npm run dev --open
