@@ -13,7 +13,7 @@ export async function authenticationMiddleware(
 	/* C */ const hasRefreshToken = !!refreshToken;
 	/* D */ const isNotAdminRoute = !url.pathname.startsWith("/admin");
 	/* E */ const isLoginRoute = url.pathname === "/admin/login";
-	const isLogoutRoute = url.pathname === "/admin/logout";
+	/* F */ const isLogoutRoute = url.pathname === "/admin/logout";
 
 	// continue navigation
 	if (
@@ -57,6 +57,18 @@ export async function authenticationMiddleware(
 
 		// if it cannot refresh the access token, fully logout the user.
 		// clearing the cookie here won't work
+		event.locals.logger.info(
+			"Request sendo redirecionada para um logout. Variáveis:\n" +
+				fmtVars(
+					hasAccessToken,
+					hasAuthUser,
+					hasRefreshToken,
+					isNotAdminRoute,
+					isLoginRoute,
+					isLogoutRoute,
+				),
+		);
+
 		return Redirects.redirectToLogout();
 	}
 
@@ -66,14 +78,21 @@ export async function authenticationMiddleware(
 
 	event.locals.logger.error(
 		"Request ultrapassou todas as regras do middleware de autenticação. Variáveis:\n" +
-			`A\t${hasAccessToken}\n` +
-			`B\t${hasAuthUser}\n` +
-			`C\t${hasRefreshToken}\n` +
-			`D\t${isNotAdminRoute}\n` +
-			`E\t${isLoginRoute}\n`,
+			fmtVars(
+				hasAccessToken,
+				hasAuthUser,
+				hasRefreshToken,
+				isNotAdminRoute,
+				isLoginRoute,
+				isLogoutRoute,
+			),
 	);
 
 	return await callback();
+}
+
+function fmtVars(a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean) {
+	return `A\t${a}\n` + `B\t${b}\n` + `C\t${c}\n` + `D\t${d}\n` + `E\t${d}\n` + `F\t${f}\n`;
 }
 
 abstract class Redirects {
