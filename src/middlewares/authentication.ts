@@ -11,9 +11,9 @@ export async function authenticationMiddleware(
 	/* A */ const hasAccessToken = !!event.locals.accessToken;
 	/* B */ const hasAuthUser = !!event.locals.user;
 	/* C */ const hasRefreshToken = !!refreshToken;
-	/* D */ const isNotAdminRoute = !url.pathname.startsWith("/admin");
-	/* E */ const isLoginRoute = url.pathname === "/admin/login";
-	/* F */ const isLogoutRoute = url.pathname === "/admin/logout";
+	/* D */ const isNotAdminRoute = !url.pathname.startsWith(Redirects.adminHomeRoute);
+	/* E */ const isLoginRoute = url.pathname === Redirects.adminLoginRoute;
+	/* F */ const isLogoutRoute = url.pathname === Redirects.adminLogoutRoute;
 
 	// continue navigation
 	if (
@@ -52,6 +52,7 @@ export async function authenticationMiddleware(
 			event.locals.accessToken = accessToken;
 			event.locals.user = user;
 
+			if (isLogoutRoute) return Redirects.redirectToAdminHome();
 			return await callback();
 		}
 
@@ -96,23 +97,27 @@ function fmtVars(a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: 
 }
 
 abstract class Redirects {
+	public static adminHomeRoute = "/admin";
+	public static adminLoginRoute = "/admin/login";
+	public static adminLogoutRoute = "/admin/logout";
+
 	public static redirectToLogin(): Response {
 		return new Response("User is unauthenticated", {
 			status: 302,
-			headers: { location: "/admin/login" },
+			headers: { location: this.adminLoginRoute },
 		});
 	}
 
 	public static redirectToLogout(): Response {
 		return new Response("Refresh token is not valid", {
 			status: 302,
-			headers: { location: "/admin/logout" },
+			headers: { location: this.adminLogoutRoute },
 		});
 	}
 
 	public static redirectToAdminHome(_headers?: Headers): Response {
 		const headers = _headers ? _headers : new Headers();
-		headers.set("location", "/admin");
+		headers.set("location", this.adminHomeRoute);
 
 		return new Response("User is already authenticated", {
 			status: 302,
