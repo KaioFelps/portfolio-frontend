@@ -5,7 +5,7 @@
 	import colors from "tailwindcss/colors";
 	import { debounce } from "$crate/lib/debounce";
 	import EditorButton from "./editorButton.svelte";
-	import { PaintBrush } from "phosphor-svelte";
+	import PaintBrush from "phosphor-svelte/lib/PaintBrush";
 
 	type PressetColor = [string, string];
 	let open = false;
