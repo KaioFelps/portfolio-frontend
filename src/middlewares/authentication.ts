@@ -1,9 +1,9 @@
-import type { MaybePromise, RequestEvent } from "@sveltejs/kit";
+import type { RequestEvent } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 
 export async function authenticationMiddleware(
 	{ event }: { event: RequestEvent },
-	callback: () => MaybePromise<Response>,
+	callback: () => Promise<Response> | Response,
 ) {
 	const { cookies, url } = event;
 	const refreshToken = cookies.get("refresh_token");
@@ -58,7 +58,7 @@ export async function authenticationMiddleware(
 
 		// if it cannot refresh the access token, fully logout the user.
 		// clearing the cookie here won't work
-		event.locals.logger.info(
+		event.locals.logger.warn(
 			"Request sendo redirecionada para um logout. Variáveis:\n" +
 				fmtVars(
 					hasAccessToken,
@@ -67,7 +67,10 @@ export async function authenticationMiddleware(
 					isNotAdminRoute,
 					isLoginRoute,
 					isLogoutRoute,
-				),
+				) +
+				"\nResposta (refresh token):\n" +
+				`\tStatus: ${newTokenResponse.status}\n` +
+				`\tCorpo: ${await newTokenResponse.text()}`,
 		);
 
 		return Redirects.redirectToLogout();
@@ -93,7 +96,7 @@ export async function authenticationMiddleware(
 }
 
 function fmtVars(a: boolean, b: boolean, c: boolean, d: boolean, e: boolean, f: boolean) {
-	return `A\t${a}\n` + `B\t${b}\n` + `C\t${c}\n` + `D\t${d}\n` + `E\t${d}\n` + `F\t${f}\n`;
+	return `A = ${a}\n` + `B = ${b}\n` + `C = ${c}\n` + `D = ${d}\n` + `E = ${e}\n` + `F = ${f}\n`;
 }
 
 abstract class Redirects {

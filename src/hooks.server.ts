@@ -1,4 +1,4 @@
-import type { Handle, HandleFetch } from "@sveltejs/kit";
+import type { Handle } from "@sveltejs/kit";
 import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
@@ -31,9 +31,7 @@ logger.add(
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
 
-	event.locals.logger.info(
-		`[${event.request.url}]\t Request recebida em ${new Date().toLocaleString()}. \t`,
-	);
+	event.locals.logger.info(`[${new Date().toLocaleString()}]\t${event.request.url}`);
 
 	const response = await authenticationMiddleware({ event }, async () => {
 		return await resolve(event);
