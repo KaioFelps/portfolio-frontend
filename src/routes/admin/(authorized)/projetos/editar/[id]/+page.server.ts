@@ -7,7 +7,6 @@ import type { Tag } from "$crate/core/entities/tag";
 import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
 import type { ServerResponseData } from "$crate/core/types/serverResponseData";
 import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
-import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 
 type FetchTagsResponse = PaginatedResponse & {
 	tags: Array<Tag>;
@@ -23,9 +22,7 @@ export const load: PageServerLoad = async (ctx): Promise<AdminEditProjectPageDat
 	const availableTags = await getAvailableTags(ctx);
 
 	try {
-		const response = await fetch(`${env.BACKEND_URL}/project/${ctx.params.id}`, {
-			headers: genHeadersWithAuth(ctx.locals.accessToken),
-		});
+		const response = await fetch(`${env.BACKEND_URL}/project/${ctx.params.id}`);
 
 		let project: Project | null = null;
 		const data: { project: Project | null } = await response.json();
@@ -130,10 +127,7 @@ export const actions: Actions = {
 
 		const response = await fetch(`${env.BACKEND_URL}/project/${projectId}/edit`, {
 			method: "put",
-			headers: genHeadersWithAuth(locals.accessToken, {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			}),
+			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body: JSON.stringify(data),
 		});

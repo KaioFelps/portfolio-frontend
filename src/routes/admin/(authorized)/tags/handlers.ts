@@ -6,7 +6,6 @@ import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
 import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
 import { editTagSchema } from "./schemas";
 import { env } from "$env/dynamic/private";
-import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 
 type EditTagErrorType = ResponseErrorType<typeof editTagSchema, string>;
 type ApiResponse = PaginatedResponse & {
@@ -18,17 +17,12 @@ export type EditTagResponse = ServerResponseData<Tag, EditTagErrorType>;
 
 export abstract class TagsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/tag/list`, {
-			headers: genHeadersWithAuth(this.locals.accessToken, {
-				Accept: "application/json",
-			}),
-		});
+		const response = await fetch(`${env.BACKEND_URL}/tag/list`);
 
 		switch (response.status) {
 			case 200:
 				return MakeServerResponseData.Ok((await response.json()) as ApiResponse);
 			case 401:
-				return MakeServerResponseData.Error("Não autorizado.");
 			default:
 				this.locals.logger.error(
 					`Falha ao buscar listagem de tags "/tags/list" no painel de administração. Erro: ` +
@@ -57,9 +51,7 @@ export abstract class TagsActionsHandlers {
 
 		const response = await this.fetch(endpoint, {
 			method: "PATCH",
-			headers: genHeadersWithAuth(this.locals.accessToken, {
-				"Content-Type": "application/json",
-			}),
+			headers: { "Content-Type": "application/json" },
 			body: reqBody,
 		});
 

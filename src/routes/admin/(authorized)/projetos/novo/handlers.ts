@@ -3,7 +3,6 @@ import { publishProjectSchema } from "./schemas";
 import type { ResponseErrorType } from "$crate/core/types/responseError";
 import type { ServerResponseData } from "$crate/core/types/serverResponseData";
 import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
-import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 import { env } from "$env/dynamic/private";
 import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
 import type { Tag } from "$crate/core/entities/tag";
@@ -23,9 +22,7 @@ export type PageLoadData = { tags: ServerResponseData<FetchTagsResponse, string>
 
 export abstract class ProjectsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/tag/list`, {
-			headers: genHeadersWithAuth(this.locals.accessToken),
-		});
+		const response = await fetch(`${env.BACKEND_URL}/tag/list`);
 
 		if (response.ok) {
 			const data: FetchTagsResponse = await response.json();
@@ -63,10 +60,7 @@ export abstract class ProjectsActionsHandlers {
 
 		const response = await fetch(`${env.BACKEND_URL}/project/new`, {
 			method: "post",
-			headers: genHeadersWithAuth(this.locals.accessToken, {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			}),
+			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body: JSON.stringify(data),
 		});

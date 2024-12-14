@@ -1,5 +1,4 @@
 import type { Project } from "$crate/core/entities/project";
-import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
 import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
 import type { ServerResponseData } from "$crate/core/types/serverResponseData";
@@ -15,12 +14,7 @@ export type PageLoadData = ServerResponseData<ApiResponse, string[]>;
 
 export abstract class ProjectsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/project/list`, {
-			headers: {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-		});
+		const response = await fetch(`${env.BACKEND_URL}/project/list`);
 
 		if (response.ok) {
 			const data: ApiResponse = await response.json();
@@ -60,7 +54,6 @@ export abstract class ProjectsActionsHandlers {
 
 		const response = await this.fetch(`${env.BACKEND_URL}/project/${projectId.toString()}/delete`, {
 			method: "DELETE",
-			headers: genHeadersWithAuth(this.locals.accessToken),
 		});
 
 		if (response.ok) return MakeServerResponseData.Ok({});

@@ -5,7 +5,6 @@ import { fail, type ActionFailure } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 import type { ServerResponseData } from "$crate/core/types/serverResponseData";
 import type { ResponseErrorType } from "$crate/core/types/responseError";
-import { genHeadersWithAuth } from "$crate/core/helpers/getAuthHeader";
 
 const createTagSchema = z.object({
 	value: z.string().min(1, "Tag precisa ter 1 caracter no mínimo."),
@@ -34,18 +33,12 @@ export abstract class TagsActionsHandlers {
 		const body = JSON.stringify(parsedData.data);
 		const response = await fetch(`${env.BACKEND_URL}/tag/new`, {
 			method: "POST",
-			headers: genHeadersWithAuth(this.locals.accessToken, {
-				"Content-Type": "application/json",
-			}),
+			headers: { "Content-Type": "application/json" },
 			credentials: "include",
 			body,
 		});
 
 		if (response.ok) return MakeServerResponseData.Ok({});
-
-		this.locals.logger.error(
-			`Falha ao criar uma nova tag no endpoint "/tag/new". Erro: ` + (await response.text()),
-		);
 
 		if (response.status === 400) {
 			const res = await response.json();

@@ -2,6 +2,7 @@ import type { Handle } from "@sveltejs/kit";
 import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
+import { env } from "$env/dynamic/private";
 
 export const logger = winston.createLogger({
 	level: "info",
@@ -39,3 +40,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return await ThemeParser.parse({ response, cookies: event.cookies });
 };
+
+/** @type {import('@sveltejs/kit').HandleFetch} */
+export async function handleFetch({ request, fetch, event }) {
+	if (request.url.startsWith(env.BACKEND_URL)) {
+		if (event.locals.accessToken) {
+			request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
+			request.headers.set("Accept", "application/json");
+		}
+	}
+
+	return fetch(request);
+}
