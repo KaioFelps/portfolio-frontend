@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
+	import FloatingSelect from "$crate/components/floating-select/index.js";
 	import Editor from "$crate/ui/tiptap/editor.svelte";
+	import type { Selected } from "bits-ui";
+	import type { PageLoadData } from "../handlers.js";
 
 	export let form;
+	export let data: PageLoadData;
 
+	$: tagsData = data.tags;
+
+	let selectedTags: Array<Selected<string>> = [];
 	let formIsLoading = false;
 </script>
 
@@ -31,8 +38,27 @@
 
 	<FloatingGroup class="mb-3">
 		<FloatingInput class="w-full" name="description" placeholder="Descrição do post" type="text" />
-		<FloatingLabel>Descrição</FloatingLabel>
+		<FloatingLabel>Linha fina</FloatingLabel>
 	</FloatingGroup>
+
+	{#if tagsData.success && tagsData.data.tags.length > 0}
+		<FloatingSelect
+			bind:values={selectedTags}
+			multiple
+			options={tagsData.data.tags.map(({ id, value }) => ({ value: id, label: value }))}
+			placeholder="Tags"
+		/>
+	{:else if !tagsData.success}
+		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
+			{tagsData.internalError ? "Não foi possível carregar as tags existentes." : tagsData.error}
+		</span>
+	{:else}
+		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
+			Ainda não há tags registradas. Você precisará <a class="font-bold" href="/admin/tags/novo">
+				criar uma tag
+			</a> antes!
+		</span>
+	{/if}
 
 	<FloatingGroup class="mb-3">
 		<FloatingInput class="w-full" name="topstory" placeholder="i.imgur.com/..." type="text" />
