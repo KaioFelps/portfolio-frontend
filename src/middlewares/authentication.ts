@@ -6,7 +6,8 @@ export async function authenticationMiddleware(
 	callback: () => Promise<Response> | Response,
 ) {
 	const { cookies, url } = event;
-	const refreshToken = cookies.get("refresh_token");
+	const REFRESH_TOKEN_KEY = "refresh_token";
+	const refreshToken = cookies.get(REFRESH_TOKEN_KEY);
 
 	/* A */ const hasAccessToken = !!event.locals.accessToken;
 	/* B */ const hasAuthUser = !!event.locals.user;
@@ -41,14 +42,15 @@ export async function authenticationMiddleware(
 	if (!hasAccessToken && !hasAuthUser && hasRefreshToken && !isNotAdminRoute && !isLoginRoute) {
 		const newTokenResponse = await event.fetch(`${env.BACKEND_URL}/auth/refresh`, {
 			method: "PATCH",
+			credentials: "include",
 			headers: {
-				Cookie: `refresh_token=${refreshToken}`,
+				Cookie: `refresh_token = ${refreshToken}`,
 			},
 		});
 
 		if (newTokenResponse.ok) {
 			const { accessToken, refreshToken, user } = await newTokenResponse.json();
-			cookies.set("refresh_token", refreshToken, { path: "/" });
+			cookies.set(REFRESH_TOKEN_KEY, refreshToken, { path: "/" });
 			event.locals.accessToken = accessToken;
 			event.locals.user = user;
 
@@ -59,7 +61,7 @@ export async function authenticationMiddleware(
 		// if it cannot refresh the access token, fully logout the user.
 		// clearing the cookie here won't work
 		event.locals.logger.warn(
-			"Request sendo redirecionada para um logout. Variáveis:\n" +
+			"Request sendo redirecionada para um logout. Refresh Token excluído. Variáveis:\n" +
 				fmtVars(
 					hasAccessToken,
 					hasAuthUser,
@@ -73,6 +75,7 @@ export async function authenticationMiddleware(
 				`\tCorpo: ${await newTokenResponse.text()}`,
 		);
 
+		cookies.delete(REFRESH_TOKEN_KEY, { path: "/" });
 		return Redirects.redirectToLogout();
 	}
 
