@@ -73,6 +73,16 @@
 
   .chip.c-yellow { @apply bg-yellow-500/10 border border-yellow-500 text-yellow-900 }
   .chip.c-yellow.c-clickable { @apply hover:bg-yellow-500/25 active:bg-yellow-500/40 }
+
+  /* TEXT CONTAINERS */
+  .text-container {
+    @apply
+      [&>*:not(:last-child)]:mb-4 prose-headings:my-6
+      prose-pre:p-4 prose-pre:bg-black/20 dark:prose-pre:bg-black/50 prose-pre:rounded-xl
+      prose-pre:border-gray-200 dark:prose-pre:border-d-gray-200
+      prose-inline-code:bg-black/20 dark:prose-inline-code:bg-black/50 prose-inline-code:border prose-inline-code:border-gray-300 dark:prose-inline-code:border-d-gray-300
+      prose-inline-code:rounded-lg prose-inline-code:px-2 prose-inline-code:py-0.5 prose-inline-code:text-yellow-600
+  }
 }
 
 @layer base {

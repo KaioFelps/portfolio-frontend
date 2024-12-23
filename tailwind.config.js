@@ -89,5 +89,11 @@ export default {
   darkMode: "selector",
   plugins: [
     typography,
+    function ({ addVariant }) {
+      addVariant(
+        'prose-inline-code',
+        '& :is(:where(:not(pre)>code):not(:where([class~="not-prose"] *)))'
+      );
+    },
   ],
 }

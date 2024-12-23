@@ -13,6 +13,7 @@
 	import FontSize from "$lib/tiptap/font-size";
 	import Image from "@tiptap/extension-image";
 	import Color from "@tiptap/extension-color";
+	import CodeBlock from "@tiptap/extension-code-block";
 
 	import TextBold from "phosphor-svelte/lib/TextB";
 	import TextItalic from "phosphor-svelte/lib/TextItalic";
@@ -23,6 +24,8 @@
 	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
 	import ColorPicker from "./colorPicker.svelte";
+	import { Indent } from "./indent";
+	import { CodeBlockIndent } from "./indentCodeBlock";
 
 	let element: Element;
 	let editor: Editor;
@@ -30,8 +33,6 @@
 	// FALTAM:
 	// linha horizontal
 	// quote
-	// linha de código
-	// bloco de código
 	// código fonte
 	// subscrito
 	// sobrescrito
@@ -47,12 +48,28 @@
 	onMount(() => {
 		editor = new Editor({
 			element,
-			extensions: [StarterKit, Underline, TextStyle, FontSize, Image, TextAlign, Color],
+			editorProps: {
+				attributes: {
+					class: "text-container",
+				},
+			},
+			extensions: [
+				StarterKit,
+				Underline,
+				TextStyle,
+				FontSize,
+				Image,
+				TextAlign,
+				Color,
+				CodeBlock.configure({ defaultLanguage: "plaintext" }),
+				CodeBlockIndent,
+				Indent,
+			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {
 				editor = editor; // force re-render so `editor.isActive` works as expected
 			},
-			async onPaste(event) {
+			async onPaste(_event) {
 				await handlePasteImageWithOrigin(editor);
 			},
 		});
@@ -66,7 +83,10 @@
 {#if editor}
 	<div
 		id="editor-bar"
-		class="p-2 bg-d-gray-200 border-y border-white/5 flex flex-row flex-wrap gap-2 rounded-lg mb-4 shadow-md shadow-black/30"
+		class={clsx(
+			"p-2 bg-d-gray-200 border-y border-white/5 flex flex-row flex-wrap gap-2 rounded-lg mb-4 shadow-md shadow-black/30",
+			"sticky top-0 z-10",
+		)}
 	>
 		<EditorSet
 			title="Formatar"
@@ -90,6 +110,26 @@
 					active: editor.isActive("heading", { level: 4 }),
 					handler: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
 					title: "H4",
+				},
+				{
+					active: editor.isActive("heading", { level: 5 }),
+					handler: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
+					title: "H5",
+				},
+				{
+					active: editor.isActive("heading", { level: 6 }),
+					handler: () => editor.chain().focus().toggleHeading({ level: 6 }).run(),
+					title: "H6",
+				},
+				{
+					active: editor.isActive("code"),
+					handler: () => editor.chain().focus().toggleCode().run(),
+					title: "Linha de código",
+				},
+				{
+					active: editor.isActive("codeBlock"),
+					handler: () => editor.chain().focus().toggleCodeBlock().run(),
+					title: "Bloco de código",
 				},
 				{
 					active: editor.isActive("paragraph"),
@@ -201,7 +241,8 @@
 
 <div
 	class={clsx(
-		"p-6 rounded-xl bg-d-backgrond/25 shadow-d-gray-300 shadow-[inset_0_0_0_1px_var(--tw-shadow)]",
+		"dark p-6 rounded-xl bg-d-backgrond/25 shadow-d-gray-300 shadow-[inset_0_0_0_1px_var(--tw-shadow)]",
+		"overscroll-y-auto overflow-x-hidden resize-y",
 		"[&>*]:focus-within:outline-none",
 	)}
 	bind:this={element}

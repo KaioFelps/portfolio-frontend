@@ -5,6 +5,7 @@
 	import Editor from "$crate/ui/tiptap/editor.svelte";
 	import type { Selected } from "bits-ui";
 	import type { PageLoadData } from "../handlers.js";
+	import Title from "$crate/components/title.svelte";
 
 	export let form;
 	export let data: PageLoadData;
@@ -14,6 +15,8 @@
 	let selectedTags: Array<Selected<string>> = [];
 	let formIsLoading = false;
 </script>
+
+<Title title="Novo post" />
 
 <h1 class="mb-12">Nova publicação</h1>
 
