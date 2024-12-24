@@ -7,9 +7,9 @@
 		builder?: any;
 	};
 
-	let className: $$Props["class"] = undefined;
-	export let active: $$Props["active"] = true;
-	export let builder: $$Props["builder"] = undefined;
+	$: className = $$props["class"];
+	export let active: $$Props["active"] = $$props["active"] ?? true;
+	export let builder: $$Props["builder"] = $$props["builder"] ?? undefined;
 </script>
 
 {#if builder}
