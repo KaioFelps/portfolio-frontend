@@ -91,6 +91,9 @@
       prose-ul:prose-li:prose-p:my-1
       prose-ol:prose-li:prose-p:my-1
       prose-ul:list-disc prose-ol:list-decimal
+
+      prose-a:text-yellow-900 dark:prose-a:text-yellow-500 prose-a:font-medium prose-a:hover:bg-yellow-600/10 prose-a:active:bg-yellow-600/20
+      prose-a:transition-all prose-a:duration-150
   }
 
   /* List styles

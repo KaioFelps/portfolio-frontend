@@ -9,18 +9,20 @@
 
 	import { handlePasteImageWithOrigin } from "$crate/lib/tiptap/paste-img";
 	import { Editor } from "@tiptap/core";
-	import StarterKit from "@tiptap/starter-kit";
-	import Underline from "@tiptap/extension-underline";
-	import TextStyle from "@tiptap/extension-text-style";
-	import TextAlign from "$lib/tiptap/text-align";
-	import FontSize from "$lib/tiptap/font-size";
+
+	import Link from "@tiptap/extension-link";
 	import Image from "./image";
 	import Color from "@tiptap/extension-color";
 	import Indent from "./indent";
-	import CodeBlockIndent from "./indentCodeBlock";
+	import FontSize from "$lib/tiptap/font-size";
 	import Subscript from "@tiptap/extension-subscript";
+	import Underline from "@tiptap/extension-underline";
+	import TextStyle from "@tiptap/extension-text-style";
+	import TextAlign from "$lib/tiptap/text-align";
+	import StarterKit from "@tiptap/starter-kit";
 	import Superscript from "@tiptap/extension-superscript";
 	import Mathematics from "@aarkue/tiptap-math-extension";
+	import CodeBlockIndent from "./indentCodeBlock";
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
@@ -38,6 +40,7 @@
 	import TextSuperscript from "phosphor-svelte/lib/TextSuperscript";
 	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
+	import HyperlinkDialog from "./hyperlinkDialog.svelte";
 
 	let element: Element;
 	let editor: Editor;
@@ -69,6 +72,10 @@
 				Subscript,
 				Superscript,
 				Mathematics,
+				Link.configure({
+					defaultProtocol: "https",
+					protocols: ["http", "https"],
+				}),
 			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {
@@ -188,6 +195,8 @@
 			>
 				<TextStrike weight="bold" size="20" />
 			</EditorButton>
+
+			<ColorPicker {editor} />
 		</div>
 
 		<EditorSet
@@ -244,8 +253,6 @@
 			</EditorButton>
 		</div>
 
-		<ColorPicker {editor} />
-
 		<div class="group-set">
 			<EditorButton
 				title="Linha Horizontal"
@@ -298,6 +305,8 @@
 			>
 				<ListNumbers weight="bold" size="20" />
 			</EditorButton>
+
+			<HyperlinkDialog {editor} />
 		</div>
 
 		<div class="group-set">

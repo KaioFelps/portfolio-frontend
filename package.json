@@ -42,6 +42,7 @@
 		"@tiptap/core": "2.7.2",
 		"@tiptap/extension-color": "2.7.3",
 		"@tiptap/extension-image": "2.7.2",
+		"@tiptap/extension-link": "2.10.4",
 		"@tiptap/extension-subscript": "2.10.4",
 		"@tiptap/extension-superscript": "2.10.4",
 		"@tiptap/extension-text-align": "2.7.3",
