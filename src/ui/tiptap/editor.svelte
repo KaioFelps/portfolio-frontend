@@ -27,6 +27,7 @@
 	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
 	import Minus from "phosphor-svelte/lib/Minus";
+	import Quotes from "phosphor-svelte/lib/Quotes";
 
 	import ColorPicker from "./colorPicker.svelte";
 
@@ -34,7 +35,6 @@
 	let editor: Editor;
 
 	// FALTAM:
-	// quote
 	// código fonte
 	// subscrito
 	// sobrescrito
@@ -248,6 +248,15 @@
 				class="text-white"
 			>
 				<Minus weight="bold" size="20" />
+			</EditorButton>
+
+			<EditorButton
+				title="Quote"
+				active={editor.isActive("blockquote")}
+				on:click={() => editor.chain().focus().toggleBlockquote().run()}
+				class="text-white"
+			>
+				<Quotes weight="bold" size="20" />
 			</EditorButton>
 		</div>
 	</div>
