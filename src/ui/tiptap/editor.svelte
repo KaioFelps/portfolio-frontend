@@ -14,6 +14,9 @@
 	import Image from "@tiptap/extension-image";
 	import Color from "@tiptap/extension-color";
 	import CodeBlock from "@tiptap/extension-code-block";
+	import { Indent } from "./indent";
+	import { CodeBlockIndent } from "./indentCodeBlock";
+	import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
 	import TextBold from "phosphor-svelte/lib/TextB";
 	import TextItalic from "phosphor-svelte/lib/TextItalic";
@@ -23,15 +26,14 @@
 	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
 	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
+	import Minus from "phosphor-svelte/lib/Minus";
+
 	import ColorPicker from "./colorPicker.svelte";
-	import { Indent } from "./indent";
-	import { CodeBlockIndent } from "./indentCodeBlock";
 
 	let element: Element;
 	let editor: Editor;
 
 	// FALTAM:
-	// linha horizontal
 	// quote
 	// código fonte
 	// subscrito
@@ -64,6 +66,7 @@
 				CodeBlock.configure({ defaultLanguage: "plaintext" }),
 				CodeBlockIndent,
 				Indent,
+				HorizontalRule,
 			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {
@@ -236,6 +239,17 @@
 		</div>
 
 		<ColorPicker {editor} />
+
+		<div class="group-set">
+			<EditorButton
+				title="Linha Horizontal"
+				active={editor.isActive("horizontalRule")}
+				on:click={() => editor.chain().focus().setHorizontalRule().run()}
+				class="text-white"
+			>
+				<Minus weight="bold" size="20" />
+			</EditorButton>
+		</div>
 	</div>
 {/if}
 
