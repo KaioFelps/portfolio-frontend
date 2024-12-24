@@ -29,6 +29,8 @@
 	import TextBold from "phosphor-svelte/lib/TextB";
 	import TextStrike from "phosphor-svelte/lib/TextStrikethrough";
 	import TextItalic from "phosphor-svelte/lib/TextItalic";
+	import ListBullets from "phosphor-svelte/lib/ListBullets";
+	import ListNumbers from "phosphor-svelte/lib/ListNumbers";
 	import TextUnderline from "phosphor-svelte/lib/TextUnderline";
 	import TextAlignLeft from "phosphor-svelte/lib/TextAlignLeft";
 	import TextSubscript from "phosphor-svelte/lib/TextSubscript";
@@ -42,8 +44,6 @@
 	let isDisplayingSourceCode = false;
 
 	// FALTAM:
-	// lista sem número
-	// lista com número
 	// inserir link
 	// modal pra adicionar/modificar imagem
 	// tabelas
@@ -280,21 +280,43 @@
 			</EditorButton>
 
 			<EditorButton
+				active={editor.isActive("bulletList")}
+				title="Lista"
+				on:click={() => {
+					editor.chain().focus().toggleBulletList().run();
+				}}
+			>
+				<ListBullets weight="bold" size="20" />
+			</EditorButton>
+
+			<EditorButton
+				active={editor.isActive("orderedList")}
+				title="Lista Enumerada"
+				on:click={() => {
+					editor.chain().focus().toggleOrderedList().run();
+				}}
+			>
+				<ListNumbers weight="bold" size="20" />
+			</EditorButton>
+		</div>
+
+		<div class="group-set">
+			<EditorButton
 				active={isDisplayingSourceCode}
 				title="Código Fonte"
 				on:click={handleToggleSourceCode}
 			>
 				<Code weight="bold" size="20" />
 			</EditorButton>
-		</div>
 
-		<EditorButton
-			active={false}
-			title="Limpar Formatação"
-			on:click={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
-		>
-			<Broom weight="bold" size="20" />
-		</EditorButton>
+			<EditorButton
+				active={false}
+				title="Limpar Formatação"
+				on:click={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+			>
+				<Broom weight="bold" size="20" />
+			</EditorButton>
+		</div>
 	</div>
 {/if}
 

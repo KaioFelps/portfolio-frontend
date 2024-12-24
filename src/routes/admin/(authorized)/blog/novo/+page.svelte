@@ -74,8 +74,8 @@
 <Editor />
 
 <div class="flex gap-2 mt-4">
-	<a href="/admin/projetos" class="btn ghost">Cancelar</a>
+	<a href="/admin/blog" class="btn ghost">Cancelar</a>
 	<button type="submit" disabled={formIsLoading} class="btn default">
-		{formIsLoading ? "Publicando" : "Publicar"} projeto
+		{formIsLoading ? "Postando" : "Postar"} publicação
 	</button>
 </div>
