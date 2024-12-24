@@ -1,4 +1,6 @@
 <script lang="ts">
+	import "katex/dist/katex.min.css";
+
 	import { onMount, onDestroy } from "svelte";
 	import clsx from "clsx";
 	import EditorButton from "./editorButton.svelte";
@@ -18,6 +20,7 @@
 	import CodeBlockIndent from "./indentCodeBlock";
 	import Subscript from "@tiptap/extension-subscript";
 	import Superscript from "@tiptap/extension-superscript";
+	import Mathematics from "@aarkue/tiptap-math-extension";
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
@@ -65,6 +68,7 @@
 				Indent,
 				Subscript,
 				Superscript,
+				Mathematics,
 			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {

@@ -97,4 +97,14 @@
       height: -webkit-fill-available;
       @apply bg-backgrond dark:!bg-d-backgrond text-black dark:!text-white;
   }
+
+  /* Decoration containing the actual text */
+  .Tiptap-mathematics-editor {
+    /* … */
+  }
+
+  /* Container of the KaTeX rendering */
+  .Tiptap-mathematics-render {
+    /* … */
+  }
 }
