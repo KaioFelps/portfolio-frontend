@@ -72,7 +72,9 @@ export async function authenticationMiddleware(
 				) +
 				"\nResposta (refresh token):\n" +
 				`\tStatus: ${newTokenResponse.status}\n` +
-				`\tCorpo: ${await newTokenResponse.text()}`,
+				`\tCorpo: ${await newTokenResponse.text()}` +
+				"\nRefresh Token enviado: " +
+				refreshToken,
 		);
 
 		cookies.delete(REFRESH_TOKEN_KEY, { path: "/" });
