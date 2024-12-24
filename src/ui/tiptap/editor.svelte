@@ -275,7 +275,7 @@
 				active={editor.isActive("superscript")}
 				on:click={() => editor.chain().focus().toggleSuperscript().run()}
 			>
-				<TextSubscript weight="bold" size="20" />
+				<TextSuperscript weight="bold" size="20" />
 			</EditorButton>
 
 			<EditorButton
