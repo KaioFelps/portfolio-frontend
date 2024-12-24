@@ -11,31 +11,30 @@
 	import TextStyle from "@tiptap/extension-text-style";
 	import TextAlign from "$lib/tiptap/text-align";
 	import FontSize from "$lib/tiptap/font-size";
-	import Image from "@tiptap/extension-image";
+	import Image from "./image";
 	import Color from "@tiptap/extension-color";
-	import CodeBlock from "@tiptap/extension-code-block";
 	import { Indent } from "./indent";
 	import { CodeBlockIndent } from "./indentCodeBlock";
-	import HorizontalRule from "@tiptap/extension-horizontal-rule";
 
-	import TextBold from "phosphor-svelte/lib/TextB";
-	import TextItalic from "phosphor-svelte/lib/TextItalic";
-	import TextUnderline from "phosphor-svelte/lib/TextUnderline";
-	import TextStrike from "phosphor-svelte/lib/TextStrikethrough";
-	import TextAlignLeft from "phosphor-svelte/lib/TextAlignLeft";
-	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
-	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
-	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
+	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
 	import Quotes from "phosphor-svelte/lib/Quotes";
+	import TextBold from "phosphor-svelte/lib/TextB";
+	import TextStrike from "phosphor-svelte/lib/TextStrikethrough";
+	import TextItalic from "phosphor-svelte/lib/TextItalic";
+	import TextUnderline from "phosphor-svelte/lib/TextUnderline";
+	import TextAlignLeft from "phosphor-svelte/lib/TextAlignLeft";
+	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
+	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
+	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
 
 	import ColorPicker from "./colorPicker.svelte";
 
 	let element: Element;
 	let editor: Editor;
+	let isDisplayingSourceCode = false;
 
 	// FALTAM:
-	// código fonte
 	// subscrito
 	// sobrescrito
 	// copiar formatação
@@ -63,10 +62,8 @@
 				Image,
 				TextAlign,
 				Color,
-				CodeBlock.configure({ defaultLanguage: "plaintext" }),
 				CodeBlockIndent,
 				Indent,
-				HorizontalRule,
 			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {
@@ -81,6 +78,18 @@
 	onDestroy(() => {
 		if (editor) editor.destroy();
 	});
+
+	function handleToggleSourceCode() {
+		console.log(editor.getText());
+
+		if (!isDisplayingSourceCode) {
+			editor.commands.setContent(`<textarea>${editor.getHTML()}</textarea>`);
+		} else {
+			editor.commands.setContent(editor.getText(), true);
+		}
+
+		isDisplayingSourceCode = !isDisplayingSourceCode;
+	}
 </script>
 
 {#if editor}
@@ -257,6 +266,14 @@
 				class="text-white"
 			>
 				<Quotes weight="bold" size="20" />
+			</EditorButton>
+
+			<EditorButton
+				active={isDisplayingSourceCode}
+				title="Código Fonte"
+				on:click={handleToggleSourceCode}
+			>
+				<Code weight="bold" size="20" />
 			</EditorButton>
 		</div>
 	</div>

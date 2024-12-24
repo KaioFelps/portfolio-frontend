@@ -15,7 +15,7 @@
 	"devDependencies": {
 		"@rocketseat/eslint-config": "^2.2.2",
 		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/kit": "^2.6.1",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/node": "20.14.2",
 		"@typescript-eslint/eslint-plugin": "6.17.0",
@@ -39,9 +39,7 @@
 		"@sveltejs/adapter-node": "5.2.4",
 		"@tailwindcss/typography": "^0.5.13",
 		"@tiptap/core": "2.7.2",
-		"@tiptap/extension-code-block": "2.10.4",
 		"@tiptap/extension-color": "2.7.3",
-		"@tiptap/extension-horizontal-rule": "2.10.4",
 		"@tiptap/extension-image": "2.7.2",
 		"@tiptap/extension-text-align": "2.7.3",
 		"@tiptap/extension-text-style": "2.7.2",
