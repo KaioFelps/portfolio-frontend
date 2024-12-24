@@ -3,6 +3,7 @@
 	import clsx from "clsx";
 	import EditorButton from "./editorButton.svelte";
 	import EditorSet from "./editorSet.svelte";
+	import ColorPicker from "./colorPicker.svelte";
 
 	import { handlePasteImageWithOrigin } from "$crate/lib/tiptap/paste-img";
 	import { Editor } from "@tiptap/core";
@@ -13,8 +14,10 @@
 	import FontSize from "$lib/tiptap/font-size";
 	import Image from "./image";
 	import Color from "@tiptap/extension-color";
-	import { Indent } from "./indent";
-	import { CodeBlockIndent } from "./indentCodeBlock";
+	import Indent from "./indent";
+	import CodeBlockIndent from "./indentCodeBlock";
+	import Subscript from "@tiptap/extension-subscript";
+	import Superscript from "@tiptap/extension-superscript";
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
@@ -24,24 +27,21 @@
 	import TextItalic from "phosphor-svelte/lib/TextItalic";
 	import TextUnderline from "phosphor-svelte/lib/TextUnderline";
 	import TextAlignLeft from "phosphor-svelte/lib/TextAlignLeft";
+	import TextSubscript from "phosphor-svelte/lib/TextSubscript";
 	import TextAlignRight from "phosphor-svelte/lib/TextAlignRight";
+	import TextSuperscript from "phosphor-svelte/lib/TextSuperscript";
 	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
-
-	import ColorPicker from "./colorPicker.svelte";
 
 	let element: Element;
 	let editor: Editor;
 	let isDisplayingSourceCode = false;
 
 	// FALTAM:
-	// subscrito
-	// sobrescrito
 	// copiar formatação
 	// apagar formatação
 	// lista sem número
 	// lista com número
-	// diminuir/aumentar recuo
 	// inserir link
 	// modal pra adicionar/modificar imagem
 	// tabelas
@@ -64,6 +64,8 @@
 				Color,
 				CodeBlockIndent,
 				Indent,
+				Subscript,
+				Superscript,
 			],
 			content: "<p>Olá, plantas! 🪴</p>",
 			onTransaction: () => {
@@ -266,6 +268,22 @@
 				class="text-white"
 			>
 				<Quotes weight="bold" size="20" />
+			</EditorButton>
+
+			<EditorButton
+				title="Super-escrita"
+				active={editor.isActive("superscript")}
+				on:click={() => editor.chain().focus().toggleSuperscript().run()}
+			>
+				<TextSubscript weight="bold" size="20" />
+			</EditorButton>
+
+			<EditorButton
+				title="Sub-escrita"
+				active={editor.isActive("subscript")}
+				on:click={() => editor.chain().focus().toggleSubscript().run()}
+			>
+				<TextSubscript weight="bold" size="20" />
 			</EditorButton>
 
 			<EditorButton

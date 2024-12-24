@@ -30,7 +30,7 @@ type IndentOptions = {
 	HTMLAttributes: Record<string, any>;
 };
 
-export const Indent = Extension.create<IndentOptions, never>({
+const Indent = Extension.create<IndentOptions, never>({
 	name: "indent",
 
 	addOptions() {
@@ -196,3 +196,5 @@ export const getOutdent: (outdentOnlyAtHead: boolean) => KeyboardShortcutCommand
 		}
 		return editor.chain().focus().outdent().run();
 	};
+
+export default Indent;

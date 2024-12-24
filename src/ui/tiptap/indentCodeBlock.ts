@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import { TextSelection } from "@tiptap/pm/state";
 
-export const CodeBlockIndent = Extension.create({
+const CodeBlockIndent = Extension.create({
 	addKeyboardShortcuts() {
 		return {
 			Tab: ({ editor }) => {
@@ -29,3 +29,5 @@ export const CodeBlockIndent = Extension.create({
 		};
 	},
 });
+
+export default CodeBlockIndent;
