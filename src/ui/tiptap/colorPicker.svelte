@@ -35,7 +35,7 @@
 <Popover.Root bind:open onOpenChange={handleColorPickOpen}>
 	<Popover.Trigger asChild let:builder>
 		<EditorButton active={false} {builder}>
-			<PaintBrush width="20" weight="bold" />
+			<PaintBrush size="20" weight="bold" />
 		</EditorButton>
 	</Popover.Trigger>
 	<Popover.Content
