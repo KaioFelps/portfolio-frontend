@@ -21,6 +21,7 @@
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
+	import Broom from "phosphor-svelte/lib/Broom";
 	import Quotes from "phosphor-svelte/lib/Quotes";
 	import TextBold from "phosphor-svelte/lib/TextB";
 	import TextStrike from "phosphor-svelte/lib/TextStrikethrough";
@@ -38,8 +39,6 @@
 	let isDisplayingSourceCode = false;
 
 	// FALTAM:
-	// copiar formatação
-	// apagar formatação
 	// lista sem número
 	// lista com número
 	// inserir link
@@ -158,7 +157,6 @@
 				title="Negrito"
 				active={editor.isActive("bold")}
 				on:click={() => editor.chain().focus().toggleBold().run()}
-				class="text-white"
 			>
 				<TextBold weight="bold" size="20" />
 			</EditorButton>
@@ -167,7 +165,6 @@
 				title="Itálico"
 				active={editor.isActive("italic")}
 				on:click={() => editor.chain().focus().toggleItalic().run()}
-				class="text-white"
 			>
 				<TextItalic weight="bold" size="20" />
 			</EditorButton>
@@ -176,7 +173,6 @@
 				title="Underline"
 				active={editor.isActive("underline")}
 				on:click={() => editor.chain().focus().toggleUnderline().run()}
-				class="text-white"
 			>
 				<TextUnderline weight="bold" size="20" />
 			</EditorButton>
@@ -185,7 +181,6 @@
 				title="Riscar"
 				active={editor.isActive("strike")}
 				on:click={() => editor.chain().focus().toggleStrike().run()}
-				class="text-white"
 			>
 				<TextStrike weight="bold" size="20" />
 			</EditorButton>
@@ -216,7 +211,6 @@
 				title="Alinhar à esquerda"
 				active={editor.isActive({ textAlign: "left" })}
 				on:click={() => editor.chain().focus().toggleTextAlign("left").run()}
-				class="text-white"
 			>
 				<TextAlignLeft weight="bold" size="20" />
 			</EditorButton>
@@ -225,7 +219,6 @@
 				title="Alinhar ao centro"
 				active={editor.isActive({ textAlign: "center" })}
 				on:click={() => editor.chain().focus().toggleTextAlign("center").run()}
-				class="text-white"
 			>
 				<TextAlignCenter weight="bold" size="20" />
 			</EditorButton>
@@ -234,7 +227,6 @@
 				title="Alinhar à direita"
 				active={editor.isActive({ textAlign: "right" })}
 				on:click={() => editor.chain().focus().toggleTextAlign("right").run()}
-				class="text-white"
 			>
 				<TextAlignRight weight="bold" size="20" />
 			</EditorButton>
@@ -243,7 +235,6 @@
 				title="Justificar"
 				active={editor.isActive({ textAlign: "justify" })}
 				on:click={() => editor.chain().focus().toggleTextAlign("justify").run()}
-				class="text-white"
 			>
 				<TextAlignJustify weight="bold" size="20" />
 			</EditorButton>
@@ -256,7 +247,6 @@
 				title="Linha Horizontal"
 				active={editor.isActive("horizontalRule")}
 				on:click={() => editor.chain().focus().setHorizontalRule().run()}
-				class="text-white"
 			>
 				<Minus weight="bold" size="20" />
 			</EditorButton>
@@ -265,7 +255,6 @@
 				title="Quote"
 				active={editor.isActive("blockquote")}
 				on:click={() => editor.chain().focus().toggleBlockquote().run()}
-				class="text-white"
 			>
 				<Quotes weight="bold" size="20" />
 			</EditorButton>
@@ -294,6 +283,14 @@
 				<Code weight="bold" size="20" />
 			</EditorButton>
 		</div>
+
+		<EditorButton
+			active={false}
+			title="Limpar Formatação"
+			on:click={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+		>
+			<Broom weight="bold" size="20" />
+		</EditorButton>
 	</div>
 {/if}
 
