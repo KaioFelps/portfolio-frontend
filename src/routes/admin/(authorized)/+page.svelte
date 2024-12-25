@@ -3,9 +3,12 @@
 	import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
 	import type { PageLoadData } from "./handlers";
 	import { formatLogString } from "$crate/utils";
+	import Title from "$crate/components/title.svelte";
 
 	export let data: PageLoadData;
 </script>
+
+<Title title="Home" adminRoute />
 
 <section class="mb-12">
 	<h2 class="mb-6">Status</h2>
