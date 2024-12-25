@@ -47,7 +47,6 @@
 	let isDisplayingSourceCode = false;
 
 	// FALTAM:
-	// inserir link
 	// modal pra adicionar/modificar imagem
 	// tabelas
 

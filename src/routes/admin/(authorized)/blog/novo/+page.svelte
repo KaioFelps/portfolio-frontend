@@ -7,7 +7,7 @@
 	import type { PageLoadData } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
 
-	export let form;
+	// export let form;
 	export let data: PageLoadData;
 
 	$: tagsData = data.tags;
