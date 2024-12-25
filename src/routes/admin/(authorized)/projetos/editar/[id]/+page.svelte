@@ -1,14 +1,15 @@
 <script lang="ts">
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
-	import type { AdminEditProjectPageServerData, EditProjectResponse } from "./+page.server";
 	import { enhance } from "$app/forms";
 	import type { Selected } from "bits-ui";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select";
 	import Trash from "phosphor-svelte/lib/Trash";
 	import { goto } from "$app/navigation";
+	import Title from "$crate/components/title.svelte";
+	import type { EditProjectResponse, AdminEditProjectPageData } from "./+page.server";
 
-	export let data: AdminEditProjectPageServerData;
+	export let data: AdminEditProjectPageData;
 	export let form: EditProjectResponse | undefined;
 
 	let initialInputValues = {
@@ -98,6 +99,7 @@
 </script>
 
 {#if data.project.success && data.project.data}
+	<Title title={`Editando Projeto ${data.project.data.title}`} adminRoute />
 	<h1 class="mb-6">Editar projeto: {data.project.data.title}</h1>
 
 	{#if form?.success}
@@ -165,7 +167,7 @@
 
 		{#if !data.tags.success}
 			<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
-				{data.tags.error}
+				{data.tags.internalError ? "Erro interno" : data.tags.error}
 			</span>
 		{:else if data.tags.data.tags.length > 0}
 			{#if !form?.success && form?.isValidationError}
@@ -250,6 +252,8 @@
 		</div>
 	</form>
 {:else if data.project.success}
+	<Title title="Projeto Não Encontrado" adminRoute />
+
 	<h1>Projeto não encontrado</h1>
 	<a href="/admin/projetos" class="btn ghost mt-3"><ArrowLeft size="20" weight="bold" /> Voltar</a>
 {:else}
