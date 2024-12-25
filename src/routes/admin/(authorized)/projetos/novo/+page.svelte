@@ -6,6 +6,7 @@
 	import type { Selected } from "bits-ui";
 	import { tick } from "svelte";
 	import type { PageLoadData, PublishResponseType } from "./handlers";
+	import Title from "$crate/components/title.svelte";
 
 	export let form: PublishResponseType;
 	export let data: PageLoadData;
@@ -58,6 +59,8 @@
 		e.currentTarget.reset();
 	}
 </script>
+
+<Title title="Novo Projeto" adminRoute />
 
 <h1 class="mb-12">Novo projeto</h1>
 
