@@ -34,9 +34,6 @@ jobs:
                 cp package.json __package
                 cp package-lock.json __package
             
-            - name: Move to __package directory
-              run: cd __package
-            
             - name: Setup Square Cloud CLI
               uses: squarecloudofc/github-action@v2
               with:
@@ -45,6 +42,7 @@ jobs:
             
             - name: Deploy
               run: |
+                run: cd __package
                 squarecloud login --token=${{ secrets.SQUARE_TOKEN }}
                 squarecloud commit ${{ secrets.SQUARE_APPLICATION_ID }}
                 squarecloud app restart ${{ secrets.SQUARE_APPLICATION_ID }}
