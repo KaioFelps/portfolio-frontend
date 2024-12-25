@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CaretLeft from "phosphor-svelte/lib/CaretLeft";
 	import CaretRight from "phosphor-svelte/lib/CaretRight";
-	import type { AdminProjectPageServerData, DeleteProjectResponse } from "./+page.server";
 	import { page } from "$app/stores";
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
 	import Pencil from "phosphor-svelte/lib/Pencil";
@@ -11,9 +10,11 @@
 	import type { ActionData } from "./$types";
 	import ErrorToast from "$crate/components/error-toast.svelte";
 	import { goto } from "$app/navigation";
+	import Title from "$crate/components/title.svelte";
+	import type { DeleteProjectResponseType, PageLoadData } from "./handlers";
 
-	export let data: AdminProjectPageServerData & { user: AuthUser };
-	export let form: DeleteProjectResponse | null;
+	export let data: PageLoadData & { user: AuthUser };
+	export let form: DeleteProjectResponseType | null;
 
 	$: formError = form ? !form.success : false;
 
@@ -22,15 +23,15 @@
 	}
 
 	let url = $page.url;
-	let currentPage = data.data?.page ?? 1;
+	let currentPage = data.success ? data.data.page : 1;
 	let lastPage = 1;
 
-	$: if (data.data) {
+	$: if (data.success) {
 		lastPage = data.data.totalCount <= 0 ? 1 : Math.ceil(data.data.totalCount / data.data.perPage);
 	}
 
 	let paginationButtons = (() => {
-		if (!data.data) return [];
+		if (!data.success) return [];
 
 		let { maxLeft, maxRight } = PaginationHelper.getVisibleButtons(5, currentPage, lastPage);
 
@@ -44,6 +45,8 @@
 	})();
 </script>
 
+<Title title="Projetos" adminRoute />
+
 <header class="mb-12 flex items-center justify-between">
 	<h1>Projetos</h1>
 
@@ -52,7 +55,7 @@
 	{/if}
 </header>
 
-{#if data.data}
+{#if data.success}
 	{#if data.data.projects.length > 0}
 		<div class="flex flex-col gap-1 mb-12">
 			{#each data.data.projects as project (project.id)}
@@ -101,9 +104,14 @@
 		</a>
 	</div>
 {:else}
-	<span class="mx-auto danger alert text-center w-full">{data.error}</span>
+	<span class="mx-auto danger alert text-center w-full"
+		>{data.internalError ? "Erro interno" : data.error}</span
+	>
 {/if}
 
 {#if formError && form && !form.success}
-	<ErrorToast close={() => (formError = false)} message={form.error} />
+	<ErrorToast
+		close={() => (formError = false)}
+		message={form.internalError ? "Erro interno" : form.error}
+	/>
 {/if}
