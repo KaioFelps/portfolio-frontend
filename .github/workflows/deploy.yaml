@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+    push:
+        branches: 
+            - main
+
+jobs:
+    deploy:
+        name: Deploy to Square Cloud
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the repository
+              uses: actions/checkout@v4
+            
+            - name: Install Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+          
+            - name: Build
+              run: |
+                npm install
+                npm run build
+            
+            - name: Generate the package
+              run: |
+                mkdir __package
+                cp -r build __package
+                cp run.sh __package
+                cp package.json __package
+                cp package-lock.json __package
+            
+            - name: Move to __package directory
+              run: cd __package
+            
+            - name: Setup Square Cloud CLI
+              uses: squarecloudofc/github-action@v2
+              with:
+                token: ${{ secrets.SQUARE_TOKEN }}
+                install-only: true
+            
+            - name: Deploy
+              run: |
+                squarecloud login --token=${{ secrets.SQUARE_TOKEN }}
+                squarecloud commit ${{ secrets.SQUARE_APPLICATION_ID }}
+                squarecloud app restart ${{ secrets.SQUARE_APPLICATION_ID }}
