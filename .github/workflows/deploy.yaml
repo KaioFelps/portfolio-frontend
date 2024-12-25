@@ -5,6 +5,9 @@ on:
         branches: 
             - main
 
+env:
+  PUBLIC_THEME_COOKIE_KEY: kaiofelps_theme
+
 jobs:
     deploy:
         name: Deploy to Square Cloud
