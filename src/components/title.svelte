@@ -1,12 +1,20 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 
-	type $$props = {
+	type $$Props = {
 		title?: string;
+		adminRoute?: boolean;
 	};
 
-	export let title: $$props["title"] = undefined;
-	$: formattedTitle = title ? `Kaio Felps | ${title}` : "Kaio Felps";
+	export let title: string | undefined = undefined;
+	export let adminRoute: boolean = false;
+
+	$: formattedTitle = getFormattedTitle(adminRoute, title);
+
+	const getFormattedTitle = (isAdminRoute: boolean, title?: string) => {
+		const formerPart = isAdminRoute ? "Kaio Felps :: Admin" : "Kaio Felps";
+		return title ? `${formerPart} | ${title}` : formerPart;
+	};
 
 	onMount(() => {
 		return () => {
