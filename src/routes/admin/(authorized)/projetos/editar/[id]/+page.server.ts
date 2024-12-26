@@ -22,7 +22,7 @@ export const load: PageServerLoad = async (ctx): Promise<AdminEditProjectPageDat
 	const availableTags = await getAvailableTags(ctx);
 
 	try {
-		const response = await fetch(`${env.BACKEND_URL}/project/${ctx.params.id}`);
+		const response = await ctx.fetch(`${env.BACKEND_URL}/project/${ctx.params.id}`);
 
 		let project: Project | null = null;
 		const data: { project: Project | null } = await response.json();

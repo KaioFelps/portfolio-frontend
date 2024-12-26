@@ -17,7 +17,7 @@ export type EditTagResponse = ServerResponseData<Tag, EditTagErrorType>;
 
 export abstract class TagsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/tag/list`);
+		const response = await this.fetch(`${env.BACKEND_URL}/tag/list`);
 
 		switch (response.status) {
 			case 200:

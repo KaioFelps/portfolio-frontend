@@ -14,7 +14,7 @@ export type PageLoadData = ServerResponseData<ApiResponse, string[]>;
 
 export abstract class ProjectsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/project/list`);
+		const response = await this.fetch(`${env.BACKEND_URL}/project/list`);
 
 		if (response.ok) {
 			const data: ApiResponse = await response.json();

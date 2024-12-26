@@ -22,7 +22,7 @@ export type PageLoadData = { tags: ServerResponseData<FetchTagsResponse, string>
 
 export abstract class ProjectsActionsHandlers {
 	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
-		const response = await fetch(`${env.BACKEND_URL}/tag/list`);
+		const response = await this.fetch(`${env.BACKEND_URL}/tag/list`);
 
 		if (response.ok) {
 			const data: FetchTagsResponse = await response.json();
@@ -58,7 +58,7 @@ export abstract class ProjectsActionsHandlers {
 
 		const data = parsedData.data;
 
-		const response = await fetch(`${env.BACKEND_URL}/project/new`, {
+		const response = await this.fetch(`${env.BACKEND_URL}/project/new`, {
 			method: "post",
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",

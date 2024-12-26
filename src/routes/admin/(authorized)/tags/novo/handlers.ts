@@ -31,7 +31,7 @@ export abstract class TagsActionsHandlers {
 			);
 
 		const body = JSON.stringify(parsedData.data);
-		const response = await fetch(`${env.BACKEND_URL}/tag/new`, {
+		const response = await this.fetch(`${env.BACKEND_URL}/tag/new`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			credentials: "include",
