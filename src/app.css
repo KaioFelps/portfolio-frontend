@@ -67,12 +67,15 @@
   /* CHIPS */
   .chip {
     @apply 
-      flex justify-center items-center cursor-default rounded-full px-2 py-1.5
+      flex justify-center items-center cursor-default rounded-full px-2.5 py-1
       text-sm leading-none transition-all
   }
 
-  .chip.c-yellow { @apply bg-yellow-500/10 border border-yellow-500 text-yellow-900 }
-  .chip.c-yellow.c-clickable { @apply hover:bg-yellow-500/25 active:bg-yellow-500/40 }
+  .chip.c-yellow { @apply bg-yellow-700/10 text-yellow-700 }
+  .chip.c-yellow.c-clickable {
+    @apply hover:bg-yellow-500/20 active:bg-yellow-500/30
+      dark:hover:bg-yellow-700/20 dark:active:bg-yellow-700/30
+  }
 
   /* TEXT CONTAINERS */
   .text-container {
