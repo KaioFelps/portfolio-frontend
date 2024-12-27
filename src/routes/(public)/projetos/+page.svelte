@@ -4,7 +4,7 @@
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import { fly } from "svelte/transition";
 	import type { FetchProjectsData } from "./proxy+page.server.js";
-	import { goto } from "$app/navigation";
+	import { goto, afterNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import LinksPopover from "./linksPopover.svelte";
 	import clsx from "clsx";
@@ -31,17 +31,31 @@
 		currentPage = form.data.page;
 	}
 
-	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
-	let query: string = $page.url.searchParams.get("q") ?? "";
-
 	const queryByOptions = [
 		{ value: "title", label: "Buscar por título" },
 		{ value: "tag", label: "Buscar por tag" },
 	];
 
-	let queryBy: Selected<string> =
-		queryByOptions.find((opt) => opt.value === $page.url.searchParams.get("qb")) ??
-		queryByOptions[0];
+	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
+	let query: string = $page.url.searchParams.get("q") ?? "";
+
+	let queryBy: Selected<string> = getQueryByValue($page.url.searchParams.get("qb"));
+
+	afterNavigate((navigation) => {
+		if (!navigation.to) return;
+
+		const newQuery = navigation.to.url.searchParams.get("q");
+		const newQueryBy = navigation.to.url.searchParams.get("qb");
+		if (newQuery !== null) query = newQuery;
+
+		if (newQueryBy !== null) {
+			queryBy = getQueryByValue(newQueryBy);
+		}
+	});
+
+	function getQueryByValue(qb: string | null) {
+		return queryByOptions.find((opt) => opt.value === qb) ?? queryByOptions[0];
+	}
 
 	function handleQueryProjects() {
 		clearTimeout(queryFormTimeoutId);
