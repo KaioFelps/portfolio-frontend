@@ -17,8 +17,17 @@
 	<nav
 		class="
         flex-1 flex flex-row gap-[10px] self-center justify-center items-center
-        prose-a:transition-all prose-a:leading-none
-        prose-a:text-black dark:data-[active=false]:prose-a:text-white prose-a:font-medium prose-a:p-[10px] prose-a:border-[transparent] hover:prose-a:border-yellow-500 prose-a:border-b data-[active=true]:prose-a:rounded-full data-[active=true]:prose-a:bg-yellow-500
+        prose-a:transition-all prose-a:leading-none prose-a:duration-75
+        prose-a:text-black dark:data-[active=false]:prose-a:text-white prose-a:font-medium
+		prose-a:px-4 prose-a:pt-2 prose-a:pb-1.5 prose-a:border-[transparent] prose-a:border-b
+		hover:prose-a:border-yellow-500 hover:prose-a:bg-yellow-500/5
+		data-[active=true]:prose-a:rounded-lg data-[active=true]:prose-a:bg-yellow-500/25
+		data-[active=true]:prose-a:text-yellow-900 data-[active=true]:prose-a:font-bold
+		data-[active=true]:prose-a:border-yellow-500
+		data-[active=true]:prose-a:border-t data-[active=true]:prose-a:border-b-0
+		dark:data-[active=true]:prose-a:border-yellow-900
+		dark:data-[active=true]:prose-a:bg-yellow-900/20
+		dark:data-[active=true]:prose-a:text-yellow-600
         "
 	>
 		<a data-active={currentPath === "/"} href="/">Home</a>
