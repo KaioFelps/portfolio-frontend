@@ -160,10 +160,7 @@
 						<footer class="flex items-start justify-between gap-2">
 							<div class="flex flex-wrap gap-1.5">
 								{#each project.tags as tag (`${project.id}_tag_${tag.id}`)}
-									<a
-										href="/blog?queryBy=tag&query={tag.value}"
-										class="group chip c-yellow c-clickable"
-									>
+									<a href="/projetos?q={tag.value}&qb=tag" class="group chip c-yellow c-clickable">
 										{tag.value}
 									</a>
 								{/each}
