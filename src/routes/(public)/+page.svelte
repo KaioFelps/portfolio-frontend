@@ -10,12 +10,20 @@
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-main mx-auto flex flex-col items-center justify-center"
 >
-	<h1 class="mb-20 text-center">Kaio Felipe</h1>
+	<h1 class="mb-10 text-center">Kaio Felipe</h1>
 
-	<h2 class="mb-6 font-medium text-2xl text-center">Desenvolvo layouts e sites fantásticos!</h2>
+	<h2
+		class="
+		mb-12 font-black text-3xl text-center text-balance max-w-[500px]
+		text-yellow-900
+		"
+	>
+		desenvolvedor full-stack, cientista da computação, engenheiro de software ou alguma coisa do
+		tipo
+	</h2>
 
-	<a class="group btn default text-lg font-semibold" href="/projetos">
-		<span class="max-2xs:hidden">Conheça o meu trabalho</span>
+	<a class="group btn default text-lg font-semibold uppercase gap-4" href="/projetos">
+		<span class="max-2xs:hidden">Confira meus projetos</span>
 		<span class="2xs:hidden">Projetos</span>
 		<ArrowRight
 			size="20"
