@@ -60,7 +60,7 @@ export const flyAndScale = (
 export function getThemeCookie(cookieString: string): string | undefined {
 	const cookies: Map<string, string> = new Map();
 
-	for (const cookie of cookieString.split(";")) {
+	for (const cookie of cookieString.split("; ")) {
 		const [key, ..._value] = cookie.split("=");
 		const value = _value.join("=");
 		cookies.set(key, value);
