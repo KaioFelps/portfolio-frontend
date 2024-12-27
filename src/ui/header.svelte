@@ -16,7 +16,7 @@
 
 	<nav
 		class="
-        flex-1 flex flex-row gap-[10px] self-center justify-center items-center
+        flex-1 flex flex-row gap-1 self-center justify-center items-center
         prose-a:transition-all prose-a:leading-none prose-a:duration-75
         prose-a:text-black dark:data-[active=false]:prose-a:text-white prose-a:font-medium
 		prose-a:px-4 prose-a:pt-2 prose-a:pb-1.5 prose-a:border-[transparent] prose-a:border-b
