@@ -14,7 +14,7 @@
 
   .btn.default {
     @apply bg-yellow-500
-    [&:not(:disabled)]:hover:bg-yellow-600 [&:not(:disabled)]:hover:scale-[1.05]
+    [&:not(:disabled)]:hover:bg-yellow-600 [&:not(:disabled)]:hover:scale-[1.01]
     outline-yellow-600/30
   }
 
