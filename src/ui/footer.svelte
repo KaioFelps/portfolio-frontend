@@ -9,7 +9,7 @@
 		class="
         flex flex-row gap-2
         prose-a:leading-none prose-a:p-2 prose-a:rounded-lg prose-a:transition-all prose-a:flex prose-a:gap-1 prose-a:items-center
-		prose-a:font-medium
+		prose-a:font-medium prose-a:text-black/80 dark:prose-a:text-white/80
 		hover:prose-a:text-tangerine-600 dark:hover:prose-a:text-yellow-700 hover:prose-a:bg-gray-200 dark:hover:prose-a:bg-d-gray-200
         "
 	>
