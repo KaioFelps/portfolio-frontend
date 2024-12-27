@@ -31,6 +31,7 @@
 		dark:data-[active=true]:prose-a:border-yellow-900
 		dark:data-[active=true]:prose-a:bg-yellow-900/20
 		dark:data-[active=true]:prose-a:text-yellow-600
+		prose-a:text-nowrap
         "
 	>
 		<a data-active={currentPath === "/"} href="/">Home</a>
