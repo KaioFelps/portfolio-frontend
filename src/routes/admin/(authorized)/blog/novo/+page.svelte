@@ -6,6 +6,7 @@
 	import type { Selected } from "bits-ui";
 	import type { PageLoadData } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
+	import PreviewDialog from "./previewDialog.svelte";
 
 	// export let form;
 	export let data: PageLoadData;
@@ -14,6 +15,9 @@
 
 	let selectedTags: Array<Selected<string>> = [];
 	let formIsLoading = false;
+
+	let editorHtml: string;
+	let title: string;
 </script>
 
 <Title title="Novo post" />
@@ -35,7 +39,13 @@
 	}}
 >
 	<FloatingGroup class="mb-3">
-		<FloatingInput class="w-full" name="title" placeholder="Título do post" type="text" />
+		<FloatingInput
+			class="w-full"
+			name="title"
+			placeholder="Título do post"
+			type="text"
+			bind:value={title}
+		/>
 		<FloatingLabel>Título</FloatingLabel>
 	</FloatingGroup>
 
@@ -71,10 +81,11 @@
 
 <h3 class="text-xl font-bold mb-3">Editor</h3>
 
-<Editor />
+<Editor bind:editorHtml />
 
 <div class="flex gap-2 mt-4">
 	<a href="/admin/blog" class="btn ghost">Cancelar</a>
+	<PreviewDialog html={editorHtml} />
 	<button type="submit" disabled={formIsLoading} class="btn default">
 		{formIsLoading ? "Postando" : "Postar"} publicação
 	</button>
