@@ -91,8 +91,6 @@
 	});
 
 	function handleToggleSourceCode() {
-		console.log(editor.getText());
-
 		if (!isDisplayingSourceCode) {
 			editor.commands.setContent(`<textarea>${editor.getHTML()}</textarea>`);
 		} else {
