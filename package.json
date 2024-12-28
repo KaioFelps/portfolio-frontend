@@ -56,7 +56,6 @@
 		"dotenv": "16.4.5",
 		"hast-util-to-dom": "4.0.0",
 		"hast-util-to-html": "9.0.4",
-		"he": "1.2.0",
 		"katex": "0.16.18",
 		"phosphor-svelte": "^2.0.1",
 		"run-script-os": "1.1.6",
