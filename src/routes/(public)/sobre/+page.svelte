@@ -1,5 +1,6 @@
 <script>
 	import Title from "$crate/components/title.svelte";
+	import { socialMedias } from "$crate/config/socialMedias";
 	import { getYearsFromNow } from "$crate/utils";
 
 	const myBirthday = new Date("07/17/2005");
@@ -35,7 +36,7 @@
 		<p>
 			Apesar de não ter experiência profissional, já fiz alguns {" "}
 			<a href="/projetos" class="link">projetos</a>! Você pode conferir tudo e mais um pouco no meu {" "}
-			<a href="https://github.com/KaioFelps" target="_blank"> github </a>.
+			<a href={socialMedias.github} target="_blank"> github </a>.
 		</p>
 	</div>
 </main>

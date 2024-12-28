@@ -2,6 +2,7 @@
 	import GithubLogo from "phosphor-svelte/lib/GithubLogo";
 	import BehanceLogo from "phosphor-svelte/lib/BehanceLogo";
 	import LinkedinLogo from "phosphor-svelte/lib/LinkedinLogo";
+	import { socialMedias } from "$crate/config/socialMedias";
 </script>
 
 <footer class="w-full h-[109px] px-16 flex items-center justify-center mt-20 shrink-0">
@@ -13,13 +14,11 @@
 		hover:prose-a:text-tangerine-600 dark:hover:prose-a:text-yellow-700 hover:prose-a:bg-gray-200 dark:hover:prose-a:bg-d-gray-200
         "
 	>
-		<a href="https://www.linkedin.com/in/kaio-felipe-70730319a/" target="_blank">
+		<a href={socialMedias.linkedin} target="_blank">
 			<LinkedinLogo size="24" weight="fill" /> Linkedin</a
 		>
-		<a href="https://github.com/KaioFelps" target="_blank">
-			<GithubLogo size="24" weight="fill" /> Github</a
-		>
-		<a href="https://www.behance.net/kaiofelps" target="_blank">
+		<a href={socialMedias.github} target="_blank"><GithubLogo size="24" weight="fill" /> Github</a>
+		<a href={socialMedias.behance} target="_blank">
 			<BehanceLogo size="24" weight="fill" /> Behance</a
 		>
 	</div>
