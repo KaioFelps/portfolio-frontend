@@ -41,10 +41,13 @@
 	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
 	import HyperlinkDialog from "./hyperlinkDialog.svelte";
+	import HardBreak from "@tiptap/extension-hard-break";
 
 	let element: Element;
 	let editor: Editor;
 	let isDisplayingSourceCode = false;
+
+	export let editorHtml: string;
 
 	// FALTAM:
 	// modal pra adicionar/modificar imagem
@@ -59,7 +62,12 @@
 				},
 			},
 			extensions: [
-				StarterKit,
+				StarterKit.configure({ hardBreak: false }),
+				HardBreak.extend({
+					renderText() {
+						return "\n";
+					},
+				}),
 				Underline,
 				TextStyle,
 				FontSize,
@@ -83,6 +91,14 @@
 			async onPaste(_event) {
 				await handlePasteImageWithOrigin(editor);
 			},
+
+			onCreate({ editor }) {
+				editorHtml = editor.getHTML();
+			},
+
+			onUpdate({ editor }) {
+				editorHtml = editor.getHTML();
+			},
 		});
 	});
 
@@ -92,12 +108,20 @@
 
 	function handleToggleSourceCode() {
 		if (!isDisplayingSourceCode) {
-			editor.commands.setContent(`<textarea>${editor.getHTML()}</textarea>`);
+			const htmlContent = editor
+				.getHTML()
+				.replaceAll("\n", "<br>")
+				.replaceAll("&", "&amp;")
+				.replaceAll("\t", "\\t");
+			editor.commands.setContent(`<textarea>${htmlContent}</textarea>`, true, {
+				preserveWhitespace: true,
+			});
 		} else {
-			editor.commands.setContent(editor.getText(), true);
+			editor.commands.setContent(editor.getText().replaceAll("\\t", "\t"));
 		}
 
 		isDisplayingSourceCode = !isDisplayingSourceCode;
+		editorHtml = editor.getHTML();
 	}
 </script>
 

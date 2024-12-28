@@ -77,6 +77,13 @@
       dark:hover:bg-yellow-700/20 dark:active:bg-yellow-700/30
   }
 
+  /* HEADINGS */
+  .main-heading {
+    @apply px-12 text-center pb-4 border-b mb-6
+      font-bold text-5xl text-gray-800 border-gray-300
+      dark:text-d-gray-800 dark:border-d-gray-300
+  }
+
   /* TEXT CONTAINERS */
   .text-container {
     @apply

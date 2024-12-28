@@ -3,6 +3,7 @@ import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
 import { env } from "$env/dynamic/private";
+import { StarryNightSingletone } from "./lib/starry-night";
 
 export const logger = winston.createLogger({
 	level: "info",
@@ -28,6 +29,8 @@ logger.add(
 		),
 	}),
 );
+
+await StarryNightSingletone.maybeInitialize();
 
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.logger = logger;
