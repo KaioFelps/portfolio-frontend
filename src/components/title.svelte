@@ -13,7 +13,7 @@
 
 	const getFormattedTitle = (isAdminRoute: boolean, title?: string) => {
 		const formerPart = isAdminRoute ? "Kaio Felps :: Admin" : "Kaio Felps";
-		return title ? `${formerPart} | ${title}` : formerPart;
+		return title ? `${formerPart} :: ${title}` : formerPart;
 	};
 
 	onMount(() => {
