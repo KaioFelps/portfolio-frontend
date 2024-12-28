@@ -47,7 +47,8 @@
 	let editor: Editor;
 	let isDisplayingSourceCode = false;
 
-	export let editorHtml: string;
+	export let htmlContent: string;
+	const updateHtmlContent = (content: string) => (htmlContent = content);
 
 	// FALTAM:
 	// modal pra adicionar/modificar imagem
@@ -93,11 +94,11 @@
 			},
 
 			onCreate({ editor }) {
-				editorHtml = editor.getHTML();
+				updateHtmlContent(editor.getHTML());
 			},
 
 			onUpdate({ editor }) {
-				editorHtml = editor.getHTML();
+				updateHtmlContent(editor.getHTML());
 			},
 		});
 	});
@@ -121,7 +122,7 @@
 		}
 
 		isDisplayingSourceCode = !isDisplayingSourceCode;
-		editorHtml = editor.getHTML();
+		updateHtmlContent(editor.getHTML());
 	}
 </script>
 

@@ -16,7 +16,7 @@
 	let selectedTags: Array<Selected<string>> = [];
 	let formIsLoading = false;
 
-	let editorHtml: string;
+	let htmlContent: string;
 	let title: string;
 </script>
 
@@ -81,11 +81,11 @@
 
 <h3 class="text-xl font-bold mb-3">Editor</h3>
 
-<Editor bind:editorHtml />
+<Editor bind:htmlContent />
 
 <div class="flex gap-2 mt-4">
 	<a href="/admin/blog" class="btn ghost">Cancelar</a>
-	<PreviewDialog html={editorHtml} />
+	<PreviewDialog html={htmlContent} />
 	<button type="submit" disabled={formIsLoading} class="btn default">
 		{formIsLoading ? "Postando" : "Postar"} publicação
 	</button>
