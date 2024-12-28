@@ -11,9 +11,9 @@
 	import { Editor } from "@tiptap/core";
 
 	import Link from "@tiptap/extension-link";
-	import Image from "./image";
+	import Image from "$crate/lib/tiptap/image";
 	import Color from "@tiptap/extension-color";
-	import Indent from "./indent";
+	import Indent from "$crate/lib/tiptap/indent";
 	import FontSize from "$lib/tiptap/font-size";
 	import Subscript from "@tiptap/extension-subscript";
 	import Underline from "@tiptap/extension-underline";
@@ -22,7 +22,7 @@
 	import StarterKit from "@tiptap/starter-kit";
 	import Superscript from "@tiptap/extension-superscript";
 	import Mathematics from "@aarkue/tiptap-math-extension";
-	import CodeBlockIndent from "./indentCodeBlock";
+	import CodeBlockIndent from "$crate/lib/tiptap/indentCodeBlock";
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
