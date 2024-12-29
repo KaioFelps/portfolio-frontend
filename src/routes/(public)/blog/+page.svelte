@@ -4,7 +4,7 @@
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import { flyAndScale } from "$crate/utils";
-	import type { FetchPostsResponse } from "./+page.server";
+	import type { LoadPaginatedPosts } from "$crate/handlers/blog";
 	import type { Post } from "$crate/core/entities/post";
 	import { page } from "$app/stores";
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
@@ -20,7 +20,7 @@
 		{ value: "tag", label: "Buscar por tag" },
 	];
 
-	export let data: FetchPostsResponse;
+	export let data: LoadPaginatedPosts;
 	export let form: ActionData;
 
 	$: formError = form?.error ? true : false;
@@ -244,7 +244,9 @@
 		{/if}
 	{:else}
 		<div class="max-w-screen-main mx-auto my-12">
-			<span class="mx-auto danger alert">{data.error}</span>
+			<span class="mx-auto danger alert">
+				{data.internalError ? "Não foi possível carregar os posts." : data.error}
+			</span>
 		</div>
 	{/if}
 </main>

@@ -1,24 +1,22 @@
 <script lang="ts">
 	import "$crate/highlight.css";
-	import type { GetPostResponse } from "./+page.server";
+	import type { GetPostBySlugResponse } from "$crate/handlers/blog";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
 	import Title from "$crate/components/title.svelte";
 	import { StarryNightSingletone } from "$crate/lib/starry-night";
 	import { onMount } from "svelte";
 
-	export let data: GetPostResponse;
+	export let data: GetPostBySlugResponse;
 
 	onMount(async () => {
-		console.log("montou");
 		const codeBlocks = Array.from(document.querySelectorAll("pre code"));
-		console.log(codeBlocks);
 		await StarryNightSingletone.clientSideHighlight(codeBlocks);
 	});
 </script>
 
 <svelte:head>
-	<Title title={data.post ? data.post.title : "Não encontrado"} />
+	<Title title={data.success && data.data ? data.data.title : "Post não encontrado"} />
 </svelte:head>
 
 <main class="flex-1 w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
@@ -35,7 +33,7 @@
 		Voltar
 	</a>
 
-	{#if data.post}
+	{#if data.success && data.data}
 		<header>
 			<h1
 				class="
@@ -44,13 +42,13 @@
                 dark:text-d-gray-800 dark:border-d-gray-300
                 "
 			>
-				{data.post.title}
+				{data.data.title}
 			</h1>
 
 			<div class="flex flex-col gap-2 w-full items-center mb-16">
 				<span class="text-sm text-center mb-1 text-gray-600 dark:text-d-gray-600">
-					{#if data.post.publishedAt}
-						Publicado em {data.post.publishedAt.toLocaleDateString("pt-Br", {
+					{#if data.data.publishedAt}
+						Publicado em {data.data.publishedAt.toLocaleDateString("pt-Br", {
 							day: "numeric",
 							month: "long",
 							year: "numeric",
@@ -59,13 +57,13 @@
 						Post ainda não publicado.
 					{/if}
 
-					{#if data.post.updatedAt}
-						<br />Última edição em {data.post.updatedAt.toLocaleDateString("pt-Br")}.
+					{#if data.data.updatedAt}
+						<br />Última edição em {data.data.updatedAt.toLocaleDateString("pt-Br")}.
 					{/if}
 				</span>
 
 				<div class="flex flex-wrap justify-center gap-1">
-					{#each data.post.tags as tag (tag.id)}
+					{#each data.data.tags as tag (tag.id)}
 						<a
 							href="/blog?queryBy=tag&query={tag.value}"
 							class="
@@ -99,15 +97,17 @@
             prose-img:max-w-full
             "
 		>
-			{@html data.post.content}</div
+			{@html data.data.content}</div
 		>
-	{:else if !data.error}
+	{:else if data.success && !data.data}
 		<div class="flex justify-center text-red-700 my-12">
 			<span>Post não encontrado =(</span>
 		</div>
 	{:else}
 		<div class="max-w-screen-main mx-auto my-12">
-			<span class="mx-auto danger alert">Parece que o servidor está fora do ar =(</span>
+			<span class="mx-auto danger alert">
+				Há algum problema com o servidor, tente mais tarde =(
+			</span>
 		</div>
 	{/if}
 </main>
