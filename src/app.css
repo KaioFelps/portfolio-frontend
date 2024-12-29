@@ -87,11 +87,14 @@
   /* TEXT CONTAINERS */
   .text-container {
     @apply
+      dark:text-white/80
+
       [&>*:not(:last-child)]:mb-4 prose-headings:my-6
-      prose-pre:p-4 prose-pre:bg-black/20 dark:prose-pre:bg-black/50 prose-pre:rounded-xl
-      prose-pre:border-gray-200 dark:prose-pre:border-d-gray-200
-      prose-inline-code:bg-black/20 dark:prose-inline-code:bg-black/50 prose-inline-code:border prose-inline-code:border-gray-300 dark:prose-inline-code:border-d-gray-300
-      prose-inline-code:rounded-lg prose-inline-code:px-2 prose-inline-code:py-0.5 prose-inline-code:text-yellow-600
+      prose-pre:p-4 prose-pre:bg-gray-200 dark:prose-pre:bg-black/50 prose-pre:rounded-xl
+      prose-pre:border-gray-200 dark:prose-pre:border-d-gray-200 prose-pre:overflow-x-scroll
+
+      prose-inline-code:bg-gray-200 dark:prose-inline-code:bg-black/50 prose-inline-code:border prose-inline-code:border-gray-300 dark:prose-inline-code:border-d-gray-300
+      prose-inline-code:rounded-lg prose-inline-code:px-2 prose-inline-code:py-0.5 prose-inline-code:text-yellow-900 dark:prose-inline-code:text-yellow-600
       
       prose-blockquote:p-3 prose-blockquote:border-l-4 prose-blockquote:border-l-yellow-600 prose-blockquote:bg-gray-100 dark:prose-blockquote:bg-d-gray-100
       prose-blockquote:rounded-se-xl prose-blockquote:rounded-ee-xl
@@ -101,6 +104,14 @@
       prose-ul:prose-li:prose-p:my-1
       prose-ol:prose-li:prose-p:my-1
       prose-ul:list-disc prose-ol:list-decimal
+      prose-li:prose-p:!mb-0
+
+      prose-h1:text-3xl prose-h1:font-black
+      prose-h2:text-2xl prose-h2:font-black
+      prose-h3:text-xl prose-h3:font-bold
+      prose-h4:text-lg prose-h4:font-bold
+      prose-h5:text-lg prose-h5:font-semibold
+      prose-h6:text-base prose-h6:font-medium
   }
 
   /* List styles

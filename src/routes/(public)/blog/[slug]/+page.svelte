@@ -1,11 +1,20 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import "$crate/highlight.css";
 	import type { GetPostResponse } from "./+page.server";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
 	import Title from "$crate/components/title.svelte";
+	import { StarryNightSingletone } from "$crate/lib/starry-night";
+	import { onMount } from "svelte";
 
 	export let data: GetPostResponse;
+
+	onMount(async () => {
+		console.log("montou");
+		const codeBlocks = Array.from(document.querySelectorAll("pre code"));
+		console.log(codeBlocks);
+		await StarryNightSingletone.clientSideHighlight(codeBlocks);
+	});
 </script>
 
 <svelte:head>
@@ -30,7 +39,7 @@
 		<header>
 			<h1
 				class="
-                px-12 text-center pb-4 border-b mb-6
+                px-12 text-center pb-8 border-b mb-6
                 font-bold text-5xl text-gray-800 border-gray-300
                 dark:text-d-gray-800 dark:border-d-gray-300
                 "
@@ -61,7 +70,7 @@
 							href="/blog?queryBy=tag&query={tag.value}"
 							class="
 							flex
-                            group cursor-default text-black rounded-full px-2 py-1 bg-yellow-500 text-sm leading-tight transition-all
+                            group cursor-default text-black rounded-full px-2.5 pt-1 pb-0.5 bg-yellow-500 text-sm leading-tight transition-all
                             hover:bg-yellow-600
 							dark:bg-yellow-600 dark:hover:bg-yellow-500
                             "
@@ -81,6 +90,7 @@
 		<div
 			id="article-body"
 			class="
+			text-container
             max-w-[792px] gap-4 mx-auto
             text-lg
             dark:text-d-gray-800

@@ -35,7 +35,7 @@
 }
   
 @media (prefers-color-scheme: dark) {
-:root {
+:root.dark {
       --color-prettylights-syntax-comment: #9198a1;
       --color-prettylights-syntax-constant: #79c0ff;
       --color-prettylights-syntax-constant-other-reference-link: #a5d6ff;
