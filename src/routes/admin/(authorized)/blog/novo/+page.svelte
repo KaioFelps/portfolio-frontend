@@ -4,20 +4,18 @@
 	import FloatingSelect from "$crate/components/floating-select/index.js";
 	import Editor from "$crate/ui/tiptap/editor.svelte";
 	import type { Selected } from "bits-ui";
-	import type { PageLoadData } from "../handlers.js";
+	import type { PageLoadData, PublishPostResponse } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
 	import PreviewDialog from "./previewDialog.svelte";
 
-	// export let form;
+	export let form: PublishPostResponse;
 	export let data: PageLoadData;
 
 	$: tagsData = data.tags;
 
 	let selectedTags: Array<Selected<string>> = [];
 	let formIsLoading = false;
-
 	let htmlContent: string;
-	let title: string;
 </script>
 
 <Title title="Novo post" />
@@ -25,11 +23,28 @@
 <h1 class="mb-12">Nova publicação</h1>
 
 <h3 class="text-xl font-bold mb-3">Detalhes</h3>
+
+{#if form && form.success}
+	<span class="success alert mb-3 py-2">Post publicado com sucesso! </span>
+{:else if form && !form.success && !form.internalError && !form.error.validation && Array.isArray(form.error.data)}
+	{#each form.error.data as error}
+		<span class="danger alert mb-3 py-2">{error}</span>
+	{/each}
+{:else if form && !form.success && (form.internalError || !form.error.validation)}
+	<span class="danger alert mb-3 py-2">
+		{form.internalError ? "Algo deu errado enquanto enviávamos o formuláriro." : form.error.data}
+	</span>
+{/if}
+
 <form
+	id="publish"
 	class="mb-12"
 	method="post"
 	action="?/publish"
 	use:enhance={({ formData }) => {
+		formData.set("tags", JSON.stringify(selectedTags.map((selected) => selected.value)));
+		formData.set("content", htmlContent);
+
 		formIsLoading = true;
 
 		return async ({ update }) => {
@@ -38,22 +53,21 @@
 		};
 	}}
 >
+	{#if form && !form.success && !form.internalError && form.error.validation}
+		{#each form.error.data.fieldErrors.title ?? [] as error}
+			<span class="alert danger mb-2 mt-4 sm">{error}</span>
+		{/each}
+	{/if}
 	<FloatingGroup class="mb-3">
-		<FloatingInput
-			class="w-full"
-			name="title"
-			placeholder="Título do post"
-			type="text"
-			bind:value={title}
-		/>
+		<FloatingInput class="w-full" name="title" placeholder="Título do post" type="text" />
 		<FloatingLabel>Título</FloatingLabel>
 	</FloatingGroup>
 
-	<FloatingGroup class="mb-3">
-		<FloatingInput class="w-full" name="description" placeholder="Descrição do post" type="text" />
-		<FloatingLabel>Linha fina</FloatingLabel>
-	</FloatingGroup>
-
+	{#if form && !form.success && !form.internalError && form.error.validation}
+		{#each form.error.data.fieldErrors.tags ?? [] as error}
+			<span class="alert danger mb-2 mt-4 sm">{error}</span>
+		{/each}
+	{/if}
 	{#if tagsData.success && tagsData.data.tags.length > 0}
 		<FloatingSelect
 			bind:values={selectedTags}
@@ -73,6 +87,11 @@
 		</span>
 	{/if}
 
+	{#if form && !form.success && !form.internalError && form.error.validation}
+		{#each form.error.data.fieldErrors.topstory ?? [] as error}
+			<span class="alert danger mb-2 mt-4 sm">{error}</span>
+		{/each}
+	{/if}
 	<FloatingGroup class="mb-3">
 		<FloatingInput class="w-full" name="topstory" placeholder="i.imgur.com/..." type="text" />
 		<FloatingLabel>Imagem de capa</FloatingLabel>
@@ -81,12 +100,17 @@
 
 <h3 class="text-xl font-bold mb-3">Editor</h3>
 
+{#if form && !form.success && !form.internalError && form.error.validation}
+	{#each form.error.data.fieldErrors.content ?? [] as error}
+		<span class="alert danger mb-2 mt-4 sm">{error}</span>
+	{/each}
+{/if}
 <Editor bind:htmlContent />
 
 <div class="flex gap-2 mt-4">
 	<a href="/admin/blog" class="btn ghost">Cancelar</a>
 	<PreviewDialog html={htmlContent} />
-	<button type="submit" disabled={formIsLoading} class="btn default">
+	<button form="publish" type="submit" disabled={formIsLoading} class="btn default">
 		{formIsLoading ? "Postando" : "Postar"} publicação
 	</button>
 </div>
