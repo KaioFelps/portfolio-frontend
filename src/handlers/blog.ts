@@ -31,8 +31,8 @@ export abstract class BlogHandlers {
 		let args: Args = {};
 
 		const formData = await ctx.request.formData();
-		const queryBy = ctx.url.searchParams.get("queryBy");
-		const query = ctx.url.searchParams.get("query");
+		const queryBy = ctx.url.searchParams.get("qb");
+		const query = ctx.url.searchParams.get("q");
 		const _page = formData.get("page")?.toString();
 
 		if (!_page || Number.isNaN(_page))
