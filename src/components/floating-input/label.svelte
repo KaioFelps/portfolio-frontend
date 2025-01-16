@@ -1,7 +1,9 @@
 <script lang="ts">
 	import type { HTMLLabelAttributes } from "svelte/elements";
 
-	type $$Props = HTMLLabelAttributes;
+	type Props = HTMLLabelAttributes;
+
+	const { class: className, children, ...rest }: Props = $props();
 </script>
 
-<label {...$$restProps}><slot /></label>
+<label {...rest}>{@render children?.()}</label>

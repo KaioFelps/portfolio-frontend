@@ -5,19 +5,22 @@
 	import { Dialog } from "bits-ui";
 	import X from "phosphor-svelte/lib/X";
 
-	export let html: string;
-	let open = false;
-	let textContainer: Element | undefined;
+	const { html }: { html: string } = $props();
 
-	$: if (open && textContainer) {
-		StarryNightSingletone.clientSideHighlight(
-			Array.from(textContainer.querySelectorAll("pre code")),
-		);
-	}
+	let open = $state(false);
+	let textContainer: Element | undefined = $state();
+
+	$effect(() => {
+		if (open && textContainer) {
+			StarryNightSingletone.clientSideHighlight(
+				Array.from(textContainer.querySelectorAll("pre code")),
+			);
+		}
+	});
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Trigger on:click={() => (open = true)} class="btn ghost btn-sm">Preview</Dialog.Trigger>
+	<Dialog.Trigger onclick={() => (open = true)} class="btn ghost btn-sm">Preview</Dialog.Trigger>
 	<Dialog.Portal>
 		<Dialog.Overlay class="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm" />
 		<Dialog.Content

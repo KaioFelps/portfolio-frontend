@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 
-	type $$Props = {
+	type Props = {
 		title?: string;
 		adminRoute?: boolean;
 	};
-
-	export let title: string | undefined = undefined;
-	export let adminRoute: boolean = false;
-
-	$: formattedTitle = getFormattedTitle(adminRoute, title);
 
 	const getFormattedTitle = (isAdminRoute: boolean, title?: string) => {
 		const formerPart = isAdminRoute ? "Kaio Felps :: Admin" : "Kaio Felps";
 		return title ? `${formerPart} :: ${title}` : formerPart;
 	};
+
+	const { adminRoute = false, title }: Props = $props();
+	const formattedTitle = $derived(getFormattedTitle(adminRoute, title));
 
 	onMount(() => {
 		return () => {

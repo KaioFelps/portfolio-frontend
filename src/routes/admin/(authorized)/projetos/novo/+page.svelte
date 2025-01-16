@@ -8,15 +8,20 @@
 	import type { PageLoadData, PublishResponseType } from "./handlers";
 	import Title from "$crate/components/title.svelte";
 
-	export let form: PublishResponseType;
-	export let data: PageLoadData;
+	const {
+		form,
+		data,
+	}: {
+		form: PublishResponseType;
+		data: PageLoadData;
+	} = $props();
 
-	let formIsLoading = false;
-	let subFormElement: HTMLFormElement | undefined;
-	let selectedTags: Selected<string>[] = [];
-	let links: Array<{ title: string; value: string }> = [];
+	let formIsLoading = $state(false);
+	let subFormElement: HTMLFormElement | undefined = $state();
+	let selectedTags: Selected<string>[] = $state([]);
+	let links: Array<{ title: string; value: string }> = $state([]);
 
-	$: tagsData = data.tags;
+	const tagsData = $derived(data.tags);
 
 	async function handleResetForm() {
 		await tick();
@@ -77,6 +82,7 @@
 {/if}
 
 <form
+	id="main-form"
 	method="post"
 	action="?/publish"
 	use:enhance={({ formData }) => {
@@ -90,7 +96,10 @@
 			await handleResetForm();
 		};
 	}}
->
+></form>
+<form id="links-form" bind:this={subFormElement} onsubmit={handleAddLinkFormSubmit}></form>
+
+<div>
 	{#if form && !form.success && !form.internalError && form.error.validation}
 		{#each form.error.data.fieldErrors.title ?? [] as error}
 			<span class="alert danger mb-2 mt-4 sm">{error}</span>
@@ -135,11 +144,7 @@
 		</span>
 	{/if}
 
-	<form
-		bind:this={subFormElement}
-		class="p-6 rounded-xl bg-d-backgrond/25"
-		on:submit={handleAddLinkFormSubmit}
-	>
+	<div class="p-6 rounded-xl bg-d-backgrond/25">
 		<h3 class="text-xl font-bold mb-6">Links referente ao projeto</h3>
 
 		{#if form && !form.success && !form.internalError && form.error.validation && form.error.data.fieldErrors.links}
@@ -150,6 +155,7 @@
 
 		<FloatingGroup class="mb-3">
 			<FloatingInput
+				form="links-form"
 				class="w-full"
 				placeholder="https://www.kaiofelps.dev, ..."
 				type="text"
@@ -159,11 +165,16 @@
 		</FloatingGroup>
 
 		<FloatingGroup class="mb-3">
-			<FloatingInput class="w-full" name="value" placeholder="https://www.kaiofelps.dev, ..." />
+			<FloatingInput
+				form="links-form"
+				class="w-full"
+				name="value"
+				placeholder="https://www.kaiofelps.dev, ..."
+			/>
 			<FloatingLabel>URL do link</FloatingLabel>
 		</FloatingGroup>
 
-		<button class="btn ghost mb-3">Adicionar</button>
+		<button form="links-form" class="btn ghost mb-3">Adicionar</button>
 
 		{#if links.length > 0}
 			<div class="flex flex-col gap-0.5">
@@ -176,7 +187,7 @@
 						</span>
 						<button
 							type="button"
-							on:click={() => handleRemoveLink(link)}
+							onclick={() => handleRemoveLink(link)}
 							class="text-white p-1 rounded-md cursor-default bg-white/5 hover:bg-white/10 active:bg-white/15"
 						>
 							<Trash size="16" weight="bold" />
@@ -185,11 +196,12 @@
 				{/each}
 			</div>
 		{/if}
-	</form>
+	</div>
 
 	<div class="flex gap-2 mt-4">
 		<a href="/admin/projetos" class="btn ghost">Cancelar</a>
 		<button
+			form="main-form"
 			type="submit"
 			disabled={formIsLoading || !tagsData.success || !(tagsData.data?.tags.length ?? 0 > 0)}
 			class="btn default"
@@ -197,4 +209,4 @@
 			{formIsLoading ? "Publicando" : "Publicar"} projeto
 		</button>
 	</div>
-</form>
+</div>

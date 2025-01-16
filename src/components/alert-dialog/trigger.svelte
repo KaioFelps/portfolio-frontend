@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { AlertDialog } from "bits-ui";
 
-	type $$Props = AlertDialog.TriggerProps;
+	type Props = AlertDialog.TriggerProps;
+
+	const { children, ...rest }: Props = $props();
 </script>
 
-<AlertDialog.Trigger {...$$restProps}>
-	<slot />
+<AlertDialog.Trigger {...rest}>
+	{@render children?.()}
 </AlertDialog.Trigger>

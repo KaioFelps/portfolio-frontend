@@ -8,8 +8,9 @@
 	import PaintBrush from "phosphor-svelte/lib/PaintBrush";
 
 	type PressetColor = [string, string];
-	let open = false;
-	export let editor: Editor;
+	let open = $state(false);
+
+	const { editor }: { editor: Editor } = $props();
 
 	const presetPallete: PressetColor[] = [
 		["white", "#ffffff"],
@@ -20,13 +21,15 @@
 		["Gray", colors.gray["600"]],
 	] as const;
 
-	let selectedColor: string | undefined = editor.getAttributes("textStyle").color;
+	let selectedColor: string | undefined = $state(editor.getAttributes("textStyle").color);
 
 	let debouncedHandler = debounce(() => {
 		editor.chain().focus().setColor(selectedColor!).run();
 	}, 200);
 
-	$: if (selectedColor) debouncedHandler();
+	$effect(() => {
+		if (selectedColor) debouncedHandler();
+	});
 
 	const handleColorPickOpen = () =>
 		(selectedColor = editor.getAttributes("textStyle").color ?? "#ffffff");
@@ -54,21 +57,23 @@
 
 		<div class="grid grid-cols-6 grid-flow-row gap-1 mb-3">
 			<button
-				on:click={() => editor.chain().focus().unsetColor().run()}
+				onclick={() => editor.chain().focus().unsetColor().run()}
 				title="Cor automática"
+				aria-label="Cor automática"
 				type="button"
 				class="text-opt bg-transparent ring-inset ring-2 ring-white"
-			/>
+			></button>
 
 			{#each presetPallete as [name, hex] (hex)}
 				<button
-					on:click={() => (selectedColor = hex)}
+					onclick={() => (selectedColor = hex)}
 					type="button"
 					title={`Selecionar ${name}`}
+					aria-label={`Selecionar ${name}`}
 					style="background: {hex};"
 					data-state={editor.isActive("textStyle", { color: hex }) ? "active" : "deactive"}
 					class="text-opt"
-				/>
+				></button>
 			{/each}
 		</div>
 	</Popover.Content>

@@ -2,8 +2,12 @@
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
 	import { fly } from "svelte/transition";
 
-	export let message: string;
-	export let close: () => void;
+	type Props = {
+		message: string;
+		close: () => void;
+	};
+
+	const { message, close }: Props = $props();
 </script>
 
 <div
@@ -17,5 +21,5 @@
 		</span>
 	</div>
 
-	<button on:click={close} class="btn ghost-dark btn-sm block ml-auto mt-1"> Fechar </button>
+	<button onclick={close} class="btn ghost-dark btn-sm block ml-auto mt-1">Fechar</button>
 </div>

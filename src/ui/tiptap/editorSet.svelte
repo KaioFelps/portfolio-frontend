@@ -5,11 +5,16 @@
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import type { Option } from "./types";
 
-	export let options: Array<Option> = [];
-	export let title: string;
+	const {
+		options = [],
+		title,
+	}: {
+		options: Array<Option>;
+		title: string;
+	} = $props();
 
-	$: selected = options.find((item) => item.active);
-	$: triggerTitle = selected?.title ?? title;
+	const selected = $derived(options.find((item) => item.active));
+	const triggerTitle = $derived(selected?.title ?? title);
 </script>
 
 <DropdownMenu.Root>
@@ -45,7 +50,7 @@
 						"group-data-[selected]:bg-d-gray-200 group-data-[selected]:my-1 group-last:!mb-0 group-first:!mt-0",
 						"hover:bg-d-gray-200 rounded-lg ",
 					)}
-					on:click={handler}
+					onclick={handler}
 				>
 					{title}
 				</button>

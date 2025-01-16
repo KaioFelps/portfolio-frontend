@@ -9,61 +9,72 @@
 	import Title from "$crate/components/title.svelte";
 	import type { EditProjectResponse, AdminEditProjectPageData } from "./+page.server";
 
-	export let data: AdminEditProjectPageData;
-	export let form: EditProjectResponse | undefined;
+	const {
+		data,
+		form,
+	}: {
+		data: AdminEditProjectPageData;
+		form: EditProjectResponse | undefined;
+	} = $props();
 
-	let initialInputValues = {
+	let initialInputValues = $state({
 		title: "",
 		topstory: "",
-	};
+	});
 
 	// this prevents sveltekit to reset these inputs values
 	// back to the default values (project current values)
 	// on the page rerender after form action dispatch
-	$: if (
-		data.project.success &&
-		data.project.data &&
-		!initialInputValues.title &&
-		!initialInputValues.topstory
-	) {
-		initialInputValues = {
-			title: data.project.data.title,
-			topstory: data.project.data.topstory,
-		};
-	}
+	$effect(() => {
+		if (
+			data.project.success &&
+			data.project.data &&
+			!initialInputValues.title &&
+			!initialInputValues.topstory
+		) {
+			initialInputValues = {
+				title: data.project.data.title,
+				topstory: data.project.data.topstory,
+			};
+		}
+	});
 
-	$: if (form?.success)
-		setTimeout(() => {
-			goto("/admin/projetos");
-		}, 2000);
+	$effect(() => {
+		if (form?.success)
+			setTimeout(() => {
+				goto("/admin/projetos");
+			}, 1000);
+	});
 
-	let formIsLoading = false;
-	let subFormElement: HTMLFormElement | undefined;
-	let selectedTags: Selected<string>[] = [];
-	let links: Array<{ title: string; value: string }> = [];
+	let formIsLoading = $state(false);
+	let subFormElement: HTMLFormElement | undefined = $state();
+	let selectedTags: Selected<string>[] = $state([]);
+	let links: Array<{ title: string; value: string }> = $state([]);
 	let tagsOptions: {
 		value: string;
 		label: string;
-	}[] = [];
+	}[] = $state([]);
 
-	$: if (data.tags.success)
-		tagsOptions = data.tags.data.tags.map((tag) => {
-			return {
-				value: tag.id,
-				label: tag.value,
-			};
-		});
+	$effect(() => {
+		if (data.tags.success)
+			tagsOptions = data.tags.data.tags.map((tag) => {
+				return {
+					value: tag.id,
+					label: tag.value,
+				};
+			});
 
-	if (data.project.success && data.project.data) {
-		selectedTags = data.project.data.tags.map((tag) => {
-			return {
-				value: tag.id,
-				label: tag.value,
-			} as Selected<string>;
-		});
+		if (data.project.success && data.project.data) {
+			selectedTags = data.project.data.tags.map((tag) => {
+				return {
+					value: tag.id,
+					label: tag.value,
+				} as Selected<string>;
+			});
 
-		links = data.project.data.links;
-	}
+			links = data.project.data.links;
+		}
+	});
 
 	function handleAddLink(link: { title: string; value: string }) {
 		links = [...links, link];
@@ -106,6 +117,7 @@
 		<span class="alert success py-2 mb-6">Projeto atualizado com sucesso!</span>
 	{/if}
 	<form
+		id="main-form"
 		method="post"
 		action="?/save"
 		use:enhance={({ formData }) => {
@@ -130,7 +142,10 @@
 				await update({ reset: false });
 			};
 		}}
-	>
+	></form>
+
+	<form id="links-form" bind:this={subFormElement} onsubmit={handleAddLinkFormSubmit}></form>
+	<div>
 		{#if !form?.success && form?.isValidationError}
 			{#each form.zod?.fieldErrors.title ?? [] as error}
 				<span class="alert danger mb-2 mt-4 sm">{error}</span>
@@ -141,6 +156,7 @@
 
 		<FloatingGroup class="mb-3">
 			<FloatingInput
+				form="main-form"
 				class="w-full"
 				name="title"
 				placeholder="Nome do projeto"
@@ -156,6 +172,7 @@
 		{/if}
 		<FloatingGroup class="mb-3">
 			<FloatingInput
+				form="main-form"
 				class="w-full"
 				name="topstory"
 				placeholder="i.imgur.com"
@@ -188,11 +205,7 @@
 				</a> antes!
 			</span>
 		{/if}
-		<form
-			bind:this={subFormElement}
-			class="p-6 rounded-xl bg-d-backgrond/25"
-			on:submit={handleAddLinkFormSubmit}
-		>
+		<div class="p-6 rounded-xl bg-d-backgrond/25">
 			<h3 class="text-xl font-bold mb-6">Links referente ao projeto</h3>
 
 			{#if !form?.success && form?.isValidationError}
@@ -203,6 +216,7 @@
 
 			<FloatingGroup class="mb-3">
 				<FloatingInput
+					form="links-form"
 					class="w-full"
 					placeholder="https://www.kaiofelps.dev, ..."
 					type="text"
@@ -212,11 +226,16 @@
 			</FloatingGroup>
 
 			<FloatingGroup class="mb-3">
-				<FloatingInput class="w-full" name="value" placeholder="https://www.kaiofelps.dev, ..." />
+				<FloatingInput
+					form="links-form"
+					class="w-full"
+					name="value"
+					placeholder="https://www.kaiofelps.dev, ..."
+				/>
 				<FloatingLabel>URL do link</FloatingLabel>
 			</FloatingGroup>
 
-			<button class="btn ghost mb-3">Adicionar</button>
+			<button form="links-form" class="btn ghost mb-3">Adicionar</button>
 
 			{#if links.length > 0}
 				<div class="flex flex-col gap-0.5">
@@ -229,7 +248,7 @@
 							</span>
 							<button
 								type="button"
-								on:click={() => handleRemoveLink(link)}
+								onclick={() => handleRemoveLink(link)}
 								class="text-white p-1 rounded-md cursor-default bg-white/5 hover:bg-white/10 active:bg-white/15"
 							>
 								<Trash size="16" weight="bold" />
@@ -238,11 +257,12 @@
 					{/each}
 				</div>
 			{/if}
-		</form>
+		</div>
 
 		<div class="flex gap-2 mt-4">
 			<a href="/admin/projetos" class="btn ghost">Cancelar</a>
 			<button
+				form="main-form"
 				type="submit"
 				disabled={formIsLoading || !data.tags.success || !(data.tags.data.tags.length > 0)}
 				class="btn default"
@@ -250,7 +270,7 @@
 				{formIsLoading ? "Salvando" : "Salvar"} projeto
 			</button>
 		</div>
-	</form>
+	</div>
 {:else if data.project.success}
 	<Title title="Projeto Não Encontrado" adminRoute />
 

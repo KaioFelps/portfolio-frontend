@@ -2,13 +2,11 @@
 	import clsx from "clsx";
 	import type { HTMLAttributes } from "svelte/elements";
 
-	type $$Props = HTMLAttributes<HTMLDivElement>;
+	type Props = HTMLAttributes<HTMLDivElement>;
 
-	let className: $$Props["class"] = undefined;
-
-	export { className as class };
+	const { class: className, children, ...rest }: Props = $props();
 </script>
 
-<div class={clsx("form-floating", className && className)} {...$$restProps}>
-	<slot />
+<div class={clsx("form-floating", className && className)} {...rest}>
+	{@render children?.()}
 </div>

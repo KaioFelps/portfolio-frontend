@@ -189,7 +189,7 @@
 			<EditorButton
 				title="Negrito"
 				active={editor.isActive("bold")}
-				on:click={() => editor.chain().focus().toggleBold().run()}
+				onclick={() => editor.chain().focus().toggleBold().run()}
 			>
 				<TextBold weight="bold" size="20" />
 			</EditorButton>
@@ -197,7 +197,7 @@
 			<EditorButton
 				title="Itálico"
 				active={editor.isActive("italic")}
-				on:click={() => editor.chain().focus().toggleItalic().run()}
+				onclick={() => editor.chain().focus().toggleItalic().run()}
 			>
 				<TextItalic weight="bold" size="20" />
 			</EditorButton>
@@ -205,7 +205,7 @@
 			<EditorButton
 				title="Underline"
 				active={editor.isActive("underline")}
-				on:click={() => editor.chain().focus().toggleUnderline().run()}
+				onclick={() => editor.chain().focus().toggleUnderline().run()}
 			>
 				<TextUnderline weight="bold" size="20" />
 			</EditorButton>
@@ -213,7 +213,7 @@
 			<EditorButton
 				title="Riscar"
 				active={editor.isActive("strike")}
-				on:click={() => editor.chain().focus().toggleStrike().run()}
+				onclick={() => editor.chain().focus().toggleStrike().run()}
 			>
 				<TextStrike weight="bold" size="20" />
 			</EditorButton>
@@ -245,7 +245,7 @@
 			<EditorButton
 				title="Alinhar à esquerda"
 				active={editor.isActive({ textAlign: "left" })}
-				on:click={() => editor.chain().focus().toggleTextAlign("left").run()}
+				onclick={() => editor.chain().focus().toggleTextAlign("left").run()}
 			>
 				<TextAlignLeft weight="bold" size="20" />
 			</EditorButton>
@@ -253,7 +253,7 @@
 			<EditorButton
 				title="Alinhar ao centro"
 				active={editor.isActive({ textAlign: "center" })}
-				on:click={() => editor.chain().focus().toggleTextAlign("center").run()}
+				onclick={() => editor.chain().focus().toggleTextAlign("center").run()}
 			>
 				<TextAlignCenter weight="bold" size="20" />
 			</EditorButton>
@@ -261,7 +261,7 @@
 			<EditorButton
 				title="Alinhar à direita"
 				active={editor.isActive({ textAlign: "right" })}
-				on:click={() => editor.chain().focus().toggleTextAlign("right").run()}
+				onclick={() => editor.chain().focus().toggleTextAlign("right").run()}
 			>
 				<TextAlignRight weight="bold" size="20" />
 			</EditorButton>
@@ -269,7 +269,7 @@
 			<EditorButton
 				title="Justificar"
 				active={editor.isActive({ textAlign: "justify" })}
-				on:click={() => editor.chain().focus().toggleTextAlign("justify").run()}
+				onclick={() => editor.chain().focus().toggleTextAlign("justify").run()}
 			>
 				<TextAlignJustify weight="bold" size="20" />
 			</EditorButton>
@@ -279,7 +279,7 @@
 			<EditorButton
 				title="Linha Horizontal"
 				active={editor.isActive("horizontalRule")}
-				on:click={() => editor.chain().focus().setHorizontalRule().run()}
+				onclick={() => editor.chain().focus().setHorizontalRule().run()}
 			>
 				<Minus weight="bold" size="20" />
 			</EditorButton>
@@ -287,7 +287,7 @@
 			<EditorButton
 				title="Quote"
 				active={editor.isActive("blockquote")}
-				on:click={() => editor.chain().focus().toggleBlockquote().run()}
+				onclick={() => editor.chain().focus().toggleBlockquote().run()}
 			>
 				<Quotes weight="bold" size="20" />
 			</EditorButton>
@@ -295,7 +295,7 @@
 			<EditorButton
 				title="Super-escrita"
 				active={editor.isActive("superscript")}
-				on:click={() => editor.chain().focus().toggleSuperscript().run()}
+				onclick={() => editor.chain().focus().toggleSuperscript().run()}
 			>
 				<TextSuperscript weight="bold" size="20" />
 			</EditorButton>
@@ -303,7 +303,7 @@
 			<EditorButton
 				title="Sub-escrita"
 				active={editor.isActive("subscript")}
-				on:click={() => editor.chain().focus().toggleSubscript().run()}
+				onclick={() => editor.chain().focus().toggleSubscript().run()}
 			>
 				<TextSubscript weight="bold" size="20" />
 			</EditorButton>
@@ -311,7 +311,7 @@
 			<EditorButton
 				active={editor.isActive("bulletList")}
 				title="Lista"
-				on:click={() => {
+				onclick={() => {
 					editor.chain().focus().toggleBulletList().run();
 				}}
 			>
@@ -321,7 +321,7 @@
 			<EditorButton
 				active={editor.isActive("orderedList")}
 				title="Lista Enumerada"
-				on:click={() => {
+				onclick={() => {
 					editor.chain().focus().toggleOrderedList().run();
 				}}
 			>
@@ -335,7 +335,7 @@
 			<EditorButton
 				active={isDisplayingSourceCode}
 				title="Código Fonte"
-				on:click={handleToggleSourceCode}
+				onclick={handleToggleSourceCode}
 			>
 				<Code weight="bold" size="20" />
 			</EditorButton>
@@ -343,7 +343,7 @@
 			<EditorButton
 				active={false}
 				title="Limpar Formatação"
-				on:click={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+				onclick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
 			>
 				<Broom weight="bold" size="20" />
 			</EditorButton>

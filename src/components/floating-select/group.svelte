@@ -11,9 +11,9 @@
 	export let values: Selected<string>[] | Selected<string>;
 </script>
 
-<Select.Root {multiple} bind:selected={values}>
+<Select.Root type={multiple ? "multiple" : "single"} bind:selected={values}>
 	<Select.Trigger class="mb-4 form-select-floating w-full flex">
-		<Select.Value class="data-[placeholder]:opacity-0 form-select-control" {placeholder} />
+		<span class="data-[placeholder]:opacity-0 form-select-control">{placeholder}</span>
 		<FloatingLabel>{placeholder}</FloatingLabel>
 	</Select.Trigger>
 

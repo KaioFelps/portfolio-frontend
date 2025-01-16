@@ -3,14 +3,17 @@
 	import { fade } from "svelte/transition";
 	import { flyAndScale } from "$crate/utils";
 	import clsx from "clsx";
+	import type { Snippet } from "svelte";
 
-	type $$Props = AlertDialog.ContentProps;
+	type Props = AlertDialog.ContentProps & {
+		children: Snippet;
+		class?: string;
+	};
 
-	let className: $$Props["class"] = undefined;
-	let transition: $$Props["transition"] = flyAndScale;
+	const { children, class: className, transition = flyAndScale, ...rest }: Props = $props();
 </script>
 
-<AlertDialog.Portal class="absolute">
+<AlertDialog.Portal>
 	<AlertDialog.Overlay
 		transition={fade}
 		transitionConfig={{ duration: 150 }}
@@ -24,8 +27,8 @@
 			"w-full max-w-[94%] sm:max-w-lg md:w-full",
 			className && className,
 		)}
-		{...$$restProps}
+		{...rest}
 	>
-		<slot />
+		{@render children()}
 	</AlertDialog.Content>
 </AlertDialog.Portal>

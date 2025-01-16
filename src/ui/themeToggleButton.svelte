@@ -9,7 +9,7 @@
 	import { PUBLIC_THEME_COOKIE_KEY } from "$env/static/public";
 	import clsx from "clsx";
 
-	let theme = "";
+	let theme = $state("");
 
 	onMount(() => {
 		theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
@@ -33,7 +33,7 @@
 </script>
 
 <button
-	on:click={toggleTheme}
+	onclick={toggleTheme}
 	class={clsx(
 		"rounded-full border-gray-300 dark:border-d-gray-300 border w-[46px] h-[46px] relative hover:scale-105 transition-all ease-in cursor-default",
 		"outline-none ring-0 dark:ring-white/15 ring-black/15 focus-within:ring-4",

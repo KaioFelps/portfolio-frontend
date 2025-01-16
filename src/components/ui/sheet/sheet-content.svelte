@@ -6,23 +6,24 @@
 		SheetPortal,
 		type Side,
 		sheetTransitions,
-		sheetVariants
+		sheetVariants,
 	} from "./index.js";
 	import { cn } from "$crate/utils.js";
 
-	type $$Props = SheetPrimitive.ContentProps & {
+	type Props = SheetPrimitive.ContentProps & {
 		side?: Side;
 	};
 
-	let className: $$Props["class"] = undefined;
-	export let side: $$Props["side"] = "right";
-	export { className as class };
-	export let inTransition: $$Props["inTransition"] = fly;
-	export let inTransitionConfig: $$Props["inTransitionConfig"] =
-		sheetTransitions[side ?? "right"].in;
-	export let outTransition: $$Props["outTransition"] = fly;
-	export let outTransitionConfig: $$Props["outTransitionConfig"] =
-		sheetTransitions[side ?? "right"].out;
+	const {
+		class: className,
+		children,
+		side,
+		inTransition = fly,
+		inTransitionConfig = sheetTransitions[side ?? "right"].in,
+		outTransition = fly,
+		outTransitionConfig = sheetTransitions[side ?? "right"].out,
+		...rest
+	}: Props = $props();
 </script>
 
 <SheetPortal>
@@ -33,8 +34,8 @@
 		{outTransition}
 		{outTransitionConfig}
 		class={cn(sheetVariants({ side }), className)}
-		{...$$restProps}
+		{...rest}
 	>
-		<slot />
+		{@render children?.()}
 	</SheetPrimitive.Content>
 </SheetPortal>
