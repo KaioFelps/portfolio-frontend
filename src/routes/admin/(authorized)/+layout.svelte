@@ -5,16 +5,23 @@
 	import type { AuthUser } from "$crate/core/entities/authUser";
 	import ArrowSquareOut from "phosphor-svelte/lib/ArrowSquareOut";
 	import clsx from "clsx";
+	import type { Snippet } from "svelte";
 
-	export let data: { user: AuthUser };
+	const {
+		data,
+		children,
+	}: {
+		data: { user: AuthUser };
+		children: Snippet;
+	} = $props();
 </script>
 
 <div
 	id="background-blobs"
 	class="fixed inset-0 -z-10 bg-d-backgrond from-yellow-700/50 to-d-backgrond pointer-events-none"
 >
-	<div class="bg-blob absolute pointer-events-none -left-[40%] -top-[60%]" />
-	<div class="bg-blob absolute pointer-events-none -right-[40%] -bottom-[60%]" />
+	<div class="bg-blob absolute pointer-events-none -left-[40%] -top-[60%]"></div>
+	<div class="bg-blob absolute pointer-events-none -right-[40%] -bottom-[60%]"></div>
 	<div class="pointer-events-none fixed inset-0 bg-blobs-overlay"></div>
 </div>
 
@@ -52,7 +59,7 @@
 			"shadow-black/25 shadow-[0_4px_25px_0_var(--tw-shadow-color)]",
 		)}
 	>
-		<slot />
+		{@render children()}
 	</main>
 </div>
 

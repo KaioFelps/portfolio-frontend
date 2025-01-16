@@ -8,24 +8,28 @@
 	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import Check from "phosphor-svelte/lib/Check";
 
-	export let editor: Editor;
-	let open = false;
-	let isHyperLink: boolean;
-	let isExternal: boolean = false;
-	let linkURL: string;
-	let error: string | null = null;
+	const { editor }: { editor: Editor } = $props();
+
+	let open = $state(false);
+	let isHyperLink: boolean = $state(false);
+	let isExternal: boolean = $state(false);
+	let linkURL: string = $state("");
+	let error: string | null = $state(null);
 
 	const handleColorPickOpen = () => {
 		linkURL = editor.getAttributes("link").href ?? "";
 		isExternal = editor.getAttributes("link").target === "_blank";
 	};
 
-	$: (open || true) && (isHyperLink = editor.isActive("link"));
+	$effect(() => {
+		(true || open) && (isHyperLink = editor.isActive("link"));
+	});
 
 	const handleUnsetLink = () => {
 		editor.chain().focus().extendMarkRange("link").unsetLink().run();
 		open = false;
 	};
+
 	const handleSetLink = () => {
 		try {
 			editor
@@ -68,7 +72,7 @@
 		<FloatingGroup class="mb-3">
 			<FloatingInput
 				bind:value={linkURL}
-				on:input={() => (error = null)}
+				oninput={() => (error = null)}
 				class="w-full"
 				name="hyperlink"
 				placeholder="https://www.kaiofelps.dev"
@@ -110,10 +114,10 @@
 
 		<div class="flex items-center gap-2">
 			{#if isHyperLink}
-				<button on:click={handleUnsetLink} type="button" class="btn ghost btn-xs">Remover</button>
+				<button onclick={handleUnsetLink} type="button" class="btn ghost btn-xs">Remover</button>
 			{/if}
 
-			<button class="btn default btn-xs" on:click={handleSetLink}>Salvar</button>
+			<button class="btn default btn-xs" onclick={handleSetLink}>Salvar</button>
 		</div>
 	</Popover.Content>
 </Popover.Root>

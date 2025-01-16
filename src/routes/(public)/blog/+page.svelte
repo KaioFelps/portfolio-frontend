@@ -1,12 +1,13 @@
 <script lang="ts">
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
-	import { Select, type Selected } from "bits-ui";
+	import type { Selected } from "bits-ui";
+	import Select from "$crate/components/select";
 	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import { flyAndScale } from "$crate/utils";
 	import type { LoadPaginatedPosts } from "$crate/handlers/blog";
 	import type { Post } from "$crate/core/entities/post";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
 	import { fly } from "svelte/transition";
 	import { enhance } from "$app/forms";
@@ -20,37 +21,45 @@
 		{ value: "tag", label: "Buscar por tag" },
 	];
 
-	export let data: LoadPaginatedPosts;
-	export let form: ActionData;
+	const { data, form }: { data: LoadPaginatedPosts; form: ActionData } = $props();
 
-	$: formError = form?.error ? true : false;
+	let formError = $state(false);
+	let formIsLoading = $state(false);
+	let currentPage = $state(data.success ? data.data.page : 1);
+	let postsPerMonth: Record<string, Post[]> = $state({});
 
-	let formIsLoading = false;
+	$effect(() => {
+		if (data.success) segregatePostsByPublishmentDate(data.data.posts);
+	});
 
-	let nextPageFetchError: string | null = null;
-	$: currentPage = data.success ? data.data.page : 1;
+	$effect(() => {
+		if (!form?.success) {
+			formError = true;
+			return;
+		}
 
-	let postsPerMonth: Record<string, Post[]> = {};
-
-	$: segregatePostsByPublishmentDate(data.success ? data.data.posts : []);
-	$: if (form?.success) {
 		segregatePostsByPublishmentDate(form.data.posts);
 		currentPage = form.data.page;
-	}
+	});
 
 	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
-	let query: string = $page.url.searchParams.get("q") ?? "";
+	let query: string = $state(page.url.searchParams.get("q") ?? "");
+	let queryByValue = $state<string>();
 
-	let queryBy: Selected<string> | undefined =
-		queryByOptions.find((option) => option.value === $page.url.searchParams.get("qb")) ??
-		queryByOptions[0];
+	let queryBy: Selected<string> | undefined = $state(
+		queryByOptions.find((option) => option.value === page.url.searchParams.get("qb")),
+	);
+
+	$effect(() => {
+		queryBy = queryByOptions.find((option) => option.value === queryByValue);
+	});
 
 	function handleQueryInput() {
 		clearTimeout(queryFormTimeoutId);
 
 		const timeout = setTimeout(async () => {
 			postsPerMonth = {};
-			if (query.trim() === "") return goto($page.url.pathname);
+			if (query.trim() === "") return goto(page.url.pathname);
 			goto(`?q=${query}&qb=${queryBy!.value}`);
 		}, 1500);
 
@@ -69,8 +78,6 @@
 
 			postsPerMonth[key].push(post);
 		});
-
-		postsPerMonth = postsPerMonth;
 	}
 </script>
 
@@ -91,7 +98,7 @@
 		<h1 class="text-5xl font-bold">Blog</h1>
 
 		<form
-			on:submit={handleQueryInput}
+			onsubmit={handleQueryInput}
 			class="flex flex-row gap-4 items-center justify-end w-full max-sm:hidden"
 		>
 			<label class="flex gap-3 input">
@@ -104,45 +111,24 @@
 					placeholder="Filtro"
 					class="input-inner"
 					bind:value={query}
-					on:input={handleQueryInput}
+					oninput={handleQueryInput}
 				/>
 			</label>
 
 			<Select.Root
-				bind:selected={queryBy}
+				name="searchBy"
+				bind:value={queryByValue}
+				type="single"
 				items={queryByOptions}
-				onSelectedChange={handleQueryInput}
+				onValueChange={handleQueryInput}
 			>
-				<Select.Trigger class="flex items-center py-5 gap-3 input group">
-					<Select.Value placeholder="Pesquisar por..." />
-					<CaretUp
-						size="24"
-						weight="regular"
-						class="group-aria-[expanded=true]:rotate-180 transition-all duration-300"
-					/>
-				</Select.Trigger>
+				<Select.Trigger label={queryBy?.label ?? "Selecione um filtro"} />
 
-				<Select.Content
-					transition={flyAndScale}
-					sideOffset={8}
-					class="w-full rounded-xl border border-gray-200 dark:border-d-gray-200 bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none"
-				>
+				<Select.Content>
 					{#each queryByOptions as { value, label } (value)}
-						<Select.Item
-							{value}
-							{label}
-							class="
-							cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
-							data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
-							"
-						>
-							{label}
-							<Select.ItemIndicator />
-						</Select.Item>
+						<Select.Item {value} {label} />
 					{/each}
-					<Select.Arrow />
 				</Select.Content>
-				<Select.Input name="searchBy" />
 			</Select.Root>
 		</form>
 	</header>
@@ -258,12 +244,10 @@
 	>
 		<div class="flex items-start gap-2">
 			<WarningCircle size="20" weight="fill" class="mt-[1px]" />
-			<span>
-				{nextPageFetchError}
-			</span>
+			<span>Houve um erro enquanto tentávamos buscar os artigos.</span>
 		</div>
 
-		<button on:click={() => (formError = false)} class="btn ghost-dark btn-sm block ml-auto mt-1">
+		<button onclick={() => (formError = false)} class="btn ghost-dark btn-sm block ml-auto mt-1">
 			Fechar
 		</button>
 	</div>

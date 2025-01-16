@@ -5,31 +5,44 @@
 	import { fly } from "svelte/transition";
 	import type { FetchProjectsData } from "./proxy+page.server.js";
 	import { goto, afterNavigate } from "$app/navigation";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import LinksPopover from "./linksPopover.svelte";
 	import clsx from "clsx";
 	import { enhance } from "$app/forms";
 	import Title from "$crate/components/title.svelte";
-	import { Select, type Selected } from "bits-ui";
+	import type { Selected } from "bits-ui";
 	import { flyAndScale } from "$crate/utils.js";
 	import type { Project } from "$crate/core/entities/project.js";
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
+	import Select from "$crate/components/select";
 
-	export let data: FetchProjectsData;
-	export let form: FetchProjectsData | null;
+	const {
+		data,
+		form,
+	}: {
+		data: FetchProjectsData;
+		form: FetchProjectsData | null;
+	} = $props();
 
-	$: currentPage = data.success ? data.data.page : 1;
+	let currentPage = $state(data.success ? data.data.page : 1);
 
-	let formIsLoading = false;
-	$: formError = !form?.success;
+	let formIsLoading = $state(false);
+	let formError = $state(false);
 
-	let projectsUnion: Project[] = [];
+	let projectsUnion: Project[] = $state([]);
 
-	$: projectsUnion = data.success ? data.data.projects : [];
-	$: if (form?.success) {
-		projectsUnion = [...projectsUnion, ...form.data.projects];
-		currentPage = form.data.page;
-	}
+	$effect(() => {
+		if (data.success) projectsUnion = data.data.projects;
+	});
+
+	$effect(() => {
+		if (form?.success) {
+			projectsUnion = [...projectsUnion, ...form.data.projects];
+			currentPage = form.data.page;
+		} else {
+			formError = true;
+		}
+	});
 
 	const queryByOptions = [
 		{ value: "title", label: "Buscar por título" },
@@ -37,9 +50,16 @@
 	];
 
 	let queryFormTimeoutId: NodeJS.Timeout | undefined = undefined;
-	let query: string = $page.url.searchParams.get("q") ?? "";
+	let query = $state(page.url.searchParams.get("q") ?? "");
 
-	let queryBy: Selected<string> = getQueryByValue($page.url.searchParams.get("qb"));
+	let queryByValue = $state("");
+	let queryBy: Selected<string> | undefined = $state(
+		getQueryByValue(page.url.searchParams.get("qb")),
+	);
+
+	$effect(() => {
+		queryBy = getQueryByValue(queryByValue);
+	});
 
 	afterNavigate((navigation) => {
 		if (!navigation.to) return;
@@ -54,15 +74,17 @@
 	});
 
 	function getQueryByValue(qb: string | null) {
-		return queryByOptions.find((opt) => opt.value === qb) ?? queryByOptions[0];
+		return queryByOptions.find((opt) => opt.value === qb);
 	}
 
 	function handleQueryProjects() {
 		clearTimeout(queryFormTimeoutId);
 
 		const timeout = setTimeout(() => {
-			if (query.trim() === "") return goto($page.url.pathname);
-			goto(`?q=${query}&qb=${queryBy!.value}`);
+			if (query.trim() === "") return goto(page.url.pathname);
+			if (!queryBy) return;
+
+			goto(`?q=${query}&qb=${queryBy.value}`);
 		}, 1500);
 
 		queryFormTimeoutId = timeout;
@@ -86,7 +108,10 @@
 		<h1 class="text-5xl font-bold">Projetos realizados</h1>
 
 		<form
-			on:submit|preventDefault={handleQueryProjects}
+			onsubmit={(e) => {
+				e.preventDefault();
+				handleQueryProjects();
+			}}
 			class="flex flex-row gap-4 items-center justify-end max-sm:hidden"
 		>
 			<label class="flex gap-3 input">
@@ -99,45 +124,24 @@
 					placeholder="Filtro"
 					class="input-inner"
 					bind:value={query}
-					on:input={handleQueryProjects}
+					oninput={handleQueryProjects}
 				/>
 			</label>
 
 			<Select.Root
-				bind:selected={queryBy}
+				name="queryBy"
+				bind:value={queryByValue}
+				type="single"
 				items={queryByOptions}
-				onSelectedChange={handleQueryProjects}
+				onValueChange={handleQueryProjects}
 			>
-				<Select.Trigger class="flex items-center py-5 gap-3 input group">
-					<Select.Value placeholder="Pesquisar por..." />
-					<CaretUp
-						size="24"
-						weight="regular"
-						class="group-aria-[expanded=true]:rotate-180 transition-all duration-300"
-					/>
-				</Select.Trigger>
+				<Select.Trigger label={queryBy?.label ?? "Selecione um filtro"} />
 
-				<Select.Content
-					transition={flyAndScale}
-					sideOffset={8}
-					class="w-full rounded-xl border border-gray-200 dark:border-d-gray-200 bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none"
-				>
+				<Select.Content>
 					{#each queryByOptions as { value, label } (value)}
-						<Select.Item
-							{value}
-							{label}
-							class="
-							cursor-default px-4 py-2 hover:bg-gray-200 dark:hover:bg-d-gray-200 rounded-lg
-							data-[selected]:bg-gray-200 data-[selected]:dark:bg-d-gray-200 data-[selected]:my-0.5
-							"
-						>
-							{label}
-							<Select.ItemIndicator />
-						</Select.Item>
+						<Select.Item {value} {label} />
 					{/each}
-					<Select.Arrow />
 				</Select.Content>
-				<Select.Input name="searchBy" />
 			</Select.Root>
 		</form>
 	</header>
@@ -231,7 +235,7 @@
 			</span>
 		</div>
 
-		<button on:click={() => (formError = false)} class="btn ghost-dark btn-sm block ml-auto mt-1">
+		<button onclick={() => (formError = false)} class="btn ghost-dark btn-sm block ml-auto mt-1">
 			Fechar
 		</button>
 	</div>

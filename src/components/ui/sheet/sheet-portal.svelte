@@ -2,12 +2,9 @@
 	import { Dialog as SheetPrimitive } from "bits-ui";
 	import { cn } from "$crate/utils.js";
 
-	type $$Props = SheetPrimitive.PortalProps;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	const { class: className, children, ...rest }: SheetPrimitive.PortalProps = $props();
 </script>
 
-<SheetPrimitive.Portal class={cn(className)} {...$$restProps}>
-	<slot />
+<SheetPrimitive.Portal class={cn(className)} {...rest}>
+	{@render children?.()}
 </SheetPrimitive.Portal>

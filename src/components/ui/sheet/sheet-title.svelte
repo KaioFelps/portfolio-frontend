@@ -2,15 +2,9 @@
 	import { Dialog as SheetPrimitive } from "bits-ui";
 	import { cn } from "$crate/utils.js";
 
-	type $$Props = SheetPrimitive.TitleProps;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	const { children, class: className, ...rest }: SheetPrimitive.TitleProps = $props();
 </script>
 
-<SheetPrimitive.Title
-	class={cn("text-lg font-semibold text-foreground", className)}
-	{...$$restProps}
->
-	<slot />
+<SheetPrimitive.Title class={cn("text-lg font-semibold text-foreground", className)} {...rest}>
+	{@render children?.()}
 </SheetPrimitive.Title>
