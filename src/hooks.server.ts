@@ -1,4 +1,4 @@
-import type { Handle } from "@sveltejs/kit";
+import type { Handle, HandleFetch } from "@sveltejs/kit";
 import winston from "winston";
 import { ThemeParser } from "./lib/theme-parser";
 import { authenticationMiddleware } from "./middlewares/authentication";
@@ -44,8 +44,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return await ThemeParser.parse({ response, cookies: event.cookies });
 };
 
-/** @type {import('@sveltejs/kit').HandleFetch} */
-export async function handleFetch({ request, fetch, event }) {
+export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
 	if (request.url.startsWith(env.BACKEND_URL)) {
 		if (event.locals.accessToken) {
 			request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
@@ -54,4 +53,4 @@ export async function handleFetch({ request, fetch, event }) {
 	}
 
 	return fetch(request);
-}
+};
