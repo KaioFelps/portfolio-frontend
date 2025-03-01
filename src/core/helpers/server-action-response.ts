@@ -1,4 +1,4 @@
-import type { ServerResponseData } from "../types/serverResponseData";
+import type { ServerResponseData } from "../types/server-response-data";
 
 export abstract class MakeServerResponseData {
 	public static Ok<T>(data: T) {

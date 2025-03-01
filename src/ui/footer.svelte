@@ -2,7 +2,7 @@
 	import GithubLogo from "phosphor-svelte/lib/GithubLogo";
 	import BehanceLogo from "phosphor-svelte/lib/BehanceLogo";
 	import LinkedinLogo from "phosphor-svelte/lib/LinkedinLogo";
-	import { socialMedias } from "$crate/config/socialMedias";
+	import { socialMedias } from "$crate/config/social-medias";
 </script>
 
 <footer class="w-full h-[109px] px-16 flex items-center justify-center mt-20 shrink-0">

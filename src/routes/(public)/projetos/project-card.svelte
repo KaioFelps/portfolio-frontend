@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Project } from "$crate/core/entities/project";
 	import clsx from "clsx";
-	import LinksPopover from "./linksPopover.svelte";
+	import LinksPopover from "./links-popover.svelte";
 
 	const { topstory, title, createdAt, id, links, tags }: Project = $props();
 </script>

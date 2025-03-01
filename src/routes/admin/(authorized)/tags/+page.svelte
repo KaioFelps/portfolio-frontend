@@ -5,7 +5,7 @@
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
-	import EditTagDialog from "./editTagDialog.svelte";
+	import EditTagDialog from "./edit-tag-dialog.svelte";
 	import type { EditTagResponse, PageLoadData } from "./handlers";
 
 	export let data: PageLoadData & { user: AuthUser };

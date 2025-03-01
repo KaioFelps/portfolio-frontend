@@ -3,9 +3,9 @@
 
 	import { onMount, onDestroy } from "svelte";
 	import clsx from "clsx";
-	import EditorButton from "./editorButton.svelte";
-	import EditorSet from "./editorSet.svelte";
-	import ColorPicker from "./colorPicker.svelte";
+	import EditorButton from "./editor-button.svelte";
+	import EditorSet from "./editor-set.svelte";
+	import ColorPicker from "./color-picker.svelte";
 
 	import { handlePasteImageWithOrigin } from "$crate/lib/tiptap/paste-img";
 	import { Editor } from "@tiptap/core";
@@ -22,7 +22,7 @@
 	import StarterKit from "@tiptap/starter-kit";
 	import Superscript from "@tiptap/extension-superscript";
 	import Mathematics from "@aarkue/tiptap-math-extension";
-	import CodeBlockIndent from "$crate/lib/tiptap/indentCodeBlock";
+	import CodeBlockIndent from "$crate/lib/tiptap/indent-code-block";
 
 	import Code from "phosphor-svelte/lib/Code";
 	import Minus from "phosphor-svelte/lib/Minus";
@@ -40,7 +40,7 @@
 	import TextSuperscript from "phosphor-svelte/lib/TextSuperscript";
 	import TextAlignCenter from "phosphor-svelte/lib/TextAlignCenter";
 	import TextAlignJustify from "phosphor-svelte/lib/TextAlignJustify";
-	import HyperlinkDialog from "./hyperlinkDialog.svelte";
+	import HyperlinkDialog from "./hyperlink-dialog.svelte";
 	import HardBreak from "@tiptap/extension-hard-break";
 
 	let element: Element;

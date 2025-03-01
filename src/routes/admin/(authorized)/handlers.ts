@@ -1,6 +1,6 @@
 import type { Log } from "$crate/core/entities/log";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
 import { env } from "$env/dynamic/private";
 import type { ServerLoadEvent } from "@sveltejs/kit";
 

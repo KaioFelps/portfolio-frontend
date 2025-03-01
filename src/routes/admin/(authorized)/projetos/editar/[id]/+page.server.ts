@@ -4,9 +4,9 @@ import { env } from "$env/dynamic/private";
 import { z } from "zod";
 import { fail, type Actions, type ServerLoadEvent } from "@sveltejs/kit";
 import type { Tag } from "$crate/core/entities/tag";
-import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import type { PaginatedResponse } from "$crate/core/types/paginated-response";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 
 type FetchTagsResponse = PaginatedResponse & {
 	tags: Array<Tag>;

@@ -4,7 +4,7 @@
 	import { Popover } from "bits-ui";
 	import { Checkbox } from "bits-ui";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
-	import EditorButton from "./editorButton.svelte";
+	import EditorButton from "./editor-button.svelte";
 	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import Check from "phosphor-svelte/lib/Check";
 

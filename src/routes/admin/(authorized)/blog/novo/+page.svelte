@@ -6,7 +6,7 @@
 	import type { Selected } from "bits-ui";
 	import type { PageLoadData, PublishPostResponse } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
-	import PreviewDialog from "./previewDialog.svelte";
+	import PreviewDialog from "./preview-dialog.svelte";
 
 	export let form: PublishPostResponse;
 	export let data: PageLoadData;
