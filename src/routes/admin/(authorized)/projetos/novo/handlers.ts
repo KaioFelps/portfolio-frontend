@@ -1,10 +1,10 @@
 import { fail, type ActionFailure, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
 import { publishProjectSchema } from "./schemas";
-import type { ResponseErrorType } from "$crate/core/types/responseError";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import type { ResponseErrorType } from "$crate/core/types/response-error";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 import { env } from "$env/dynamic/private";
-import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
+import type { PaginatedResponse } from "$crate/core/types/paginated-response";
 import type { Tag } from "$crate/core/entities/tag";
 
 type RequestFormData = {

@@ -1,9 +1,9 @@
-import type { ResponseErrorType } from "$crate/core/types/responseError";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
+import type { ResponseErrorType } from "$crate/core/types/response-error";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
 import type { RequestEvent, ServerLoadEvent } from "@sveltejs/kit";
 import type { Tag } from "$crate/core/entities/tag";
-import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import type { PaginatedResponse } from "$crate/core/types/paginated-response";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 import { editTagSchema } from "./schemas";
 import { env } from "$env/dynamic/private";
 

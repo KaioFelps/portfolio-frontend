@@ -6,7 +6,7 @@
 	import Pencil from "phosphor-svelte/lib/Pencil";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
-	import DeleteProjectButton from "./deleteProjectButton.svelte";
+	import DeleteProjectButton from "./delete-project-button.svelte";
 	import type { ActionData } from "./$types";
 	import ErrorToast from "$crate/components/error-toast.svelte";
 	import { goto } from "$app/navigation";

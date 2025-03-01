@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Header from "$crate/ui/header.svelte";
 	import Footer from "$crate/ui/footer.svelte";
-	import MobileHeader from "$crate/ui/mobileHeader.svelte";
+	import MobileHeader from "$crate/ui/mobile-header.svelte";
 	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import type { Snippet } from "svelte";
 

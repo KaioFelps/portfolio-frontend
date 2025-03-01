@@ -1,7 +1,7 @@
 <script lang="ts">
 	import logo from "$crate/assets/logo-dark-mode.svg";
 	import House from "phosphor-svelte/lib/House";
-	import SideBarDynamicMenu from "./sideBarDynamicMenu.svelte";
+	import SideBarDynamicMenu from "./sidebar-dynamic-menu.svelte";
 	import type { AuthUser } from "$crate/core/entities/authUser";
 	import ArrowSquareOut from "phosphor-svelte/lib/ArrowSquareOut";
 	import clsx from "clsx";

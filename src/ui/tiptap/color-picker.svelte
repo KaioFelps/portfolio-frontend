@@ -4,7 +4,7 @@
 	import { Popover } from "bits-ui";
 	import colors from "tailwindcss/colors";
 	import { debounce } from "$crate/lib/debounce";
-	import EditorButton from "./editorButton.svelte";
+	import EditorButton from "./editor-button.svelte";
 	import PaintBrush from "phosphor-svelte/lib/PaintBrush";
 
 	type PressetColor = [string, string];

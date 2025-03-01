@@ -2,7 +2,7 @@
 	import LogoDark from "$crate/assets/logo-dark-mode.svg";
 	import Logo from "$crate/assets/logo-white-mode.svg";
 	import { page } from "$app/stores";
-	import ThemeToggler from "$crate/ui/themeToggleButton.svelte";
+	import ThemeToggler from "$crate/ui/theme-toggle-button.svelte";
 
 	let currentPath: string | null = null;
 	page.subscribe((value) => (currentPath = value.url.pathname));

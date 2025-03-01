@@ -1,12 +1,12 @@
 import type { Post } from "$crate/core/entities/post";
-import { generateQueryString, type Args } from "$crate/core/utils/queryParams";
+import { generateQueryString, type Args } from "$crate/core/utils/query-params";
 import { env } from "$env/dynamic/private";
 import { fail } from "@sveltejs/kit";
 import type { ActionFailure, RequestEvent, ServerLoadEvent } from "@sveltejs/kit";
 import type { ExpandedPost } from "$crate/core/entities/expandedPost";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
-import type { PaginatedResponse } from "$crate/core/types/paginatedResponse";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
+import type { PaginatedResponse } from "$crate/core/types/paginated-response";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 
 type PaginatedPosts = PaginatedResponse & { posts: Post[] };
 export type LoadPaginatedPosts = ServerResponseData<PaginatedPosts, string>;

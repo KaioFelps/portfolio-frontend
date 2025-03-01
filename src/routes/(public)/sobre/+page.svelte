@@ -1,6 +1,6 @@
 <script>
 	import Title from "$crate/components/title.svelte";
-	import { socialMedias } from "$crate/config/socialMedias";
+	import { socialMedias } from "$crate/config/social-medias";
 	import { getYearsFromNow } from "$crate/utils";
 
 	const myBirthday = new Date("07/17/2005");

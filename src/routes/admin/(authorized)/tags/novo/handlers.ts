@@ -1,10 +1,10 @@
 import { z } from "zod";
 import type { RequestEvent } from "@sveltejs/kit";
-import { MakeServerResponseData } from "$crate/core/helpers/serverActionResponse";
+import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 import { fail, type ActionFailure } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
-import type { ServerResponseData } from "$crate/core/types/serverResponseData";
-import type { ResponseErrorType } from "$crate/core/types/responseError";
+import type { ServerResponseData } from "$crate/core/types/server-response-data";
+import type { ResponseErrorType } from "$crate/core/types/response-error";
 
 const createTagSchema = z.object({
 	value: z.string().min(1, "Tag precisa ter 1 caracter no mínimo."),

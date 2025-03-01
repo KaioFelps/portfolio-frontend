@@ -2,7 +2,7 @@ import type { Project } from "$crate/core/entities/project";
 import { env } from "$env/dynamic/private";
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { generateQueryString, type Args } from "$crate/core/utils/queryParams";
+import { generateQueryString, type Args } from "$crate/core/utils/query-params";
 
 const apiUrl = (q = "") => `${env.BACKEND_URL}/project/list${q}`;
 
