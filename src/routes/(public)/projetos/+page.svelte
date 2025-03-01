@@ -1,20 +1,19 @@
 <script lang="ts">
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
 	import WarningCircle from "phosphor-svelte/lib/WarningCircle";
-	import CaretUp from "phosphor-svelte/lib/CaretUp";
 	import { fly } from "svelte/transition";
 	import type { FetchProjectsData } from "./proxy+page.server.js";
 	import { goto, afterNavigate } from "$app/navigation";
 	import { page } from "$app/state";
-	import LinksPopover from "./linksPopover.svelte";
 	import clsx from "clsx";
 	import { enhance } from "$app/forms";
 	import Title from "$crate/components/title.svelte";
 	import type { Selected } from "bits-ui";
-	import { flyAndScale } from "$crate/utils.js";
 	import type { Project } from "$crate/core/entities/project.js";
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 	import Select from "$crate/components/select";
+	import ProjectCard from "./project-card.svelte";
+	import ProjectSkeleton from "./project-skeleton.svelte";
 
 	const {
 		data,
@@ -29,15 +28,25 @@
 	let formIsLoading = $state(false);
 	let formError = $state(false);
 
-	let projectsUnion: Project[] = $state([]);
+	let projectsTotalCount: null | number = $state(null);
+	let projects: { data: Project[] } | { error: string } | { loading: true } = $state({
+		loading: true,
+	});
 
 	$effect(() => {
-		if (data.success) projectsUnion = data.data.projects;
+		if (data.success) {
+			projects = { data: data.data.projects };
+			projectsTotalCount = data.data.totalCount;
+			return;
+		}
+
+		projects = { error: data.error };
 	});
 
 	$effect(() => {
 		if (form?.success) {
-			projectsUnion = [...projectsUnion, ...form.data.projects];
+			const oldProjects = "data" in projects ? projects.data : [];
+			projects = { data: [...oldProjects, ...form.data.projects] };
 			currentPage = form.data.page;
 		} else {
 			formError = true;
@@ -146,8 +155,16 @@
 		</form>
 	</header>
 
-	{#if data.success}
-		{#if projectsUnion.length > 0}
+	{#if "loading" in projects}
+		<div class="flex gap-12 w-full max-w-screen-main mt-16">
+			<ProjectSkeleton />
+			<ProjectSkeleton />
+			<ProjectSkeleton />
+		</div>
+	{/if}
+
+	{#if "data" in projects}
+		{#if projects.data.length > 0}
 			<div
 				class={clsx(
 					"grid grid-flow-row grid-cols-3 gap-12 w-full max-w-screen-main mt-16",
@@ -156,69 +173,42 @@
 					"max-sm:grid-cols-1",
 				)}
 			>
-				{#each projectsUnion as project}
-					<article
-						class="
-						group/parent transition-all will-change-[shadow]
-						p-4 rounded-2xl bg-gray-100 dark:bg-d-gray-100 border border-gray-300 dark:border-none
-						hover:shadow-lg duration-300
-						flex flex-col gap-3
-						"
-					>
-						<img
-							src={project.topstory}
-							class="h-[180px] rounded-lg object-cover object-center"
-							alt=""
-						/>
-
-						<h2 class="font-medium text-base leading-4">
-							<span class="sr-only">Projeto </span>{project.title}
-						</h2>
-
-						<footer class="flex items-start justify-between gap-2">
-							<div class="flex flex-wrap gap-1.5">
-								{#each project.tags as tag (`${project.id}_tag_${tag.id}`)}
-									<a href="/projetos?q={tag.value}&qb=tag" class="group chip c-yellow c-clickable">
-										{tag.value}
-									</a>
-								{/each}
-							</div>
-
-							<LinksPopover links={project.links} />
-						</footer>
-					</article>
+				{#each projects.data as project (project.id)}
+					<ProjectCard {...project} />
 				{/each}
 			</div>
+
+			{#if projects.data.length < projectsTotalCount!}
+				<form
+					action="?/fetchMore"
+					method="post"
+					use:enhance={() => {
+						formIsLoading = true;
+
+						return async ({ update }) => {
+							formIsLoading = false;
+							update();
+						};
+					}}
+				>
+					<input type="hidden" name="page" value={currentPage + 1} />
+					<button
+						type="submit"
+						class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
+						disabled={formIsLoading}
+					>
+						Carregar mais
+					</button>
+				</form>
+			{/if}
 		{:else}
 			<WarningAlert>Ainda não há nenhum projeto 🫶</WarningAlert>
 		{/if}
+	{/if}
 
-		{#if projectsUnion.length < data.data.totalCount}
-			<form
-				action="?/fetchMore"
-				method="post"
-				use:enhance={() => {
-					formIsLoading = true;
-
-					return async ({ update }) => {
-						formIsLoading = false;
-						update();
-					};
-				}}
-			>
-				<input type="hidden" name="page" value={currentPage + 1} />
-				<button
-					type="submit"
-					class="btn default text-xl font-bold px-16 mx-auto mt-6 disabled:opacity-50"
-					disabled={formIsLoading}
-				>
-					Carregar mais
-				</button>
-			</form>
-		{/if}
-	{:else}
+	{#if "error" in projects}
 		<div class="max-w-screen-main w-full my-12">
-			<span class="w-full danger alert">{data.error}</span>
+			<span class="w-full danger alert">{projects.error}</span>
 		</div>
 	{/if}
 </main>
