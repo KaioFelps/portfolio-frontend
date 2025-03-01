@@ -22,6 +22,7 @@
 		</Popover.Trigger>
 		<Popover.Content
 			sideOffset={8}
+			collisionPadding={24}
 			forceMount
 			class={clsx(
 				"z-30 w-full flex flex-col gap-1 max-w-48 rounded-xl ring-1 ring-gray-300",
@@ -51,7 +52,7 @@
 								width={8}
 								height={4}
 								class={clsx(
-									"text-gray-100 dark:text-d-gray-200 drop-shadow-[0px_-1px_0_var(--tw-shadow-color)]",
+									"text-gray-100 dark:text-d-gray-100 drop-shadow-[0px_-1px_0_var(--tw-shadow-color)]",
 									"shadow-gray-300 dark:shadow-black",
 								)}
 							></Popover.Arrow>
