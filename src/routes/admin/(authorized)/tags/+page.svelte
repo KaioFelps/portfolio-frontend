@@ -121,9 +121,9 @@
 {/if}
 
 {#if formStatus.status.code === "success"}
-	<SuccessToast close={formStatus.clean} message="Tag atualizada com sucesso!" />
+	<SuccessToast close={formStatus.getCleanCallback()} message="Tag atualizada com sucesso!" />
 {/if}
 
 {#if formStatus.status.code === "error"}
-	<ErrorToast close={formStatus.clean} message={formStatus.status.message} />
+	<ErrorToast close={formStatus.getCleanCallback()} message={formStatus.status.message} />
 {/if}
