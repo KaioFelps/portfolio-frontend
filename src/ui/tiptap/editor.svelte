@@ -358,7 +358,7 @@
 		"[&>*]:focus-within:outline-none",
 	)}
 	bind:this={element}
-/>
+></div>
 
 <style lang="postcss">
 	.group-set {
