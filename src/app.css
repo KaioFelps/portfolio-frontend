@@ -133,7 +133,9 @@
   }
 
   body {
-      height: -webkit-fill-available;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
       @apply bg-backgrond dark:!bg-d-backgrond text-black dark:!text-white;
   }
 
