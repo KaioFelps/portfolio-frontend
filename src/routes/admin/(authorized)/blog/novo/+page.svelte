@@ -7,15 +7,22 @@
 	import type { PageLoadData, PublishPostResponse } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
 	import PreviewDialog from "./preview-dialog.svelte";
+	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
 
-	export let form: PublishPostResponse;
-	export let data: PageLoadData;
+	type Props = {
+		data: PageLoadData;
+		form: PublishPostResponse;
+	};
 
-	$: tagsData = data.tags;
+	const { data, form }: Props = $props();
 
-	let selectedTags: Array<Selected<string>> = [];
-	let formIsLoading = false;
-	let htmlContent: string;
+	const availableTags: SelectOption[] = $derived.by(() => {
+		if (!data.tags.success) return [];
+		return data.tags.data.tags.map((tag) => ({ value: tag.id, label: tag.value }));
+	});
+
+	let formIsLoading = $state(false);
+	let htmlContent: string = $state("");
 </script>
 
 <Title title="Novo post" />
@@ -42,7 +49,6 @@
 	method="post"
 	action="?/publish"
 	use:enhance={({ formData }) => {
-		formData.set("tags", JSON.stringify(selectedTags.map((selected) => selected.value)));
 		formData.set("content", htmlContent);
 
 		formIsLoading = true;
@@ -68,16 +74,11 @@
 			<span class="alert danger mb-2 mt-4 sm">{error}</span>
 		{/each}
 	{/if}
-	{#if tagsData.success && tagsData.data.tags.length > 0}
-		<FloatingSelect
-			bind:values={selectedTags}
-			multiple
-			options={tagsData.data.tags.map(({ id, value }) => ({ value: id, label: value }))}
-			placeholder="Tags"
-		/>
-	{:else if !tagsData.success}
+	{#if data.tags.success && availableTags.length > 0}
+		<FloatingSelect name="tags" multiple options={availableTags} placeholder="Tags" />
+	{:else if !data.tags.success}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
-			{tagsData.internalError ? "Não foi possível carregar as tags existentes." : tagsData.error}
+			{data.tags.internalError ? "Não foi possível carregar as tags existentes." : data.tags.error}
 		</span>
 	{:else}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
