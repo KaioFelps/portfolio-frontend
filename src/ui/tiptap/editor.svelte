@@ -43,11 +43,16 @@
 	import HyperlinkDialog from "./hyperlink-dialog.svelte";
 	import HardBreak from "@tiptap/extension-hard-break";
 
-	let element: Element;
-	let editor: Editor;
-	let isDisplayingSourceCode = false;
+	type Props = {
+		htmlContent: string;
+	};
 
-	export let htmlContent: string;
+	let { htmlContent = $bindable() }: Props = $props();
+
+	let element: Element | null = $state(null);
+	let editor: Editor | null = $state(null);
+	let isDisplayingSourceCode = $state(false);
+
 	const updateHtmlContent = (content: string) => (htmlContent = content);
 
 	// FALTAM:
@@ -56,7 +61,7 @@
 
 	onMount(() => {
 		editor = new Editor({
-			element,
+			element: element!,
 			editorProps: {
 				attributes: {
 					class: "text-container",
@@ -108,6 +113,7 @@
 	});
 
 	function handleToggleSourceCode() {
+		if (!editor) return;
 		if (!isDisplayingSourceCode) {
 			const htmlContent = editor
 				.getHTML()
@@ -139,47 +145,47 @@
 			options={[
 				{
 					active: editor.isActive("heading", { level: 1 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 1 }).run(),
 					title: "H1",
 				},
 				{
 					active: editor.isActive("heading", { level: 2 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 2 }).run(),
 					title: "H2",
 				},
 				{
 					active: editor.isActive("heading", { level: 3 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 3 }).run(),
 					title: "H3",
 				},
 				{
 					active: editor.isActive("heading", { level: 4 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 4 }).run(),
 					title: "H4",
 				},
 				{
 					active: editor.isActive("heading", { level: 5 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 5 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 5 }).run(),
 					title: "H5",
 				},
 				{
 					active: editor.isActive("heading", { level: 6 }),
-					handler: () => editor.chain().focus().toggleHeading({ level: 6 }).run(),
+					handler: () => editor!.chain().focus().toggleHeading({ level: 6 }).run(),
 					title: "H6",
 				},
 				{
 					active: editor.isActive("code"),
-					handler: () => editor.chain().focus().toggleCode().run(),
+					handler: () => editor!.chain().focus().toggleCode().run(),
 					title: "Linha de código",
 				},
 				{
 					active: editor.isActive("codeBlock"),
-					handler: () => editor.chain().focus().toggleCodeBlock().run(),
+					handler: () => editor!.chain().focus().toggleCodeBlock().run(),
 					title: "Bloco de código",
 				},
 				{
 					active: editor.isActive("paragraph"),
-					handler: () => editor.chain().focus().setParagraph().run(),
+					handler: () => editor!.chain().focus().setParagraph().run(),
 					title: "Parágrafo",
 				},
 			]}
@@ -189,7 +195,7 @@
 			<EditorButton
 				title="Negrito"
 				active={editor.isActive("bold")}
-				onclick={() => editor.chain().focus().toggleBold().run()}
+				onclick={() => editor!.chain().focus().toggleBold().run()}
 			>
 				<TextBold weight="bold" size="20" />
 			</EditorButton>
@@ -197,7 +203,7 @@
 			<EditorButton
 				title="Itálico"
 				active={editor.isActive("italic")}
-				onclick={() => editor.chain().focus().toggleItalic().run()}
+				onclick={() => editor!.chain().focus().toggleItalic().run()}
 			>
 				<TextItalic weight="bold" size="20" />
 			</EditorButton>
@@ -205,7 +211,7 @@
 			<EditorButton
 				title="Underline"
 				active={editor.isActive("underline")}
-				onclick={() => editor.chain().focus().toggleUnderline().run()}
+				onclick={() => editor!.chain().focus().toggleUnderline().run()}
 			>
 				<TextUnderline weight="bold" size="20" />
 			</EditorButton>
@@ -213,7 +219,7 @@
 			<EditorButton
 				title="Riscar"
 				active={editor.isActive("strike")}
-				onclick={() => editor.chain().focus().toggleStrike().run()}
+				onclick={() => editor!.chain().focus().toggleStrike().run()}
 			>
 				<TextStrike weight="bold" size="20" />
 			</EditorButton>
@@ -227,15 +233,15 @@
 				if (size === false)
 					return {
 						active: false,
-						handler: () => editor.chain().focus().unsetFontSize().run(),
+						handler: () => editor!.chain().focus().unsetFontSize().run(),
 						title: "Restaurar",
 					};
 
 				const fontSize = size + "px";
 
 				return {
-					active: editor.isActive("textStyle", { fontSize }),
-					handler: () => editor.chain().focus().setFontSize(fontSize).run(),
+					active: editor!.isActive("textStyle", { fontSize }),
+					handler: () => editor!.chain().focus().setFontSize(fontSize).run(),
 					title: fontSize,
 				};
 			})}
@@ -245,7 +251,7 @@
 			<EditorButton
 				title="Alinhar à esquerda"
 				active={editor.isActive({ textAlign: "left" })}
-				onclick={() => editor.chain().focus().toggleTextAlign("left").run()}
+				onclick={() => editor!.chain().focus().toggleTextAlign("left").run()}
 			>
 				<TextAlignLeft weight="bold" size="20" />
 			</EditorButton>
@@ -253,7 +259,7 @@
 			<EditorButton
 				title="Alinhar ao centro"
 				active={editor.isActive({ textAlign: "center" })}
-				onclick={() => editor.chain().focus().toggleTextAlign("center").run()}
+				onclick={() => editor!.chain().focus().toggleTextAlign("center").run()}
 			>
 				<TextAlignCenter weight="bold" size="20" />
 			</EditorButton>
@@ -261,7 +267,7 @@
 			<EditorButton
 				title="Alinhar à direita"
 				active={editor.isActive({ textAlign: "right" })}
-				onclick={() => editor.chain().focus().toggleTextAlign("right").run()}
+				onclick={() => editor!.chain().focus().toggleTextAlign("right").run()}
 			>
 				<TextAlignRight weight="bold" size="20" />
 			</EditorButton>
@@ -269,7 +275,7 @@
 			<EditorButton
 				title="Justificar"
 				active={editor.isActive({ textAlign: "justify" })}
-				onclick={() => editor.chain().focus().toggleTextAlign("justify").run()}
+				onclick={() => editor!.chain().focus().toggleTextAlign("justify").run()}
 			>
 				<TextAlignJustify weight="bold" size="20" />
 			</EditorButton>
@@ -279,7 +285,7 @@
 			<EditorButton
 				title="Linha Horizontal"
 				active={editor.isActive("horizontalRule")}
-				onclick={() => editor.chain().focus().setHorizontalRule().run()}
+				onclick={() => editor!.chain().focus().setHorizontalRule().run()}
 			>
 				<Minus weight="bold" size="20" />
 			</EditorButton>
@@ -287,7 +293,7 @@
 			<EditorButton
 				title="Quote"
 				active={editor.isActive("blockquote")}
-				onclick={() => editor.chain().focus().toggleBlockquote().run()}
+				onclick={() => editor!.chain().focus().toggleBlockquote().run()}
 			>
 				<Quotes weight="bold" size="20" />
 			</EditorButton>
@@ -295,7 +301,7 @@
 			<EditorButton
 				title="Super-escrita"
 				active={editor.isActive("superscript")}
-				onclick={() => editor.chain().focus().toggleSuperscript().run()}
+				onclick={() => editor!.chain().focus().toggleSuperscript().run()}
 			>
 				<TextSuperscript weight="bold" size="20" />
 			</EditorButton>
@@ -303,7 +309,7 @@
 			<EditorButton
 				title="Sub-escrita"
 				active={editor.isActive("subscript")}
-				onclick={() => editor.chain().focus().toggleSubscript().run()}
+				onclick={() => editor!.chain().focus().toggleSubscript().run()}
 			>
 				<TextSubscript weight="bold" size="20" />
 			</EditorButton>
@@ -312,7 +318,7 @@
 				active={editor.isActive("bulletList")}
 				title="Lista"
 				onclick={() => {
-					editor.chain().focus().toggleBulletList().run();
+					editor!.chain().focus().toggleBulletList().run();
 				}}
 			>
 				<ListBullets weight="bold" size="20" />
@@ -322,7 +328,7 @@
 				active={editor.isActive("orderedList")}
 				title="Lista Enumerada"
 				onclick={() => {
-					editor.chain().focus().toggleOrderedList().run();
+					editor!.chain().focus().toggleOrderedList().run();
 				}}
 			>
 				<ListNumbers weight="bold" size="20" />
@@ -343,7 +349,7 @@
 			<EditorButton
 				active={false}
 				title="Limpar Formatação"
-				onclick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+				onclick={() => editor!.chain().focus().clearNodes().unsetAllMarks().run()}
 			>
 				<Broom weight="bold" size="20" />
 			</EditorButton>

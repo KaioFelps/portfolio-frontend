@@ -36,46 +36,54 @@
 </script>
 
 <Popover.Root bind:open onOpenChange={handleColorPickOpen}>
-	<Popover.Trigger asChild let:builder>
-		<EditorButton active={false} {builder}>
-			<PaintBrush size="20" weight="bold" />
-		</EditorButton>
+	<Popover.Trigger>
+		{#snippet child({ props })}
+			<EditorButton {...props} active={false}>
+				<PaintBrush size="20" weight="bold" />
+			</EditorButton>
+		{/snippet}
 	</Popover.Trigger>
 	<Popover.Content
-		transition={flyAndScale}
 		align="start"
 		sideOffset={8}
 		alignOffset={0}
-		sameWidth={false}
 		class="max-w-[calc(100%-_48px)] min-w-[200px] dropdown p-3"
 	>
-		<span><strong>Alterar cor do texto</strong></span>
+		{#snippet child({ wrapperProps, props, open })}
+			{#if open}
+				<div {...wrapperProps}>
+					<div {...props} transition:flyAndScale>
+						<span><strong>Alterar cor do texto</strong></span>
 
-		<input bind:value={selectedColor} type="color" id="favcolor" />
+						<input bind:value={selectedColor} type="color" id="favcolor" />
 
-		<hr class="bg-d-gray-300 h-[1px] border-none w-full my-3" />
+						<hr class="bg-d-gray-300 h-[1px] border-none w-full my-3" />
 
-		<div class="grid grid-cols-6 grid-flow-row gap-1 mb-3">
-			<button
-				onclick={() => editor.chain().focus().unsetColor().run()}
-				title="Cor automática"
-				aria-label="Cor automática"
-				type="button"
-				class="text-opt bg-transparent ring-inset ring-2 ring-white"
-			></button>
+						<div class="grid grid-cols-6 grid-flow-row gap-1 mb-3">
+							<button
+								onclick={() => editor.chain().focus().unsetColor().run()}
+								title="Cor automática"
+								aria-label="Cor automática"
+								type="button"
+								class="text-opt bg-transparent ring-inset ring-2 ring-white"
+							></button>
 
-			{#each presetPallete as [name, hex] (hex)}
-				<button
-					onclick={() => (selectedColor = hex)}
-					type="button"
-					title={`Selecionar ${name}`}
-					aria-label={`Selecionar ${name}`}
-					style="background: {hex};"
-					data-state={editor.isActive("textStyle", { color: hex }) ? "active" : "deactive"}
-					class="text-opt"
-				></button>
-			{/each}
-		</div>
+							{#each presetPallete as [name, hex] (hex)}
+								<button
+									onclick={() => (selectedColor = hex)}
+									type="button"
+									title={`Selecionar ${name}`}
+									aria-label={`Selecionar ${name}`}
+									style="background: {hex};"
+									data-state={editor.isActive("textStyle", { color: hex }) ? "active" : "deactive"}
+									class="text-opt"
+								></button>
+							{/each}
+						</div>
+					</div>
+				</div>
+			{/if}
+		{/snippet}
 	</Popover.Content>
 </Popover.Root>
 

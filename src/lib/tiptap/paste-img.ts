@@ -13,7 +13,7 @@ async function pasteClipboardImageAsNode() {
 	} catch (error) {}
 }
 
-export async function handlePasteImageWithOrigin(editor?: Editor) {
+export async function handlePasteImageWithOrigin(editor?: Editor | null) {
 	if (!editor) return;
 
 	const imgElement = await pasteClipboardImageAsNode();
