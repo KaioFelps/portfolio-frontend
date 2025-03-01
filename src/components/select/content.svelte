@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { flyAndScale } from "$crate/utils";
 	import { Select } from "bits-ui";
+	import clsx from "clsx";
 
 	type Props = Omit<Select.ContentProps, "class">;
 
@@ -10,7 +11,10 @@
 <Select.Content
 	{...rest}
 	{sideOffset}
-	class="w-full rounded-xl border border-gray-200 dark:border-d-gray-200 bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none"
+	class={clsx(
+		"min-w-56 w-full rounded-xl border border-gray-200 dark:border-d-gray-200",
+		"bg-backgrond dark:bg-d-backgrond p-1 shadow-sm outline-none",
+	)}
 	forceMount
 >
 	{#snippet child({ wrapperProps, props, open })}
