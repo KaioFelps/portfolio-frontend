@@ -5,7 +5,7 @@
 	import { formatLogString } from "$crate/utils";
 	import Title from "$crate/components/title.svelte";
 
-	export let data: PageLoadData;
+	const { data }: { data: PageLoadData } = $props();
 </script>
 
 <Title title="Home" adminRoute />
