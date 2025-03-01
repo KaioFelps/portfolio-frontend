@@ -19,7 +19,7 @@
 
 	let formIsLoading = $state(false);
 	let subFormElement: HTMLFormElement | undefined = $state();
-	let selectedTags: string[] = $state([]);
+	let selectedTagsIds: string[] = $state([]);
 	let links: Array<{ title: string; value: string }> = $state([]);
 
 	const availableTags: SelectOption[] = $derived.by(() => {
@@ -31,7 +31,7 @@
 		await tick();
 		if (form.success) {
 			links = [];
-			selectedTags = [];
+			selectedTagsIds = [];
 			subFormElement?.reset();
 		}
 	}
@@ -91,7 +91,7 @@
 	action="?/publish"
 	use:enhance={({ formData }) => {
 		formData.set("links", JSON.stringify(links));
-		formData.set("tags", JSON.stringify(selectedTags));
+		formData.set("tags", JSON.stringify(selectedTagsIds));
 		formIsLoading = true;
 
 		return async ({ update }) => {
@@ -130,7 +130,12 @@
 				<span class="alert danger mb-2 mt-4 sm">{error}</span>
 			{/each}
 		{/if}
-		<FloatingSelect bind:value={selectedTags} multiple options={availableTags} placeholder="Tags" />
+		<FloatingSelect
+			bind:value={selectedTagsIds}
+			multiple
+			options={availableTags}
+			placeholder="Tags"
+		/>
 	{:else if !data.tags.success}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
 			{data.tags.internalError ? "Não foi possível carregar as tags existentes." : data.tags.error}
