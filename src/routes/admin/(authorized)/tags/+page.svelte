@@ -1,35 +1,53 @@
 <script lang="ts">
 	import CaretLeft from "phosphor-svelte/lib/CaretLeft";
 	import CaretRight from "phosphor-svelte/lib/CaretRight";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { PaginationHelper } from "$crate/core/helpers/pagination";
 	import { UserRoleEnum } from "$crate/core/entities/userRoleEnum";
 	import type { AuthUser } from "$crate/core/entities/authUser";
 	import EditTagDialog from "./edit-tag-dialog.svelte";
 	import type { EditTagResponse, PageLoadData } from "./handlers";
+	import ErrorToast from "$crate/components/error-toast.svelte";
+	import SuccessToast from "$crate/components/success-toast.svelte";
+	import { FormStatus } from "$crate/core/utils/form-status.svelte";
 
-	export let data: PageLoadData & { user: AuthUser };
-	export let form: EditTagResponse | undefined;
+	type Props = {
+		data: PageLoadData & { user: AuthUser };
+		form?: EditTagResponse;
+	};
 
-	$: tags = data.success ? data.data.tags : [];
+	let formStatus = new FormStatus();
+	$effect(() => {
+		if (!form) return;
+		if (form.success) {
+			formStatus.success();
+			return;
+		}
 
-	let url = $page.url;
-	let currentPage = data?.success ? data.data.page : 1;
-	let lastPage = 1;
+		if (form.internalError) return;
+		formStatus.error("Não foi possível salvar as alterações realizadas.");
+	});
 
-	$: if (data.success) {
-		lastPage = data.data.totalCount <= 0 ? 1 : Math.ceil(data.data.totalCount / data.data.perPage);
-	}
+	const { data, form }: Props = $props();
 
-	$: if (form && form.success) {
-		tags = tags.map((tag) => {
-			if (tag.id === form.data.id) return form.data;
+	let tags = $derived.by(() => {
+		if (!data.success) return [];
 
-			return tag;
-		});
-	}
+		if (form && form.success) {
+			return data.data.tags.map((tag) => (tag.id == form.data.id ? form.data : tag));
+		}
 
-	let paginationButtons = (() => {
+		return data.data.tags;
+	});
+
+	const url = page.url;
+	let currentPage = $state(data?.success ? data.data.page : 1);
+	let lastPage = $derived.by(() => {
+		if (!data.success || data.data.totalCount <= 0) return 1;
+		return Math.ceil(data.data.totalCount / data.data.perPage);
+	});
+
+	const paginationButtons = (() => {
 		if (!data.success) return [];
 
 		let { maxLeft, maxRight } = PaginationHelper.getVisibleButtons(5, currentPage, lastPage);
@@ -100,4 +118,12 @@
 	<span class="mx-auto danger alert text-center w-full">
 		{data.internalError ? "Não foi possível carregar as tags existentes." : data.error}
 	</span>
+{/if}
+
+{#if formStatus.status.code === "success"}
+	<SuccessToast close={formStatus.clean} message="Tag atualizada com sucesso!" />
+{/if}
+
+{#if formStatus.status.code === "error"}
+	<ErrorToast close={formStatus.clean} message={formStatus.status.message} />
 {/if}
