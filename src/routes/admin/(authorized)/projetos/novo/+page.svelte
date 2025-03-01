@@ -7,6 +7,7 @@
 	import { tick } from "svelte";
 	import type { PageLoadData, PublishResponseType } from "./handlers";
 	import Title from "$crate/components/title.svelte";
+	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
 
 	const {
 		form,
@@ -18,10 +19,13 @@
 
 	let formIsLoading = $state(false);
 	let subFormElement: HTMLFormElement | undefined = $state();
-	let selectedTags: Selected<string>[] = $state([]);
+	let selectedTags: string[] = $state([]);
 	let links: Array<{ title: string; value: string }> = $state([]);
 
-	const tagsData = $derived(data.tags);
+	const availableTags: SelectOption[] = $derived.by(() => {
+		if (!data.tags.success) return [];
+		return data.tags.data.tags.map(({ id, value }) => ({ value: id, label: value }));
+	});
 
 	async function handleResetForm() {
 		await tick();
@@ -87,7 +91,7 @@
 	action="?/publish"
 	use:enhance={({ formData }) => {
 		formData.set("links", JSON.stringify(links));
-		formData.set("tags", JSON.stringify(selectedTags.map((selected) => selected.value)));
+		formData.set("tags", JSON.stringify(selectedTags));
 		formIsLoading = true;
 
 		return async ({ update }) => {
@@ -120,21 +124,16 @@
 		<FloatingLabel>Imagem de capa</FloatingLabel>
 	</FloatingGroup>
 
-	{#if tagsData.success && tagsData.data.tags.length > 0}
+	{#if availableTags.length > 0}
 		{#if form && !form.success && !form.internalError && form.error.validation && form.error.data.fieldErrors.tags}
 			{#each form.error.data.fieldErrors.tags as error}
 				<span class="alert danger mb-2 mt-4 sm">{error}</span>
 			{/each}
 		{/if}
-		<FloatingSelect
-			bind:values={selectedTags}
-			multiple
-			options={tagsData.data.tags.map(({ id, value }) => ({ value: id, label: value }))}
-			placeholder="Tags"
-		/>
-	{:else if !tagsData.success}
+		<FloatingSelect bind:value={selectedTags} multiple options={availableTags} placeholder="Tags" />
+	{:else if !data.tags.success}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
-			{tagsData.internalError ? "Não foi possível carregar as tags existentes." : tagsData.error}
+			{data.tags.internalError ? "Não foi possível carregar as tags existentes." : data.tags.error}
 		</span>
 	{:else}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
@@ -203,7 +202,7 @@
 		<button
 			form="main-form"
 			type="submit"
-			disabled={formIsLoading || !tagsData.success || !(tagsData.data?.tags.length ?? 0 > 0)}
+			disabled={formIsLoading || !data.tags.success || availableTags.length <= 0}
 			class="btn default"
 		>
 			{formIsLoading ? "Publicando" : "Publicar"} projeto
