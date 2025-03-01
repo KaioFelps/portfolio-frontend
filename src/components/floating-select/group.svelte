@@ -1,41 +1,62 @@
 <script lang="ts">
-	import { Select, type Selected } from "bits-ui";
+	import { Select } from "bits-ui";
 	import { FloatingLabel } from "$crate/components/floating-input";
 	import clsx from "clsx";
-	import { fly } from "svelte/transition";
 	import { flyAndScale } from "$crate/utils";
+	import CaretDown from "phosphor-svelte/lib/CaretDown";
 
-	export let options: { value: string; label: string }[];
-	export let placeholder: string;
-	export let multiple: boolean = false;
-	export let values: Selected<string>[] | Selected<string>;
+	type Props = {
+		options: { value: string; label: string }[];
+		placeholder: string;
+	} & ({ multiple: true; value: string[] } | { multiple: false; value: string });
+
+	let { multiple = false, options, placeholder, value }: Props = $props();
 </script>
 
-<Select.Root type={multiple ? "multiple" : "single"} bind:selected={values}>
-	<Select.Trigger class="mb-4 form-select-floating w-full flex">
+<Select.Root
+	type={multiple ? "multiple" : "single"}
+	onValueChange={(v: string | string[]) => (value = v)}
+>
+	<Select.Trigger class="group mb-4 form-select-floating w-full flex justify-between items-center">
 		<span class="data-[placeholder]:opacity-0 form-select-control">{placeholder}</span>
 		<FloatingLabel>{placeholder}</FloatingLabel>
+		<CaretDown
+			size={16}
+			weight="bold"
+			class="group-data-[state=open]:rotate-180 transition-all duration-300 will-change-transform"
+		/>
 	</Select.Trigger>
 
-	<Select.Content
-		sideOffset={10}
-		transition={flyAndScale}
-		class="bg-d-backgrond/50 p-1.5 backdrop-blur-3xl rounded-xl border border-white/5 shadow-black/50 shadow-2xl"
-	>
-		{#each options as option (`floating-select-input-option${option.label}-${option.value}`)}
-			<Select.Item
-				value={option.value}
-				class={clsx(
-					"p-1.5 rounded-lg hover:bg-white/5 cursor-default data-[selected]:bg-white/5 mb-1 last:mb-0",
-					"ring-yellow-500/25 ring-0 outline-none transition-all duration-100 will-change-[shadow]",
-					"focus:ring-4 data-[highlighted]:ring-4",
-				)}
-			>
-				{option.label}
-				<Select.ItemIndicator />
-			</Select.Item>
-		{/each}
-
-		<Select.Arrow />
-	</Select.Content>
+	<Select.Portal>
+		<Select.Content
+			sideOffset={10}
+			class={clsx(
+				"bg-d-backgrond/50 p-1.5 backdrop-blur-3xl rounded-xl border border-white/5",
+				"shadow-black/50 shadow-2xl w-[var(--bits-select-anchor-width)]",
+			)}
+		>
+			{#snippet child({ wrapperProps, props, open })}
+				{#if open}
+					<div {...wrapperProps}>
+						<div {...props} transition:flyAndScale>
+							{#each options as option (`floating-select-input-option${option.label}-${option.value}`)}
+								<Select.Item
+									value={option.value}
+									class={clsx(
+										"p-1.5 rounded-lg hover:bg-white/5 cursor-default data-[selected]:bg-white/5 mb-1 last:mb-0",
+										"ring-yellow-500/25 ring-0 outline-none transition-all duration-100 will-change-[shadow]",
+										"focus:ring-4 data-[highlighted]:ring-4",
+									)}
+								>
+									{#snippet children(_)}
+										{option.label}
+									{/snippet}
+								</Select.Item>
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{/snippet}
+		</Select.Content>
+	</Select.Portal>
 </Select.Root>
