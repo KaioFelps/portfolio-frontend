@@ -2,6 +2,7 @@
 	import Trash from "phosphor-svelte/lib/Trash";
 	import AlertDialog from "$crate/components/alert-dialog";
 	import { enhance } from "$app/forms";
+	import { flyAndScale } from "$crate/utils";
 
 	export let projectId: string;
 	let open = false;
@@ -13,7 +14,7 @@
 		<Trash size="20" weight="bold" />
 	</AlertDialog.Trigger>
 
-	<AlertDialog.Content>
+	<AlertDialog.Content transition={flyAndScale}>
 		<div class="flex flex-col gap-4 pb-6">
 			<AlertDialog.Title class="text-lg font-semibold tracking-tight">
 				Você quer apagar o projeto?
