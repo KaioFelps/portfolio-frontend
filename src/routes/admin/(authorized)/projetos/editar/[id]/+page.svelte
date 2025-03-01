@@ -109,12 +109,12 @@
 			if (!data.project.success || !data.project.data) return;
 
 			const oldProject = data.project.data;
-			const selectedTagsValues = availableTags
-				.filter((tag) => selectedTagIds.includes(tag.value))
-				.map((tag) => tag.label);
 
-			const areSameTags = oldProject.tags.every((tag) => selectedTagsValues.includes(tag.value));
-			if (!areSameTags) formData.set("tags", JSON.stringify(selectedTagsValues));
+			const areSameTags =
+				selectedTagIds.length === oldProject.tags.length &&
+				oldProject.tags.every((tag) => selectedTagIds.includes(tag.id));
+
+			if (!areSameTags) formData.set("tags", JSON.stringify(selectedTagIds));
 
 			// comparison is made with json stringify to allow recreating links in order
 			// to reorder them
