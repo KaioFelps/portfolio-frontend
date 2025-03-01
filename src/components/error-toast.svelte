@@ -21,5 +21,7 @@
 		</span>
 	</div>
 
-	<button onclick={close} class="btn ghost-dark btn-sm block ml-auto mt-1">Fechar</button>
+	<button onclick={close} class="btn ghost-dark btn-sm block ml-auto mt-1 leading-none rounded-md">
+		Fechar
+	</button>
 </div>
