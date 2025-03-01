@@ -13,12 +13,13 @@
 	type Props = {
 		options: SelectOption[];
 		placeholder: string;
-	} & ({ multiple: true; value: string[] } | { multiple: false; value: string });
+		name?: string;
+	} & ({ multiple: true; value?: string[] } | { multiple: false; value?: string });
 
-	let { multiple = false, options, placeholder, value = $bindable() }: Props = $props();
+	let { name, multiple = false, options, placeholder, value = $bindable([]) }: Props = $props();
 </script>
 
-<Select.Root type={multiple ? "multiple" : "single"} bind:value required>
+<Select.Root {name} type={multiple ? "multiple" : "single"} bind:value required>
 	<Select.Trigger class="group mb-4 form-select-floating w-full flex justify-between items-center">
 		<span class="data-[placeholder]:opacity-0 form-select-control">
 			{#if value.length == 0}
