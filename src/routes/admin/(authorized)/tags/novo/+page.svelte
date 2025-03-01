@@ -3,8 +3,12 @@
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import type { CreateTagResponse } from "./handlers";
 
-	export let form: CreateTagResponse | undefined;
-	let formIsLoading = false;
+	type Props = {
+		form?: CreateTagResponse;
+	};
+
+	const { form }: Props = $props();
+	let formIsLoading = $state(false);
 </script>
 
 <h1 class="mb-12">Criar tag</h1>
