@@ -3,6 +3,7 @@
 	import { StarryNightSingletone } from "$crate/lib/starry-night";
 	import { flyAndScale } from "$crate/utils";
 	import { Dialog } from "bits-ui";
+	import clsx from "clsx";
 	import X from "phosphor-svelte/lib/X";
 
 	const { html }: { html: string } = $props();
@@ -24,11 +25,11 @@
 	<Dialog.Portal>
 		<Dialog.Overlay class="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm" />
 		<Dialog.Content
-			class="
-            dark fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]
-			shadow-popover outline-none border border-white/5 rounded-2xl p-6 bg-d-backgrond/80 backdrop-blur-md
-            w-main max-w-[calc(100%_-_48px)] max-h-[calc(100vh_-_72px)] overflow-y-scroll
-            "
+			class={clsx(
+				"dark fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]",
+				"shadow-popover outline-none border border-white/5 rounded-2xl p-6 bg-d-backgrond/80 backdrop-blur-md",
+				"w-main max-w-[calc(100%_-_48px)] max-h-[calc(100vh_-_72px)] overflow-y-scroll",
+			)}
 		>
 			{#snippet child({ props, open })}
 				{#if open}
@@ -40,9 +41,11 @@
 
 							<Dialog.Close
 								autofocus={false}
-								class="cursor-default p-3 rounded-full bg-transparent dark:bg-white/5 hover:bg-black/5
-                    dark:hover:bg-white/10 active:brightness-95 outline-none ring-0
-                    dark:ring-white/15 ring-black/15 focus:ring-4 transition-all"
+								class={clsx(
+									"cursor-default p-3 rounded-full bg-transparent dark:bg-white/5 hover:bg-black/5",
+									"dark:hover:bg-white/10 active:brightness-95 outline-none ring-0",
+									"dark:ring-white/15 ring-black/15 focus:ring-4 transition-all",
+								)}
 							>
 								<X size="20" weight="bold" />
 							</Dialog.Close>
