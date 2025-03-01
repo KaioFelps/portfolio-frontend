@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { AlertDialog } from "bits-ui";
-	import { fade } from "svelte/transition";
+	import { fade, type TransitionConfig } from "svelte/transition";
 	import { flyAndScale } from "$crate/utils";
 	import clsx from "clsx";
 	import type { Snippet } from "svelte";
@@ -8,19 +8,26 @@
 	type Props = AlertDialog.ContentProps & {
 		children: Snippet;
 		class?: string;
+		transition: (...args: any) => TransitionConfig;
 	};
 
-	const { children, class: className, transition = flyAndScale, ...rest }: Props = $props();
+	const {
+		children,
+		class: className,
+		transition: choosenTransition = flyAndScale,
+		...rest
+	}: Props = $props();
 </script>
 
 <AlertDialog.Portal>
-	<AlertDialog.Overlay
-		transition={fade}
-		transitionConfig={{ duration: 150 }}
-		class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-	/>
+	<AlertDialog.Overlay class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+		{#snippet child({ open, props })}
+			{#if open}
+				<div {...props} transition:fade={{ duration: 150 }}></div>
+			{/if}
+		{/snippet}
+	</AlertDialog.Overlay>
 	<AlertDialog.Content
-		{transition}
 		class={clsx(
 			"fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]",
 			"shadow-popover outline-none border border-white/5 rounded-2xl p-6 bg-d-backgrond/80 backdrop-blur-md",
@@ -29,6 +36,12 @@
 		)}
 		{...rest}
 	>
-		{@render children()}
+		{#snippet child({ props, open })}
+			{#if open}
+				<div {...props} transition:choosenTransition>
+					{@render children()}
+				</div>
+			{/if}
+		{/snippet}
 	</AlertDialog.Content>
 </AlertDialog.Portal>
