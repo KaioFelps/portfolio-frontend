@@ -5,20 +5,33 @@
 	import { flyAndScale } from "$crate/utils";
 	import CaretDown from "phosphor-svelte/lib/CaretDown";
 
+	export type SelectOption = {
+		value: string;
+		label: string;
+	};
+
 	type Props = {
-		options: { value: string; label: string }[];
+		options: SelectOption[];
 		placeholder: string;
 	} & ({ multiple: true; value: string[] } | { multiple: false; value: string });
 
-	let { multiple = false, options, placeholder, value }: Props = $props();
+	let { multiple = false, options, placeholder, value = $bindable() }: Props = $props();
 </script>
 
-<Select.Root
-	type={multiple ? "multiple" : "single"}
-	onValueChange={(v: string | string[]) => (value = v)}
->
+<Select.Root type={multiple ? "multiple" : "single"} bind:value required>
 	<Select.Trigger class="group mb-4 form-select-floating w-full flex justify-between items-center">
-		<span class="data-[placeholder]:opacity-0 form-select-control">{placeholder}</span>
+		<span class="data-[placeholder]:opacity-0 form-select-control">
+			{#if value.length == 0}
+				{placeholder}
+			{:else}
+				{!Array.isArray(value)
+					? value
+					: value
+							.map((v) => options.find((option) => option.value === v)?.label)
+							.filter(Boolean)
+							.join(", ")}
+			{/if}
+		</span>
 		<FloatingLabel>{placeholder}</FloatingLabel>
 		<CaretDown
 			size={16}

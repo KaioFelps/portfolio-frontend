@@ -1,14 +1,13 @@
 <script lang="ts">
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
 	import { enhance } from "$app/forms";
-	import type { Selected } from "bits-ui";
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select";
 	import Trash from "phosphor-svelte/lib/Trash";
 	import { goto } from "$app/navigation";
 	import Title from "$crate/components/title.svelte";
 	import type { EditProjectResponse, AdminEditProjectPageData } from "./+page.server";
-
+	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
 	const {
 		data,
 		form,
@@ -48,30 +47,16 @@
 
 	let formIsLoading = $state(false);
 	let subFormElement: HTMLFormElement | undefined = $state();
-	let selectedTags: Selected<string>[] = $state([]);
+	let selectedTagIds: string[] = $state([]);
+	let availableTags: SelectOption[] = $state([]);
 	let links: Array<{ title: string; value: string }> = $state([]);
-	let tagsOptions: {
-		value: string;
-		label: string;
-	}[] = $state([]);
 
 	$effect(() => {
 		if (data.tags.success)
-			tagsOptions = data.tags.data.tags.map((tag) => {
-				return {
-					value: tag.id,
-					label: tag.value,
-				};
-			});
+			availableTags = data.tags.data.tags.map((tag) => ({ label: tag.value, value: tag.id }));
 
 		if (data.project.success && data.project.data) {
-			selectedTags = data.project.data.tags.map((tag) => {
-				return {
-					value: tag.id,
-					label: tag.value,
-				} as Selected<string>;
-			});
-
+			selectedTagIds = data.project.data.tags.map((tag) => tag.id);
 			links = data.project.data.links;
 		}
 	});
@@ -123,14 +108,18 @@
 		use:enhance={({ formData }) => {
 			if (!data.project.success || !data.project.data) return;
 
-			if (
-				JSON.stringify(selectedTags.map((t) => t.value)) !==
-				JSON.stringify(data.project.data.tags.map((t) => t.id))
-			)
-				formData.set("tags", JSON.stringify(selectedTags.map((selected) => selected.value)));
+			const oldProject = data.project.data;
+			const selectedTagsValues = availableTags
+				.filter((tag) => selectedTagIds.includes(tag.value))
+				.map((tag) => tag.label);
 
-			if (JSON.stringify(links) !== JSON.stringify(data.project.data.links))
-				formData.set("links", JSON.stringify(links));
+			const areSameTags = oldProject.tags.every((tag) => selectedTagsValues.includes(tag.value));
+			if (!areSameTags) formData.set("tags", JSON.stringify(selectedTagsValues));
+
+			// comparison is made with json stringify to allow recreating links in order
+			// to reorder them
+			const areSameLinks = JSON.stringify(links) === JSON.stringify(oldProject.links);
+			if (!areSameLinks) formData.set("links", JSON.stringify(links));
 
 			if (formData.get("title") === data.project.data.title) formData.delete("title");
 			if (formData.get("topstory") === data.project.data.topstory) formData.delete("topstory");
@@ -193,9 +182,9 @@
 				{/each}
 			{/if}
 			<FloatingSelect
-				bind:values={selectedTags}
+				bind:value={selectedTagIds}
 				multiple
-				options={tagsOptions}
+				options={availableTags}
 				placeholder="Tags"
 			/>
 		{:else}
