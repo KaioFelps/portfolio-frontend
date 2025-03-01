@@ -45,11 +45,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
-	if (request.url.startsWith(env.BACKEND_URL)) {
-		if (event.locals.accessToken) {
-			request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
-			request.headers.set("Accept", "application/json");
-		}
+	if (request.url.startsWith(env.BACKEND_URL) && event.locals.accessToken) {
+		request.headers.set("Authorization", `Bearer ${event.locals.accessToken}`);
+		request.headers.set("Accept", "application/json");
 	}
 
 	return fetch(request);
