@@ -49,11 +49,12 @@
 							{/each}
 
 							<Popover.Arrow
-								width={8}
-								height={4}
+								width={10}
+								height={5}
 								class={clsx(
-									"text-gray-100 dark:text-d-gray-100 drop-shadow-[0px_-1px_0_var(--tw-shadow-color)]",
+									"text-gray-100 dark:text-d-gray-100 drop-shadow-[0_1px_0_var(--tw-shadow-color)]",
 									"shadow-gray-300 dark:shadow-black",
+									"data-[side=bottom]:drop-shadow-[0_-1px_0_var(--tw-shadow-color)]",
 								)}
 							></Popover.Arrow>
 						</div>
