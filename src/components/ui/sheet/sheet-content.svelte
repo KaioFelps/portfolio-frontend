@@ -1,41 +1,26 @@
 <script lang="ts">
 	import { Dialog as SheetPrimitive } from "bits-ui";
-	import { fly } from "svelte/transition";
-	import {
-		SheetOverlay,
-		SheetPortal,
-		type Side,
-		sheetTransitions,
-		sheetVariants,
-	} from "./index.js";
+	import type { Snippet } from "svelte";
 	import { cn } from "$crate/utils.js";
+	import { sheetVariants, type Side } from ".";
+	import { Portal, Overlay } from ".";
 
-	type Props = SheetPrimitive.ContentProps & {
-		side?: Side;
-	};
+	type ContentPropsWithoutChildOrChildren = Omit<SheetPrimitive.ContentProps, "child" | "children">;
 
-	const {
+	let {
 		class: className,
+		side = "right",
 		children,
-		side,
-		inTransition = fly,
-		inTransitionConfig = sheetTransitions[side ?? "right"].in,
-		outTransition = fly,
-		outTransitionConfig = sheetTransitions[side ?? "right"].out,
-		...rest
-	}: Props = $props();
+		...restProps
+	}: ContentPropsWithoutChildOrChildren & {
+		side?: Side;
+		children: Snippet;
+	} = $props();
 </script>
 
-<SheetPortal>
-	<SheetOverlay />
-	<SheetPrimitive.Content
-		{inTransition}
-		{inTransitionConfig}
-		{outTransition}
-		{outTransitionConfig}
-		class={cn(sheetVariants({ side }), className)}
-		{...rest}
-	>
+<Portal>
+	<Overlay />
+	<SheetPrimitive.Content class={cn(sheetVariants({ side }), className)} {...restProps}>
 		{@render children?.()}
 	</SheetPrimitive.Content>
-</SheetPortal>
+</Portal>

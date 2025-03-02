@@ -1,5 +1,8 @@
 import typography from "@tailwindcss/typography";
 import { Config } from "tailwindcss";
+import { KeyValuePair } from "tailwindcss/types/config";
+
+const { keyframes: sheetKeyframes, animations: sheetAnimations } = generateSheetSwipeAnimations();
 
 export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
@@ -29,22 +32,7 @@ export default {
 			},
 
 			keyframes: {
-				sheetSwipeInFromLeft: {
-					from: {
-						transform: "translateX(-100%)",
-					},
-					to: {
-						transform: "translateX(0)",
-					},
-				},
-				sheetSwipeInToLeft: {
-					from: {
-						transform: "translateX(0)",
-					},
-					to: {
-						transform: "translateX(-100%)",
-					},
-				},
+				...sheetKeyframes,
 				indeterminate: {
 					"0%": { transform: "translateX(0) scaleX(0)" },
 					"40%": { transform: "translateX(0) scaleX(0.4)" },
@@ -52,8 +40,7 @@ export default {
 				},
 			},
 			animation: {
-				sheetSwipeInFromLeft: "sheetSwipeInFromLeft 150ms ease-out",
-				sheetSwipeInToLeft: "sheetSwipeInToLeft 150ms ease-in",
+				...sheetAnimations,
 				indeterminate: "indeterminate 1s infinite ease-in",
 			},
 		},
@@ -108,3 +95,50 @@ export default {
 		},
 	],
 } as Config;
+
+function generateSheetSwipeAnimations() {
+	const sides = [
+		{ axis: "Y", side: "Top" },
+		{ axis: "Y", side: "Bottom" },
+		{ axis: "X", side: "Left" },
+		{ axis: "X", side: "Right" },
+	];
+
+	const keyframes: KeyValuePair<
+		string,
+		KeyValuePair<string, KeyValuePair<string, string>>
+	> = sides.reduce((acc, { side, axis }) => {
+		return {
+			...acc,
+			[`sheetSwipeInFrom${side}`]: {
+				from: {
+					transform: `translate${axis}(-100%)`,
+				},
+				to: {
+					transform: `translate${axis}(0)`,
+				},
+			},
+			[`sheetSwipeInTo${side}`]: {
+				from: {
+					transform: `translate${axis}(0)`,
+				},
+				to: {
+					transform: `translate${axis}(-100%)`,
+				},
+			},
+		};
+	}, {});
+
+	const animations: KeyValuePair<string, string> = Object.keys(keyframes).reduce(
+		(acc, key: string) => {
+			const inOrOut = key.includes("From") ? "out" : "in";
+			return {
+				...acc,
+				[key]: `${key} 150ms ease-${inOrOut}`,
+			};
+		},
+		{},
+	);
+
+	return { keyframes, animations };
+}
