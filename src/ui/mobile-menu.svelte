@@ -32,11 +32,11 @@
 
 	<div
 		class="
-                flex flex-col p-6 gap-1
-                prose-a:text-xl prose-a:font-medium prose-a:p-3 prose-a:px-6 prose-a:w-full prose-a:rounded-xl prose-a:bg-gray-200 dark:prose-a:bg-d-gray-100
-                hover:prose-a:bg-gray-300 dark:hover:prose-a:bg-d-gray-200 duration-500 hover:prose-a:pl-7
-                prose-a:transition-all prose-a:cursor-default
-                "
+					flex flex-col p-6 gap-1
+					prose-a:text-xl prose-a:font-medium prose-a:p-3 prose-a:px-6 prose-a:w-full prose-a:rounded-xl prose-a:bg-gray-200 dark:prose-a:bg-d-gray-100
+					hover:prose-a:bg-gray-300 dark:hover:prose-a:bg-d-gray-200 duration-500 hover:prose-a:pl-7
+					prose-a:transition-all prose-a:cursor-default
+					"
 	>
 		<a data-active={currentPath === "/"} href="/" onclick={close}>Home</a>
 		<a data-active={currentPath === "/sobre"} href="/sobre" onclick={close}>Sobre</a>
