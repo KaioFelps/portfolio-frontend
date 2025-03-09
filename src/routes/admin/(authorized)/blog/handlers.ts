@@ -12,10 +12,12 @@ type ResponseError = ResponseErrorType<typeof publishPostSchema, string | string
 export type PublishPostResponse = ServerResponseData<{}, ResponseError>;
 
 type FetchTagsResponse = PaginatedResponse & { tags: Array<Tag> };
-export type PageLoadData = { tags: ServerResponseData<FetchTagsResponse, string> };
+export type NewBlogPostPageLoadData = { tags: ServerResponseData<FetchTagsResponse, string> };
 
 export abstract class BlogActionsHandlers {
-	public static async load(this: ServerLoadEvent): Promise<PageLoadData> {
+	public static async loadNewBlogPostPageData(
+		this: ServerLoadEvent,
+	): Promise<NewBlogPostPageLoadData> {
 		const tagsFetch = await this.fetch(`${env.BACKEND_URL}/tag/list`);
 
 		if (tagsFetch.ok) {
@@ -24,7 +26,7 @@ export abstract class BlogActionsHandlers {
 		}
 
 		this.locals.logger.error(
-			`Falha aoo buscar tags no endpoint "/tag/list". Err: ` + (await tagsFetch.text()),
+			`Falha ao buscar tags no endpoint "/tag/list". Err: ` + (await tagsFetch.text()),
 		);
 
 		return {

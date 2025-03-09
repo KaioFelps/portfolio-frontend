@@ -4,13 +4,13 @@
 	import FloatingSelect from "$crate/components/floating-select/index.js";
 	import Editor from "$crate/ui/tiptap/editor.svelte";
 	import type { Selected } from "bits-ui";
-	import type { PageLoadData, PublishPostResponse } from "../handlers.js";
+	import type { NewBlogPostPageLoadData, PublishPostResponse } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
 	import PreviewDialog from "./preview-dialog.svelte";
 	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
 
 	type Props = {
-		data: PageLoadData;
+		data: NewBlogPostPageLoadData;
 		form: PublishPostResponse;
 	};
 
