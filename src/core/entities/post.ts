@@ -8,5 +8,5 @@ export type Post = {
 	tags: Tag[];
 	preview: string;
 	createdAt: Date;
-	publishedAt: Date;
+	publishedAt?: string | Date | null;
 };
