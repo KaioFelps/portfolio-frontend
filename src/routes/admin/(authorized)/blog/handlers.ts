@@ -5,16 +5,89 @@ import type { ResponseErrorType } from "$crate/core/types/response-error";
 import type { ServerResponseData } from "$crate/core/types/server-response-data";
 import { env } from "$env/dynamic/private";
 import { fail, type ActionFailure, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
-import { publishPostSchema } from "./schemas";
+import { publishPostSchema, togglePostVisibilitySchema } from "./schemas";
+import type { Post } from "$crate/core/entities/post";
 
-type ResponseError = ResponseErrorType<typeof publishPostSchema, string | string[]>;
+type PublishPostResponseError = ResponseErrorType<typeof publishPostSchema, string | string[]>;
+type TogglePostVisibilityResponseError = ResponseErrorType<
+	typeof togglePostVisibilitySchema,
+	string | string[]
+>;
 
-export type PublishPostResponse = ServerResponseData<{}, ResponseError>;
+export type PublishPostResponse = ServerResponseData<{}, PublishPostResponseError>;
+export type TogglePostVisibilityResponse = ServerResponseData<
+	{},
+	TogglePostVisibilityResponseError
+>;
 
 type FetchTagsResponse = PaginatedResponse & { tags: Array<Tag> };
+type FetchPostsResponse = PaginatedResponse & { posts: Array<Post> };
+
 export type NewBlogPostPageLoadData = { tags: ServerResponseData<FetchTagsResponse, string> };
+export type BlogPostsPageLoadData = { posts: ServerResponseData<FetchPostsResponse, null> };
 
 export abstract class BlogActionsHandlers {
+	public static async loadBlogPosts(this: ServerLoadEvent): Promise<BlogPostsPageLoadData> {
+		const posts = await this.fetch(`${env.BACKEND_URL}/post/list/admin`);
+
+		if (posts.ok) {
+			const data: FetchPostsResponse = await posts.json();
+			return { posts: MakeServerResponseData.Ok(data) };
+		}
+
+		this.locals.logger.error(
+			`Falha ao buscar blogposts no endpoint "/post/list/admin". Err: ` + (await posts.text()),
+		);
+
+		return {
+			posts: MakeServerResponseData.InternalError(),
+		};
+	}
+
+	public static async toggleBlogPostVisibility(
+		this: RequestEvent,
+	): Promise<ActionFailure<TogglePostVisibilityResponse> | TogglePostVisibilityResponse> {
+		let formData = Object.fromEntries(await this.request.formData());
+
+		const parseResult = await togglePostVisibilitySchema.safeParseAsync(formData);
+
+		if (!parseResult.success) {
+			return fail(
+				400,
+				MakeServerResponseData.Error({
+					validation: true,
+					data: parseResult.error.flatten(),
+				}),
+			);
+		}
+
+		const { id } = parseResult.data;
+
+		const response = await this.fetch(`${env.BACKEND_URL}/post/${id}/visibility`, {
+			method: "PATCH",
+		});
+
+		if (response.ok) return MakeServerResponseData.Ok({});
+
+		switch (response.status) {
+			case 400:
+				return fail(
+					response.status,
+					MakeServerResponseData.Error({ validation: false, data: "Post não encontrado." }),
+				);
+			case 401:
+				return fail(
+					response.status,
+					MakeServerResponseData.Error({
+						validation: false,
+						data: "Você não tem autorização para publicar este post.",
+					}),
+				);
+			default:
+				return fail(500, MakeServerResponseData.InternalError());
+		}
+	}
+
 	public static async loadNewBlogPostPageData(
 		this: ServerLoadEvent,
 	): Promise<NewBlogPostPageLoadData> {
