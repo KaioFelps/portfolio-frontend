@@ -1,5 +1,5 @@
 <script lang="ts">
-	import "$crate/admin.css";
+	import "$crate/styles/admin.css";
 	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import type { Snippet } from "svelte";
 

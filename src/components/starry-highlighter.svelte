@@ -1,5 +1,5 @@
 <script>
-	import "$crate/style/starry-night.css";
+	import "$crate/styles/starry-night.css";
 	import { StarryNightSingletone } from "$crate/lib/starry-night";
 	import { onMount } from "svelte";
 
