@@ -39,7 +39,7 @@
 			</button>
 		</div>
 
-		<p class="text-gray-600 dark:text-d-gray-600 font-medium mb-6 mt-1">{post.preview}</p>
+		<p class="text-gray-600 dark:text-d-gray-600 font-medium mb-6 mt-1">{post.description}</p>
 
 		<div class="flex gap-2 flex-wrap">
 			<span
