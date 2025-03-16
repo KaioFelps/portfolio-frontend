@@ -1,18 +1,13 @@
 <script lang="ts">
-	import "$crate/highlight.css";
 	import type { GetPostBySlugResponse } from "$crate/handlers/blog";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
 	import Title from "$crate/components/title.svelte";
-	import { StarryNightSingletone } from "$crate/lib/starry-night";
-	import { onMount } from "svelte";
+	import clsx from "clsx";
+	import StarryHighlighter from "$crate/components/starry-highlighter.svelte";
 
-	export let data: GetPostBySlugResponse;
-
-	onMount(async () => {
-		const codeBlocks = Array.from(document.querySelectorAll("pre code"));
-		await StarryNightSingletone.clientSideHighlight(codeBlocks);
-	});
+	type Props = { data: GetPostBySlugResponse };
+	const { data }: Props = $props();
 </script>
 
 <svelte:head>
@@ -36,11 +31,11 @@
 	{#if data.success && data.data}
 		<header>
 			<h1
-				class="
-                px-12 text-center pb-8 border-b mb-6
-                font-bold text-5xl text-gray-800 border-gray-300
-                dark:text-d-gray-800 dark:border-d-gray-300
-                "
+				class={clsx(
+					"px-12 max-sm:px-4 text-center pb-8 border-b mb-6",
+					"font-bold text-5xl max-sm:text-3xl text-gray-800 border-gray-300",
+					"dark:text-d-gray-800 dark:border-d-gray-300",
+				)}
 			>
 				{data.data.title}
 			</h1>
@@ -97,8 +92,17 @@
             prose-img:max-w-full
             "
 		>
-			{@html data.data.content}</div
-		>
+			{#await data.data.content}
+				<div class="h-5 w-full rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
+				<div class="h-5 w-3/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
+				<div class="h-5 w-1/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
+				<div class="h-5 w-2/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
+			{:then content}
+				{@html content}
+			{:catch err}
+				<p>{err}</p>
+			{/await}
+		</div>
 	{:else if data.success && !data.data}
 		<div class="flex justify-center text-red-700 my-12">
 			<span>Post não encontrado =(</span>

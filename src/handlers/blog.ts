@@ -8,9 +8,10 @@ import type { ServerResponseData } from "$crate/core/types/server-response-data"
 import type { PaginatedResponse } from "$crate/core/types/paginated-response";
 import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 
+export type LazyExpandedPost = Omit<ExpandedPost, "content"> & { content: Promise<string> };
 type PaginatedPosts = PaginatedResponse & { posts: Post[] };
 export type LoadPaginatedPosts = ServerResponseData<PaginatedPosts, string>;
-export type GetPostBySlugResponse = ServerResponseData<ExpandedPost | null, null>;
+export type GetPostBySlugResponse = ServerResponseData<LazyExpandedPost | null, null>;
 
 export abstract class BlogHandlers {
 	public static async loadAllPosts(ctx: ServerLoadEvent): Promise<LoadPaginatedPosts> {
@@ -48,12 +49,12 @@ export abstract class BlogHandlers {
 		return await BlogHandlers.fetchDataAndFormat(queryString, ctx.fetch, ctx.locals);
 	}
 
-	public static async getPostBySlug(ctx: ServerLoadEvent): Promise<GetPostBySlugResponse> {
-		const response = await ctx.fetch(`${env.BACKEND_URL}/post/${ctx.params.slug}/show`);
+	public static async getPostBySlug(this: ServerLoadEvent): Promise<GetPostBySlugResponse> {
+		const response = await this.fetch(`${env.BACKEND_URL}/post/${this.params.slug}/show`);
 
 		if (!response.ok) {
-			ctx.locals.logger.error(
-				`Erro inexperado ao visualizar a notícia de slug ${ctx.params.slug}: `,
+			this.locals.logger.error(
+				`Erro inexperado ao visualizar a notícia de slug ${this.params.slug}: `,
 				await response.text(),
 			);
 
@@ -62,13 +63,20 @@ export abstract class BlogHandlers {
 
 		const data: { post: ExpandedPost | null } = await response.json();
 
-		const post: ExpandedPost | null = data.post
-			? {
-					...data.post,
-					publishedAt: data.post.publishedAt ? new Date(data.post.publishedAt) : null,
-					updatedAt: data.post.updatedAt ? new Date(data.post.updatedAt) : null,
-				}
-			: null;
+		// make it lazy load the content because sending the whole content
+		// would trigger some bugs with component mounting life cycle
+		// for some reason
+		const post: LazyExpandedPost | null = (() => {
+			if (!data.post) return null;
+
+			const { publishedAt, updatedAt, content, ...post } = data.post;
+			return {
+				...post,
+				publishedAt: publishedAt ? new Date(publishedAt) : null,
+				updatedAt: updatedAt ? new Date(updatedAt) : null,
+				content: (async () => content)(),
+			} satisfies LazyExpandedPost;
+		})();
 
 		return MakeServerResponseData.Ok(post);
 	}
