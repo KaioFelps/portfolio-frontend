@@ -1,9 +1,7 @@
 <script lang="ts">
-	import "$crate/highlight.css";
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
 	import type { Selected } from "bits-ui";
 	import Select from "$crate/components/select";
-	import LinkSimple from "phosphor-svelte/lib/LinkSimple";
 	import type { LoadPaginatedPosts } from "$crate/handlers/blog";
 	import type { Post } from "$crate/core/entities/post";
 	import { page } from "$app/state";
