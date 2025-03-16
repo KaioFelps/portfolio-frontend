@@ -69,9 +69,10 @@ export abstract class BlogHandlers {
 		const post: LazyExpandedPost | null = (() => {
 			if (!data.post) return null;
 
-			const { publishedAt, updatedAt, content, ...post } = data.post;
+			const { createdAt, publishedAt, updatedAt, content, ...post } = data.post;
 			return {
 				...post,
+				createdAt: new Date(createdAt),
 				publishedAt: publishedAt ? new Date(publishedAt) : null,
 				updatedAt: updatedAt ? new Date(updatedAt) : null,
 				content: (async () => content)(),

@@ -8,6 +8,7 @@ export type ExpandedPost = {
 	tags: Tag[];
 	topstory: string;
 	content: string;
+	createdAt: Date;
 	updatedAt: Date | null;
 	publishedAt: Date | null;
 };
