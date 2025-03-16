@@ -3,7 +3,6 @@
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select/index.js";
 	import Editor from "$crate/ui/tiptap/editor.svelte";
-	import type { Selected } from "bits-ui";
 	import type { NewBlogPostPageLoadData, PublishPostResponse } from "../handlers.js";
 	import Title from "$crate/components/title.svelte";
 	import PreviewDialog from "./preview-dialog.svelte";
@@ -67,6 +66,16 @@
 	<FloatingGroup class="mb-3">
 		<FloatingInput class="w-full" name="title" placeholder="Título do post" type="text" />
 		<FloatingLabel>Título</FloatingLabel>
+	</FloatingGroup>
+
+	{#if form && !form.success && !form.internalError && form.error.validation}
+		{#each form.error.data.fieldErrors.preview ?? [] as error}
+			<span class="alert danger mb-2 mt-4 sm">{error}</span>
+		{/each}
+	{/if}
+	<FloatingGroup class="mb-3">
+		<FloatingInput class="w-full" name="preview" placeholder="Preview/Descrição" type="text" />
+		<FloatingLabel>Preview/Descrição</FloatingLabel>
 	</FloatingGroup>
 
 	{#if form && !form.success && !form.internalError && form.error.validation}
