@@ -6,7 +6,7 @@ export type Post = {
 	slug: string;
 	topstory: string;
 	tags: Tag[];
-	preview: string;
+	description: string;
 	createdAt: Date;
 	publishedAt?: string | Date | null;
 };
