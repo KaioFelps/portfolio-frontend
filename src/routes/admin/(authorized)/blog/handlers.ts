@@ -5,10 +5,10 @@ import type { ResponseErrorType } from "$crate/core/types/response-error";
 import type { ServerResponseData } from "$crate/core/types/server-response-data";
 import { env } from "$env/dynamic/private";
 import { fail, type ActionFailure, type RequestEvent, type ServerLoadEvent } from "@sveltejs/kit";
-import { publishPostSchema, togglePostVisibilitySchema } from "./schemas";
+import { postSchema, togglePostVisibilitySchema } from "./schemas";
 import type { Post } from "$crate/core/entities/post";
 
-type PublishPostResponseError = ResponseErrorType<typeof publishPostSchema, string | string[]>;
+type PublishPostResponseError = ResponseErrorType<typeof postSchema, string | string[]>;
 type TogglePostVisibilityResponseError = ResponseErrorType<
 	typeof togglePostVisibilitySchema,
 	string | string[]
@@ -120,7 +120,7 @@ export abstract class BlogActionsHandlers {
 		let formData = Object.fromEntries(await this.request.formData());
 		formData = { ...formData, tags: JSON.parse((formData as RequestFormData).tags) };
 
-		const parseResult = await publishPostSchema.safeParseAsync(formData);
+		const parseResult = await postSchema.safeParseAsync(formData);
 
 		if (!parseResult.success) {
 			return fail(
