@@ -8,6 +8,14 @@
 
 	type Props = { data: GetPostBySlugResponse };
 	const { data }: Props = $props();
+
+	function formatDateTime(date: Date) {
+		return date.toLocaleDateString("pt-Br", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
+	}
 </script>
 
 <svelte:head>
@@ -43,11 +51,9 @@
 			<div class="flex flex-col gap-2 w-full items-center mb-16">
 				<span class="text-sm text-center mb-1 text-gray-600 dark:text-d-gray-600">
 					{#if data.data.publishedAt}
-						Publicado em {data.data.publishedAt.toLocaleDateString("pt-Br", {
-							day: "numeric",
-							month: "long",
-							year: "numeric",
-						})}.
+						Criado em {formatDateTime(data.data.createdAt)}. Publicado em {formatDateTime(
+							data.data.publishedAt,
+						)}.
 					{:else}
 						Post ainda não publicado.
 					{/if}
