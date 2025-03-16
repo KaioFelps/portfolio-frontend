@@ -99,6 +99,7 @@
 				<div class="h-5 w-2/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
 			{:then content}
 				{@html content}
+				<StarryHighlighter />
 			{:catch err}
 				<p>{err}</p>
 			{/await}

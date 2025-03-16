@@ -1,5 +1,5 @@
 <script lang="ts">
-	import "$crate/highlight.css";
+	import "$crate/style/starry-night.css";
 	import { StarryNightSingletone } from "$crate/lib/starry-night";
 	import { flyAndScale } from "$crate/utils";
 	import { Dialog } from "bits-ui";

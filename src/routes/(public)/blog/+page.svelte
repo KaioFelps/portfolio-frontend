@@ -1,5 +1,4 @@
 <script lang="ts">
-	import "$crate/highlight.css";
 	import MagnifyingGlass from "phosphor-svelte/lib/MagnifyingGlass";
 	import type { Selected } from "bits-ui";
 	import Select from "$crate/components/select";
