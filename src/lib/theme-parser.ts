@@ -25,6 +25,9 @@ export class ThemeParser {
 
 		const { headers: responseHeaders, ...responseData } = response;
 		const headers = new Headers(responseHeaders);
+		const newBodyLength = new Blob([body]).size;
+
+		headers.set("content-length", newBodyLength.toString());
 
 		return new Response(body, {
 			...responseData,
