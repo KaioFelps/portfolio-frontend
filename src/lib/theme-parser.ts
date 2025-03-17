@@ -13,30 +13,22 @@ export class ThemeParser {
 		response,
 		themeToken = "%kaio-webiste.theme%",
 	}: ParseParams): Promise<Response> {
-		if (!(response.headers.get("content-type") === "text/html")) return response;
+		if (!response.headers.get("content-type")?.includes("text/html")) return response;
 
 		const themeCookie = cookies.get(PUBLIC_THEME_COOKIE_KEY);
 		let isDark = false;
 
 		if (themeCookie === "dark") isDark = true;
+		let body = await response.text();
 
-		let bodyBuffers = [];
+		body = body.replace(themeToken, isDark ? 'class="dark"' : "");
 
-		// @ts-ignore
-		for await (const chunk of response.body) {
-			bodyBuffers.push(chunk);
-		}
+		const { headers: responseHeaders, ...responseData } = response;
+		const headers = new Headers(responseHeaders);
 
-		const body = Buffer.concat(bodyBuffers).toString();
-		const newResponseBody = body.replace(themeToken, isDark ? 'class="dark"' : "");
-
-		const headers = response.headers;
-		headers.set("content-length", newResponseBody.length.toString());
-
-		return new Response(newResponseBody, {
-			headers: response.headers,
-			status: response.status,
-			statusText: response.statusText,
+		return new Response(body, {
+			...responseData,
+			headers,
 		});
 	}
 }
