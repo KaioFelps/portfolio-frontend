@@ -8,10 +8,9 @@ import type { ServerResponseData } from "$crate/core/types/server-response-data"
 import type { PaginatedResponse } from "$crate/core/types/paginated-response";
 import { MakeServerResponseData } from "$crate/core/helpers/server-action-response";
 
-export type LazyExpandedPost = Omit<ExpandedPost, "content"> & { content: Promise<string> };
 type PaginatedPosts = PaginatedResponse & { posts: Post[] };
 export type LoadPaginatedPosts = ServerResponseData<PaginatedPosts, string>;
-export type GetPostBySlugResponse = ServerResponseData<LazyExpandedPost | null, null>;
+export type GetPostBySlugResponse = ServerResponseData<ExpandedPost | null, null>;
 
 export abstract class BlogHandlers {
 	public static async loadAllPosts(ctx: ServerLoadEvent): Promise<LoadPaginatedPosts> {
@@ -50,7 +49,8 @@ export abstract class BlogHandlers {
 	}
 
 	public static async getPostBySlug(this: ServerLoadEvent): Promise<GetPostBySlugResponse> {
-		const response = await this.fetch(`${env.BACKEND_URL}/post/${this.params.slug}/show`);
+		const slug = this.params.slug;
+		const response = await this.fetch(`${env.BACKEND_URL}/post/${slug}/show`);
 
 		if (!response.ok) {
 			this.locals.logger.error(
@@ -62,22 +62,16 @@ export abstract class BlogHandlers {
 		}
 
 		const data: { post: ExpandedPost | null } = await response.json();
+		if (!data.post) return MakeServerResponseData.Ok(null);
 
-		// make it lazy load the content because sending the whole content
-		// would trigger some bugs with component mounting life cycle
-		// for some reason
-		const post: LazyExpandedPost | null = (() => {
-			if (!data.post) return null;
+		const { publishedAt, createdAt, updatedAt, ...post_ } = data.post;
 
-			const { createdAt, publishedAt, updatedAt, content, ...post } = data.post;
-			return {
-				...post,
-				createdAt: new Date(createdAt),
-				publishedAt: publishedAt ? new Date(publishedAt) : null,
-				updatedAt: updatedAt ? new Date(updatedAt) : null,
-				content: (async () => content)(),
-			} satisfies LazyExpandedPost;
-		})();
+		const post = {
+			...post_,
+			createdAt: new Date(createdAt),
+			publishedAt: publishedAt ? new Date(publishedAt) : null,
+			updatedAt: updatedAt ? new Date(updatedAt) : null,
+		};
 
 		return MakeServerResponseData.Ok(post);
 	}

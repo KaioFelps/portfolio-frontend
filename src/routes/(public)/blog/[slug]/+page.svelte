@@ -98,17 +98,8 @@
             prose-img:max-w-full
             "
 		>
-			{#await data.data.content}
-				<div class="h-5 w-full rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
-				<div class="h-5 w-3/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
-				<div class="h-5 w-1/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
-				<div class="h-5 w-2/4 rounded-full animate-pulse bg-gray-300 dark:bg-d-gray-300"></div>
-			{:then content}
-				{@html content}
-				<StarryHighlighter />
-			{:catch err}
-				<p>{err}</p>
-			{/await}
+			{@html data.data.content}
+			<StarryHighlighter />
 		</div>
 	{:else if data.success && !data.data}
 		<div class="flex justify-center text-red-700 my-12">
