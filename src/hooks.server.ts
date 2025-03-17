@@ -41,7 +41,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return await resolve(event);
 	});
 
-	return await ThemeParser.parse({ response, cookies: event.cookies });
+	const themeParsedResponse = await ThemeParser.parse({ response, cookies: event.cookies });
+	return themeParsedResponse;
 };
 
 export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
