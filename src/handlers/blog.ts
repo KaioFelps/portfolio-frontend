@@ -64,10 +64,10 @@ export abstract class BlogHandlers {
 		const data: { post: ExpandedPost | null } = await response.json();
 		if (!data.post) return MakeServerResponseData.Ok(null);
 
-		const { publishedAt, createdAt, updatedAt, ...post_ } = data.post;
+		const { publishedAt, createdAt, updatedAt, ..._post } = data.post;
 
 		const post = {
-			...post_,
+			..._post,
 			createdAt: new Date(createdAt),
 			publishedAt: publishedAt ? new Date(publishedAt) : null,
 			updatedAt: updatedAt ? new Date(updatedAt) : null,
