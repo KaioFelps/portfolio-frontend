@@ -3,12 +3,14 @@
 	import RocketLaunch from "phosphor-svelte/lib/RocketLaunch";
 	import type { PageLoadData } from "./handlers";
 	import { formatLogString } from "$crate/utils";
-	import Title from "$crate/components/title.svelte";
+	import meta from "$crate/components/meta";
 
 	const { data }: { data: PageLoadData } = $props();
 </script>
 
-<Title title="Home" adminRoute />
+<meta.Root>
+	<meta.Title title="Home" adminRoute />
+</meta.Root>
 
 <section class="mb-12">
 	<h2 class="mb-6">Status</h2>

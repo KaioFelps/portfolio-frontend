@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Title from "$crate/components/title.svelte";
 	import PencilSimple from "phosphor-svelte/lib/PencilSimple";
 	import ArrowSquareOut from "phosphor-svelte/lib/ArrowSquareOut";
 	import type { BlogPostsPageLoadData } from "./handlers";
 	import TogglePostVisibility from "./toggle-post-visibility.svelte";
+	import meta from "$crate/components/meta";
 
 	const {
 		data,
@@ -12,7 +12,9 @@
 	} = $props();
 </script>
 
-<Title title="Blog Posts" adminRoute />
+<meta.Root>
+	<meta.Title title="Blog Posts" adminRoute />
+</meta.Root>
 
 <header class="mb-12 flex items-center justify-between">
 	<h1>Blog Posts</h1>

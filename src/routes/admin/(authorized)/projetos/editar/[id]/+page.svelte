@@ -5,9 +5,9 @@
 	import FloatingSelect from "$crate/components/floating-select";
 	import Trash from "phosphor-svelte/lib/Trash";
 	import { goto } from "$app/navigation";
-	import Title from "$crate/components/title.svelte";
 	import type { EditProjectResponse, AdminEditProjectPageData } from "./+page.server";
 	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
+	import meta from "$crate/components/meta";
 	const {
 		data,
 		form,
@@ -94,8 +94,16 @@
 	}
 </script>
 
+<meta.Root>
+	{@const title =
+		data.project.success && data.project.data
+			? `Editando Projeto ${data.project.data.title}`
+			: "Projeto não encontrado"}
+
+	<meta.Title {title} adminRoute />
+</meta.Root>
+
 {#if data.project.success && data.project.data}
-	<Title title={`Editando Projeto ${data.project.data.title}`} adminRoute />
 	<h1 class="mb-6">Editar projeto: {data.project.data.title}</h1>
 
 	{#if form?.success}
@@ -261,8 +269,6 @@
 		</div>
 	</div>
 {:else if data.project.success}
-	<Title title="Projeto Não Encontrado" adminRoute />
-
 	<h1>Projeto não encontrado</h1>
 	<a href="/admin/projetos" class="btn ghost mt-3"><ArrowLeft size="20" weight="bold" /> Voltar</a>
 {:else}

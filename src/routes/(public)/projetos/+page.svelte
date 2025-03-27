@@ -7,13 +7,13 @@
 	import { page } from "$app/state";
 	import clsx from "clsx";
 	import { enhance } from "$app/forms";
-	import Title from "$crate/components/title.svelte";
 	import type { Selected } from "bits-ui";
 	import type { Project } from "$crate/core/entities/project.js";
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
 	import Select from "$crate/components/select";
 	import ProjectCard from "./project-card.svelte";
 	import ProjectSkeleton from "./project-skeleton.svelte";
+	import meta from "$crate/components/meta/index.js";
 
 	const {
 		data,
@@ -100,9 +100,12 @@
 	}
 </script>
 
-<svelte:head>
-	<Title title="Projetos" />
-</svelte:head>
+<meta.Root>
+	<meta.Title title="Projetos" />
+	<meta.Description
+		description="Projetos nos quais eu venho trabalhando, já trabalhei, e/ou dou manutenção!"
+	/>
+</meta.Root>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-mainExpanded mx-auto flex flex-col items-center justify-center"
