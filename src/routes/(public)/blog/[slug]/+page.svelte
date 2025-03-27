@@ -2,9 +2,9 @@
 	import type { GetPostBySlugResponse } from "$crate/handlers/blog";
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
 	import ArrowLeft from "phosphor-svelte/lib/ArrowLeft";
-	import Title from "$crate/components/title.svelte";
 	import clsx from "clsx";
 	import StarryHighlighter from "$crate/components/starry-highlighter.svelte";
+	import meta from "$crate/components/meta";
 
 	type Props = { data: GetPostBySlugResponse };
 	const { data }: Props = $props();
@@ -18,9 +18,14 @@
 	}
 </script>
 
-<svelte:head>
-	<Title title={data.success && data.data ? data.data.title : "Post não encontrado"} />
-</svelte:head>
+<meta.Root>
+	<meta.Title title={data.success && data.data ? data.data.title : "Post não encontrado"} />
+	{#if data.success && data.data}
+		<meta.Description description={data.data.preview} />
+		<meta.Image url={data.data.topstory} />
+		<meta.Card url={data.data.topstory} />
+	{/if}
+</meta.Root>
 
 <main class="flex-1 w-[calc(100%_-_48px)] max-w-screen-mainExpanded mx-auto">
 	<a

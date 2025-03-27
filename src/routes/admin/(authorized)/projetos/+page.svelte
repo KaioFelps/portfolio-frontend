@@ -10,8 +10,8 @@
 	import type { ActionData } from "./$types";
 	import ErrorToast from "$crate/components/error-toast.svelte";
 	import { goto } from "$app/navigation";
-	import Title from "$crate/components/title.svelte";
 	import type { DeleteProjectResponseType, PageLoadData } from "./handlers";
+	import meta from "$crate/components/meta";
 
 	export let data: PageLoadData & { user: AuthUser };
 	export let form: DeleteProjectResponseType | null;
@@ -45,7 +45,9 @@
 	})();
 </script>
 
-<Title title="Projetos" adminRoute />
+<meta.Root>
+	<meta.Title title="Projetos" adminRoute />
+</meta.Root>
 
 <header class="mb-12 flex items-center justify-between">
 	<h1>Projetos</h1>

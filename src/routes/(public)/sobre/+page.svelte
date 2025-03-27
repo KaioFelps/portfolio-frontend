@@ -1,5 +1,5 @@
 <script>
-	import Title from "$crate/components/title.svelte";
+	import meta from "$crate/components/meta";
 	import { socialMedias } from "$crate/config/social-medias";
 	import { getYearsFromNow } from "$crate/utils";
 
@@ -10,9 +10,9 @@
 	const yearsStudying = getYearsFromNow(startedStudyingAt);
 </script>
 
-<svelte:head>
-	<Title title="Sobre mim" />
-</svelte:head>
+<meta.Root>
+	<meta.Title title="Sobre mim" />
+</meta.Root>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-md mx-auto flex flex-col items-center justify-center"

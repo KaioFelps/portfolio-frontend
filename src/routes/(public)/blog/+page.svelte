@@ -10,8 +10,8 @@
 	import { enhance } from "$app/forms";
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
-	import Title from "$crate/components/title.svelte";
 	import WarningAlert from "$crate/components/alerts/warning-alert.svelte";
+	import Meta from "$crate/components/meta";
 	import ArticleCard from "./article-card.svelte";
 
 	const queryByOptions = [
@@ -86,9 +86,12 @@
 	}
 </script>
 
-<svelte:head>
-	<Title title="Blog" />
-</svelte:head>
+<Meta.Root>
+	<Meta.Title title="Blog" />
+	<Meta.Description
+		description="Artigos sobre o que eu venho aprontando ou sobre coisas que, aparentemente, todo mundo sabia mas eu acabei de descobrir!"
+	/>
+</Meta.Root>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-mainExpanded mx-auto flex flex-col items-center justify-center"
