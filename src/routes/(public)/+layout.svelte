@@ -4,6 +4,7 @@
 	import MobileHeader from "$crate/ui/mobile-header.svelte";
 	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import type { Snippet } from "svelte";
+	import { env } from "$env/dynamic/public";
 
 	let loading = $state(false);
 
@@ -12,6 +13,26 @@
 
 	const { children }: { children: Snippet } = $props();
 </script>
+
+<svelte:head>
+	<!-- base metatags -->
+	<meta property="og:locale" content="pt_BR" />
+	<meta property="og:type" content="website" />
+	<meta property="theme-color" content="#FFC700" />
+
+	<meta property="og:site_name" content={env.PUBLIC_APP_NAME} />
+	<meta name="application-name" content={env.PUBLIC_APP_NAME} />
+
+	<link rel="canonical" href={env.PUBLIC_APP_URL} />
+	<meta name="og:url" content={env.PUBLIC_APP_URL} />
+
+	<!-- overridable -->
+	<title>{env.PUBLIC_APP_NAME}</title>
+	<meta
+		name="description"
+		content="Programador; Desenvolvedor, Analista ou Engenheiro de software; Cientista da Computação. Alguma coisa do gênero."
+	/>
+</svelte:head>
 
 <div class="flex-1 flex flex-col">
 	{#if loading}
