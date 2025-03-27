@@ -11,4 +11,5 @@ export type ExpandedPost = {
 	createdAt: Date;
 	updatedAt: Date | null;
 	publishedAt: Date | null;
+	description: string;
 };
