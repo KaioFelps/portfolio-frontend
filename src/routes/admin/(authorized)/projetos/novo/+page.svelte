@@ -3,11 +3,10 @@
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import FloatingSelect from "$crate/components/floating-select";
 	import Trash from "phosphor-svelte/lib/Trash";
-	import type { Selected } from "bits-ui";
 	import { tick } from "svelte";
 	import type { PageLoadData, PublishResponseType } from "./handlers";
-	import Title from "$crate/components/title.svelte";
 	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
+	import meta from "$crate/components/meta";
 
 	const {
 		form,
@@ -69,7 +68,9 @@
 	}
 </script>
 
-<Title title="Novo Projeto" adminRoute />
+<meta.Root>
+	<meta.Title title="Novo Projeto" adminRoute />
+</meta.Root>
 
 <h1 class="mb-12">Novo projeto</h1>
 

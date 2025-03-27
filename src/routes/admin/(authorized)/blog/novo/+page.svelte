@@ -4,9 +4,9 @@
 	import FloatingSelect from "$crate/components/floating-select/index.js";
 	import Editor from "$crate/ui/tiptap/editor.svelte";
 	import type { NewBlogPostPageLoadData, PublishPostResponse } from "../handlers.js";
-	import Title from "$crate/components/title.svelte";
 	import PreviewDialog from "./preview-dialog.svelte";
 	import type { SelectOption } from "$crate/components/floating-select/group.svelte";
+	import meta from "$crate/components/meta/index.js";
 
 	type Props = {
 		data: NewBlogPostPageLoadData;
@@ -24,7 +24,9 @@
 	let htmlContent: string = $state("");
 </script>
 
-<Title title="Novo post" />
+<meta.Root>
+	<meta.Title title="Novo post" adminRoute />
+</meta.Root>
 
 <h1 class="mb-12">Nova publicação</h1>
 
