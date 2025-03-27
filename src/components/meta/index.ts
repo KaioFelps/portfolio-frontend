@@ -10,13 +10,8 @@ type ResolveTitleArgs = {
 };
 
 export function resolveTitle({ title, adminRoute = false }: ResolveTitleArgs) {
-	const getFormattedTitle = (isAdminRoute: boolean, title?: string) => {
-		const formerPart = isAdminRoute ? "Kaio Felps :: Admin" : "Kaio Felps";
-		return title ? `${formerPart} :: ${title}` : formerPart;
-	};
-
-	const formattedTitle = $derived(getFormattedTitle(adminRoute, title));
-	return formattedTitle;
+	const formerPart = adminRoute ? "Kaio Felps :: Admin" : "Kaio Felps";
+	return title ? `${formerPart} :: ${title}` : formerPart;
 }
 
 export default {
