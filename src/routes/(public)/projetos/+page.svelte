@@ -100,7 +100,7 @@
 	}
 </script>
 
-<meta.Root>
+<meta.Root location="/projetos">
 	<meta.Title title="Projetos" />
 	<meta.Description
 		description="Projetos nos quais eu venho trabalhando, já trabalhei, e/ou dou manutenção!"

@@ -18,10 +18,10 @@
 	}
 </script>
 
-<meta.Root>
+<meta.Root location="/blog/{data.success && data.data ? data.data.slug : ''}">
 	<meta.Title title={data.success && data.data ? data.data.title : "Post não encontrado"} />
+	<meta.Description description={data.success ? data.data?.description : undefined} />
 	{#if data.success && data.data}
-		<meta.Description description={data.data.description} />
 		<meta.Image url={data.data.topstory} />
 		<meta.Card url={data.data.topstory} />
 	{/if}

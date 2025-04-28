@@ -86,7 +86,7 @@
 	}
 </script>
 
-<Meta.Root>
+<Meta.Root location="/blog">
 	<Meta.Title title="Blog" />
 	<Meta.Description
 		description="Artigos sobre o que eu venho aprontando ou sobre coisas que, aparentemente, todo mundo sabia mas eu acabei de descobrir!"

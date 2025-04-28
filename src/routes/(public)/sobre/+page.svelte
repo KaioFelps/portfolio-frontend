@@ -10,8 +10,9 @@
 	const yearsStudying = getYearsFromNow(startedStudyingAt);
 </script>
 
-<meta.Root>
+<meta.Root location="/sobre">
 	<meta.Title title="Sobre mim" />
+	<meta.Description />
 </meta.Root>
 
 <main
