@@ -1,6 +1,12 @@
 <script>
 	import ArrowRight from "phosphor-svelte/lib/ArrowRight";
+	import Meta from "$crate/components/meta";
 </script>
+
+<Meta.Root>
+	<Meta.Title />
+	<Meta.Description />
+</Meta.Root>
 
 <main
 	class="flex-1 w-[calc(100%_-_24px)] max-w-screen-main mx-auto flex flex-col items-center justify-center"
