@@ -5,7 +5,7 @@ import Root from "./root.svelte";
 import Title from "./title.svelte";
 
 type ResolveTitleArgs = {
-	title: string;
+	title?: string;
 	adminRoute?: boolean;
 };
 

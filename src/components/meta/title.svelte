@@ -2,7 +2,7 @@
 	import { resolveTitle } from ".";
 
 	type Props = {
-		title: string;
+		title?: string;
 		adminRoute?: boolean;
 	};
 
