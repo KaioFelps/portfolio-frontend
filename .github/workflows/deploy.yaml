@@ -40,6 +40,6 @@ jobs:
             - name: Deploy
               run: |
                 cd __package
-                squarecloud login --token=${{ secrets.SQUARE_TOKEN }}
+                squarecloud auth login --token=${{ secrets.SQUARE_TOKEN }}
                 squarecloud commit ${{ secrets.SQUARE_APPLICATION_ID }}
                 squarecloud app restart ${{ secrets.SQUARE_APPLICATION_ID }}
