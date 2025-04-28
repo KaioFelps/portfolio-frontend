@@ -35,10 +35,7 @@ jobs:
                 cp package-lock.json __package
             
             - name: Setup Square Cloud CLI
-              uses: squarecloudofc/github-action@v2
-              with:
-                token: ${{ secrets.SQUARE_TOKEN }}
-                install-only: true
+              run: curl -fsSL https://cli.squarecloud.app/install | bash
             
             - name: Deploy
               run: |
