@@ -35,11 +35,13 @@ jobs:
                 cp package-lock.json __package
             
             - name: Setup Square Cloud CLI
-              run: curl -fsSL https://cli.squarecloud.app/install | bash
+              run: |
+                chmod +x .github/squarecloud_cli.sh
+                ./.github/squarecloud_cli.sh
             
             - name: Deploy
               run: |
                 cd __package
-                squarecloud auth login --token=${{ secrets.SQUARE_TOKEN }}
+                squarecloud login --token=${{ secrets.SQUARE_TOKEN }}
                 squarecloud commit ${{ secrets.SQUARE_APPLICATION_ID }}
                 squarecloud app restart ${{ secrets.SQUARE_APPLICATION_ID }}
