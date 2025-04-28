@@ -1,10 +1,13 @@
 <script lang="ts">
 	type Props = {
-		description: string;
+		description?: string;
 		adminRoute?: boolean;
 	};
 
-	const { description, adminRoute = false }: Props = $props();
+	const {
+		description = "Programador; Desenvolvedor, Analista ou Engenheiro de software; Cientista da Computação. Alguma coisa do gênero.",
+		adminRoute = false,
+	}: Props = $props();
 </script>
 
 {#if !adminRoute}
