@@ -14,6 +14,15 @@ export function resolveTitle({ title, adminRoute = false }: ResolveTitleArgs) {
 	return title ? `${formerPart} :: ${title}` : formerPart;
 }
 
+export function resolveCanonicalUrl(base: string, location?: string) {
+	if (!location) return base;
+
+	if (!location.startsWith("/")) location = "/" + location;
+	if (base.endsWith("/")) base = base.substring(0, base.length - 1);
+
+	return base + location;
+}
+
 export default {
 	Root,
 	Title,
