@@ -6,6 +6,7 @@
 	import { FloatingGroup, FloatingInput, FloatingLabel } from "$crate/components/floating-input";
 	import type { ActionData } from "./$types";
 	import { goto } from "$app/navigation";
+	import meta from "$crate/components/meta";
 
 	export let form: ActionData;
 
@@ -17,6 +18,11 @@
 
 	const bgImage = `background-image: url("${blob}")`;
 </script>
+
+<meta.Root>
+	<meta.Title title="Login" adminRoute />
+	<meta.Description adminRoute />
+</meta.Root>
 
 <img src={logo} alt="Kaio Felps" class="absolute top-4 left-4" />
 
