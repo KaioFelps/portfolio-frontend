@@ -4,7 +4,7 @@
 
 @layer components {
     .dropdown {
-        @apply rounded-xl border border-d-gray-200 bg-d-backgrond p-1 shadow-sm outline-none;
+        @apply rounded-xl border border-d-gray-200 bg-d-backgrond p-1 shadow-sm outline-none z-10;
     }
 }
 

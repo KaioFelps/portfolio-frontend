@@ -25,8 +25,9 @@
 	>
 		<span
 			class="inline-block text-start w-full line-clamp-1 text-ellipsis whitespace-nowrap overflow-hidden"
-			>{triggerTitle}</span
 		>
+			{triggerTitle}
+		</span>
 		<CaretUp
 			size="20"
 			weight="regular"
@@ -34,31 +35,34 @@
 		/>
 	</DropdownMenu.Trigger>
 
-	<DropdownMenu.Content
-		align="start"
-		sideOffset={8}
-		alignOffset={0}
-		class="max-w-[calc(100%-_48px)] min-w-[144px] dropdown"
-	>
-		{#snippet child({ props, open })}
-			{#if open}
-				<div {...props} transition:flyAndScale>
-					{#each options as { title, handler, active } (title)}
-						<DropdownMenu.Item class="group" data-selected={active || null}>
-							<button
-								class={clsx(
-									"cursor-default w-full text-start px-2 py-1",
-									"group-data-[selected]:bg-d-gray-200 group-data-[selected]:my-1 group-last:!mb-0 group-first:!mt-0",
-									"hover:bg-d-gray-200 rounded-lg ",
-								)}
-								onclick={handler}
-							>
-								{title}
-							</button>
-						</DropdownMenu.Item>
-					{/each}
-				</div>
-			{/if}
-		{/snippet}
-	</DropdownMenu.Content>
+	<DropdownMenu.Portal>
+		<DropdownMenu.Content
+			side="bottom"
+			align="start"
+			sideOffset={8}
+			alignOffset={0}
+			class="max-w-[calc(100%-_48px)] min-w-[144px] dropdown"
+		>
+			{#snippet child({ props, open })}
+				{#if open}
+					<div {...props} transition:flyAndScale>
+						{#each options as { title, handler, active } (title)}
+							<DropdownMenu.Item class="group" data-selected={active || null}>
+								<button
+									class={clsx(
+										"cursor-default w-full text-start px-2 py-1",
+										"group-data-[selected]:bg-d-gray-200 group-data-[selected]:my-1 group-last:!mb-0 group-first:!mt-0",
+										"hover:bg-d-gray-200 rounded-lg ",
+									)}
+									onclick={handler}
+								>
+									{title}
+								</button>
+							</DropdownMenu.Item>
+						{/each}
+					</div>
+				{/if}
+			{/snippet}
+		</DropdownMenu.Content>
+	</DropdownMenu.Portal>
 </DropdownMenu.Root>
