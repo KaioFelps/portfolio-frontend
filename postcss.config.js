@@ -1,6 +1,10 @@
 export default {
   plugins: {
     tailwindcss: {},
-    autoprefixer: {},
+    autoprefixer: {
+      overrideBrowserslist: [
+        "defaults and Firefox >= 51",
+      ]
+    },
   },
 }
