@@ -8,7 +8,7 @@
 	import Tag from "phosphor-svelte/lib/Tag";
 	import Plus from "phosphor-svelte/lib/Plus";
 	import Minus from "phosphor-svelte/lib/Minus";
-	import { slide } from "svelte/transition";
+	import CollapsibleContent from "./collapsible-content.svelte";
 
 	export let user: AuthUser;
 	$: isAdmin = user.role === UserRoleEnum.admin;
@@ -32,14 +32,10 @@
 			<Minus size="20" weight="bold" />
 		</span>
 	</Collapsible.Trigger>
-	<Collapsible.Content
-		class="flex flex-col items-stretch"
-		transition={slide}
-		transitionConfig={{ duration: 200 }}
-	>
+	<CollapsibleContent>
 		<a class={itemsClasses} href="/admin/projetos">Lista de projetos</a>
 		<a class={itemsClasses} href="/admin/projetos/novo">Novo projeto</a>
-	</Collapsible.Content>
+	</CollapsibleContent>
 </Collapsible.Root>
 
 <!-- Blog -->
@@ -55,14 +51,10 @@
 			<Minus size="20" weight="bold" />
 		</span>
 	</Collapsible.Trigger>
-	<Collapsible.Content
-		class="flex flex-col items-stretch"
-		transition={slide}
-		transitionConfig={{ duration: 200 }}
-	>
+	<CollapsibleContent>
 		<a class={itemsClasses} href="/admin/blog">Lista de posts </a>
 		<a class={itemsClasses} href="/admin/blog/novo">Novo post</a>
-	</Collapsible.Content>
+	</CollapsibleContent>
 </Collapsible.Root>
 
 <!-- Users -->
@@ -78,16 +70,12 @@
 			<Minus size="20" weight="bold" />
 		</span>
 	</Collapsible.Trigger>
-	<Collapsible.Content
-		class="flex flex-col items-stretch"
-		transition={slide}
-		transitionConfig={{ duration: 200 }}
-	>
+	<CollapsibleContent>
 		<a class={itemsClasses} href="/admin/users">Lista de usuários</a>
 		{#if isAdmin}
 			<a class={itemsClasses} href="/admin/users/novo/">Novo usuário</a>
 		{/if}
-	</Collapsible.Content>
+	</CollapsibleContent>
 </Collapsible.Root>
 
 <!-- Tags -->
@@ -103,12 +91,8 @@
 			<Minus size="20" weight="bold" />
 		</span>
 	</Collapsible.Trigger>
-	<Collapsible.Content
-		class="flex flex-col items-stretch"
-		transition={slide}
-		transitionConfig={{ duration: 200 }}
-	>
+	<CollapsibleContent>
 		<a class={itemsClasses} href="/admin/tags">Tags existentes</a>
 		<a class={itemsClasses} href="/admin/tags/novo/">Criar tag</a>
-	</Collapsible.Content>
+	</CollapsibleContent>
 </Collapsible.Root>
