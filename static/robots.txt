@@ -20,3 +20,4 @@ User-agent: AdsBot-Google-Mobile
 User-agent: AdsBot-Google-Mobile-Apps
 User-agent: *
 Disallow: /admin/
+Disallow: /cdn-cgi/
