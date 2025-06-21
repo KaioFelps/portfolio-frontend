@@ -4,5 +4,5 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
-	plugins: [sveltekit(), tsconfigPaths(), visualizer()],
+	plugins: [sveltekit(), tsconfigPaths({ ignoreConfigErrors: true }), visualizer()],
 });
