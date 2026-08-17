@@ -20,6 +20,8 @@
 		return data.tags.data.tags.map((tag) => ({ value: tag.id, label: tag.value }));
 	});
 
+	let selectedTagsIds: string[] = $state([]);
+
 	let formIsLoading = $state(false);
 	let htmlContent: string = $state("");
 </script>
@@ -51,6 +53,7 @@
 	action="?/publish"
 	use:enhance={({ formData }) => {
 		formData.set("content", htmlContent);
+		formData.set("tags", JSON.stringify(selectedTagsIds));
 
 		formIsLoading = true;
 
@@ -71,12 +74,12 @@
 	</FloatingGroup>
 
 	{#if form && !form.success && !form.internalError && form.error.validation}
-		{#each form.error.data.fieldErrors.preview ?? [] as error}
+		{#each form.error.data.fieldErrors.description ?? [] as error}
 			<span class="alert danger mb-2 mt-4 sm">{error}</span>
 		{/each}
 	{/if}
 	<FloatingGroup class="mb-3">
-		<FloatingInput class="w-full" name="preview" placeholder="Preview/Descrição" type="text" />
+		<FloatingInput class="w-full" name="description" placeholder="Preview/Descrição" type="text" />
 		<FloatingLabel>Preview/Descrição</FloatingLabel>
 	</FloatingGroup>
 
@@ -86,7 +89,7 @@
 		{/each}
 	{/if}
 	{#if data.tags.success && availableTags.length > 0}
-		<FloatingSelect name="tags" multiple options={availableTags} placeholder="Tags" />
+		<FloatingSelect name="tags" multiple bind:value={selectedTagsIds} options={availableTags} placeholder="Tags" />
 	{:else if !data.tags.success}
 		<span class="mx-auto warning alert text-center w-full mb-3 inline-block">
 			{data.tags.internalError ? "Não foi possível carregar as tags existentes." : data.tags.error}
