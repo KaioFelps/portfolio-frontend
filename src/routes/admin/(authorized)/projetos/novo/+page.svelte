@@ -111,7 +111,7 @@
 		{/each}
 	{/if}
 	<FloatingGroup class="mb-3">
-		<FloatingInput class="w-full" name="title" placeholder="Nome do projeto" type="text" />
+		<FloatingInput class="w-full" name="title" placeholder="Nome do projeto" type="text" form="main-form" />
 		<FloatingLabel>Nome do projeto</FloatingLabel>
 	</FloatingGroup>
 
@@ -121,7 +121,7 @@
 		{/each}
 	{/if}
 	<FloatingGroup class="mb-3">
-		<FloatingInput class="w-full" name="topstory" placeholder="i.imgur.com" type="text" />
+		<FloatingInput class="w-full" name="topstory" placeholder="i.imgur.com" type="text" form="main-form" />
 		<FloatingLabel>Imagem de capa</FloatingLabel>
 	</FloatingGroup>
 
